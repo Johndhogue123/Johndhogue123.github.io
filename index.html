@@ -5905,7 +5905,7 @@ function eat(si){
   const need=foodNeed();
   G.food-=need;
   if(G.food<0){
-    G.food=0;G.starve++;if(!(G.tl&&G.tl['first-starve']))tally1('first-starve-y'+Math.min(Math.floor(G.day/DPY),10));tally1('first-starve');
+    G.food=0;G.starve++;if(!(G.tl&&G.tl['first-starve'])){tally1('first-starve-y'+Math.min(Math.floor(G.day/DPY),10));tally1('first-starve-farm'+Math.min(G.settlers.filter(o=>o.job==='farm'&&!isChild(o)).length,6));tally1('first-starve-field'+Math.min(G.built.field||0,6))}tally1('first-starve');
     // once a game, in the first two years on Easy and Normal: a neighbouring village sends two seasons of food, and says it will not again
     if(G.starve===1&&!G.resc&&G.day<2*DPY&&G.diff!==2&&!G.over){G.resc=1;G.starve=0;const n=Math.round(need*2*DPS);G.food=n;queueEvent(evRescue(n))}
     else if(G.starve===1)log('The stores are empty. The hold goes hungry.','bad',true);
