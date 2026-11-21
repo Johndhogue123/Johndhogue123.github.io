@@ -957,7 +957,7 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 .crow{display:grid;gap:6px;width:100%;text-align:left;font:inherit;color:var(--ink);cursor:pointer}.crow .cgo{justify-self:end}
 .croll{padding:8px 10px;display:grid;gap:3px}.croll .bhead b{font-family:var(--f-display);font-weight:400;font-size:17px}.croll .sub.dn{color:#8a2a22}
 .croll .bhead b{color:var(--ink);text-shadow:none}
-.seals .lean{display:block;font-size:11.5px;font-style:italic;color:var(--ink2);text-transform:none;letter-spacing:0}
+.seals .lean{display:block;white-space:nowrap;font-size:11px;font-style:italic;color:var(--ink2);text-transform:none;letter-spacing:0}
 
 /* THE PAGE TEMPLATE (illumPage in 10-screen.js, 2026-11-20, his ask: "a design template so going forward it's part of the design").
    Every pop-up page (a sheet in #binfo) built with illumPage wears the card look: the book-of-hours border with vines, the title's
@@ -986,7 +986,7 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 .bscn img{display:block;width:100%;height:auto}
 .ihead>svg.hp,.ihead>svg{display:block;width:100%;height:auto}
 /* a short window (the itch.io box is 940x620): the page picture drawn smaller, so the words start in view (hunt 13); same shape and frame */
-@media (max-height:700px){.ihead{width:min(100%,240px)}}
+@media (max-height:700px){.ihead{width:min(100%,240px)}.rpass svg.pt{width:46px;height:46px}}
 </style>
 
 <div id="app">
@@ -1129,7 +1129,7 @@ const BUILD={
 Object.assign(BUILD,{
   sawmill:{n:'Sawmill',cost:{wood:30,stone:10},work:12,max:1,fx:'Wood jobs yield 40% more.'},
   mine:{n:'Iron mine',cost:{wood:30,stone:15},work:14,max:1,req:()=>G.rocks.length>0,reqT:'Needs rocky ground',fx:'Miners also dig iron, and stone yields 25% more. Built outside the walls.'},
-  pasture:{n:'Sheep pasture',cost:{wood:20,gold:4},work:8,max:4,fx:'Room for two shepherds, who bring in mutton and cheese. Each gives 1 wool and 0.4 food a day. Wool keeps the hold warm in winter. Outside the walls.'},
+  pasture:{n:'Sheep pasture',cost:{wood:20,gold:4},work:8,max:4,fx:'Room for two shepherds, who bring in mutton and cheese. The pasture itself gives 1 wool and 2 food every 5 days, worked or not; shepherds bring in far more. Wool keeps the hold warm in winter. Outside the walls.'},
   mill:{n:'Windmill',cost:{wood:40,stone:20},work:14,max:1,req:()=>G.built.field>=3,reqT:'Needs 3 field plots',fx:'Farms yield 15% more.'},
   market:{n:'Market',cost:{wood:35,stone:15,gold:20},work:14,max:1,req:()=>G.settlers.length>=(dif().mkt||7),reqT:()=>'Needs '+(dif().mkt||7)+' people',fx:'+1.5 gold a day. Sell goods pays full price for iron and wool and carries more.'},
   smithy:{n:'Smithy',cost:{wood:25,stone:30,iron:8},work:16,max:1,req:()=>G.built.mine>0,reqT:'Needs an iron mine',fx:'+10% output for farms, wood and stone. +4 defense. Opens New tools and every iron upgrade.'},
@@ -1146,8 +1146,8 @@ Object.assign(BUILD,{
 });
 Object.assign(BUILD,{
   guildhall:{n:'Guildhall',cost:{wood:50,stone:40,gold:40},work:22,max:1,req:()=>G.built.market>0&&G.rank>=2,reqT:()=>!G.built.market?'Needs a market':'Needs Barony rank',fx:'+2 gold and +0.3 renown a day. Wages cost a third less.'},
-  fishery:{n:'Fishery',cost:{wood:25,stone:5},work:10,max:3,fx:'Room for two fishermen, who land about 3 food a day each (2 in winter). The fishery itself lands 1 a day (half in winter), manned or not. Built on the river bank.'},
-  orchard:{n:'Orchard',cost:{wood:20,gold:8},work:10,max:4,req:()=>G.rank>=1,reqT:'Needs Village rank',fx:'Room for two pickers. Each gives 0.5 food a day and 20 more over the autumn apple picking, and pickers bring in far more. +2 mood. Outside the walls.'},
+  fishery:{n:'Fishery',cost:{wood:25,stone:5},work:10,max:3,fx:'Room for two fishers, who land about 3 food a day each (2 in winter). The fishery itself lands 1 a day (half in winter), manned or not. Built on the river bank.'},
+  orchard:{n:'Orchard',cost:{wood:20,gold:8},work:10,max:4,req:()=>G.rank>=1,reqT:'Needs Village rank',fx:'Room for two pickers. The orchard itself gives 1 food every 2 days and 20 more over the autumn picking, worked or not; pickers bring in far more. +2 mood. Outside the walls.'},
   stables:{n:'Stables',cost:{wood:40,stone:20,gold:15},work:16,max:1,req:()=>G.built.palisade>0,reqT:'Needs a palisade',fx:'+4 defense. Spies ride faster and are caught less. Ambushes hit harder.'}
 });
 // Great Works: big late projects (the Cathedral, above, counts as one too). The palace is needed to become a Kingdom.
@@ -1171,7 +1171,7 @@ const UPG={
   hut:[{n:'Stone cottages',fx:'Every cottage gets a stone ground floor and houses two more people. +2 mood.',cost:{stone:45},work:16},{n:'Iron stoves',fx:'Every cottage gets an upper storey and houses two more again. Winters burn a fifth less wood.',cost:{iron:20,stone:10},work:14}],
   granary:[{n:'Stone granaries',fx:'Each granary holds 60 more food.',cost:{stone:30},work:10},{n:'Iron-bound bins',fx:'Each holds 60 more again, and summer rot is halved.',cost:{iron:12,wood:10},work:10}],
   pasture:[{n:'Stone sheepfolds',fx:'Pastures give 50% more wool and food, and shepherds bring in 35% more.',cost:{stone:25},work:8},{n:'Iron shears',fx:'Pastures give 50% more again, and shepherds 35% more.',cost:{iron:8,wood:6},work:6}],
-  fishery:[{n:'Stone jetties',fx:'Fisheries land 50% more, and fishermen catch 25% more.',cost:{stone:25},work:8},{n:'Iron hooks and nets',fx:'Fisheries land 50% more again, and fishermen 25% more.',cost:{iron:10,wool:6},work:6}],
+  fishery:[{n:'Stone jetties',fx:'Fisheries land 50% more, and fishers catch 25% more.',cost:{stone:25},work:8},{n:'Iron hooks and nets',fx:'Fisheries land 50% more again, and fishers 25% more.',cost:{iron:10,wool:6},work:6}],
   palisade:[{n:'Stone curtain wall',fx:'Rebuilds the palisade in stone. +6 defense.',cost:{stone:80,wood:10},work:24},{n:'Iron gates',fx:'+5 defense, and barring the gates is much stronger.',cost:{iron:25,stone:10},work:16}],
   tower:[{n:'Stone tower',fx:'+4 defense. Thieves and killers are caught more often.',cost:{stone:35},work:12},{n:'Iron ballista',fx:'+6 defense.',cost:{iron:20,wood:15},work:12}],
   barracks:[{n:'Stone barracks',fx:'Guards fight 10% harder. Houses two more people.',cost:{stone:50},work:16},{n:'Iron armoury',fx:'Guards fight 15% harder again.',cost:{iron:30},work:16}],
@@ -1186,9 +1186,9 @@ const UPG={
   library:[{n:'Stone scriptorium',fx:'+10% XP and faster lessons. +0.1 renown a day.',cost:{stone:40},work:14},{n:'Chained books',fx:'+10% XP and faster lessons again. +0.1 renown a day.',cost:{iron:12,gold:20},work:12}],
   dungeon:[{n:'Deeper cells',fx:'Holds three more prisoners, who escape less.',cost:{stone:35},work:12},{n:'Iron bars',fx:'Holds three more again, and escapes are rarer still.',cost:{iron:15},work:10}],
   bakery:[{n:'Stone ovens',fx:'Everyone eats 5% less again.',cost:{stone:30},work:12},{n:'Iron griddles',fx:'Sweet loaves: +2 mood.',cost:{iron:10,wood:10},work:10}],
-  brewery:[{n:'Stone vaults',fx:'+0.75 gold a day from ale.',cost:{stone:30},work:12},{n:'Iron-hooped casks',fx:'+0.75 gold a day more.',cost:{iron:12,wood:10},work:10}],
+  brewery:[{n:'Stone vaults',fx:'+3 gold every 4 days from ale.',cost:{stone:30},work:12},{n:'Iron-hooped casks',fx:'+3 gold every 4 days more.',cost:{iron:12,wood:10},work:10}],
   guildhall:[{n:'Stone guild hall',fx:'+1 gold a day.',cost:{stone:45},work:14},{n:'Iron strongboxes',fx:'Wages are halved instead of cut by a third.',cost:{iron:20,gold:20},work:12}],
-  orchard:[{n:'Stone orchard walls',fx:'Orchards give 0.25 more food a day and 10 more apples at harvest. Pickers bring in 25% more.',cost:{stone:25},work:8},{n:'Iron pruning hooks',fx:'10 more apples at harvest again, and pickers 25% more. +1 mood.',cost:{iron:8,wood:6},work:6}],
+  orchard:[{n:'Stone orchard walls',fx:'Orchards give 1 more food every 4 days and 10 more apples at harvest. Pickers bring in 25% more.',cost:{stone:25},work:8},{n:'Iron pruning hooks',fx:'10 more apples at harvest again, and pickers 25% more. +1 mood.',cost:{iron:8,wood:6},work:6}],
   stables:[{n:'Stone stables',fx:'+3 defense.',cost:{stone:35},work:12},{n:'Iron horseshoes',fx:'Spies are caught less. Ambushes hit harder.',cost:{iron:15},work:10}]
 };
 const ULV=['Timber','Stone','Iron'];
@@ -1683,7 +1683,7 @@ function endReign(old,how,cause){
   const g=G.reign;G.reign=null;if(!g)return;if(old&&old.id!==g.id)old=null;
   const K=kinBook(),k=K[g.id]||(old?noteKin(old):null);if(!k)return;
   const ag=Math.floor((G.day-k.born)/DPY),yrs=(G.day-g.from)/DPY,ep=epithet(g,how,ag,yrs,old&&old.traits,old&&old.bas),nm=`${k.name} ${ep}`,yi=Math.floor(yrs);
-  k.ep=ep;rpEpithet(ep,nm);rpReign(nm,k.id);k.rf=g.from;k.rt=G.day;k.how=how;{const ln=lawNotes(g);if(ln.length)k.lw=ln.slice(0,2)}{let lf='',v=0;for(const f in g.tf||{})if(g.tf[f]>v){v=g.tf[f];lf=f}k.lf=lf}{const el=how==='died'?`Remembered ever after as ${k.name} ${ep}.`:`Loses the high seat, and gains a name: ${k.name} ${ep}.`;if(old&&old.life){life(old,el);k.life=lifeKeep(old.life)}else if(k.life){k.life.push([G.day,el]);k.life=lifeKeep(k.life)}}
+  k.ep=ep;rpEpithet(ep,k.name);rpReign(nm,k.id);k.rf=g.from;k.rt=G.day;k.how=how;{const ln=lawNotes(g);if(ln.length)k.lw=ln.slice(0,2)}{let lf='',v=0;for(const f in g.tf||{})if(g.tf[f]>v){v=g.tf[f];lf=f}k.lf=lf}{const el=how==='died'?`Remembered ever after as ${k.name} ${ep}.`:`Loses the high seat, and gains a name: ${k.name} ${ep}.`;if(old&&old.life){life(old,el);k.life=lifeKeep(old.life)}else if(k.life){k.life.push([G.day,el]);k.life=lifeKeep(k.life)}}
   const span=`ruled ${yi<1?'less than a year':yi+' year'+(yi===1?'':'s')} (${yearOf(g.from)}–${yearOf(G.day)})`;
   annal(`So ends the reign of ${nm}, who ${span}.`,'story');
   // a great ruler (a good name and 5 years or more on the seat, died in it) gets a plaque on the Founder's Statue
@@ -1711,7 +1711,7 @@ const CHEP={'the Poisoner':['{n} was never asked to supper again, by anyone, in 
   'the Peaceful':['{n} kept the swords on the wall and the valley quiet, which is harder than it looks.','Under {n} the guards grew fat, the fields grew full, and nobody minded either.'],
   'the Bane of the Valley':['{n} burned a hall to the ground once, and the valley never quite forgot it.','Mothers in the valley used the name of {n} to get children to bed.'],
   'the Scourge of the Valley':['{n} left more than one hall in ashes, and called it tidying.','Where {n} rode, the crows followed, and so did the bills from the thatchers.'],
-  'the Kind':['{n} had a soft heart and an open door, and the door was rarely shut.','{n} forgave almost everyone, including several who did not deserve it.'],
+  'the Kind':['{n} had a soft heart and an open door, and the door was rarely shut.','{n} forgave almost everyone, including several who did not deserve it.','{n} gave away more than the hold could spare, and somehow the hold never went short.'],
   'the Stern':['{n} gave hard orders and did not repeat them.','Under {n}, folk learned to stand up straight when the hall door opened.'],
   'the Cruel':['{n} was not loved, but was very much obeyed.','The hold kept its head down under {n}, and most kept it on their shoulders.'],
   'the Pious':['{n} prayed often, and loudly enough that heaven had little choice but to listen.','{n} spent more time on the chapel steps than in the high seat.'],
@@ -1896,7 +1896,7 @@ function chronicle(){
     if(/loses a child/.test(t))return [0,'died'];
     if(/ kills /.test(t))return [6,'bad'];
     return [3,'good']};
-  let lastStrk=-9;
+  let lastStrk=-9;const epUsed=new Set();// an epithet's line is not told twice in one Chronicle while another is left (hunt 14)
   rs.forEach((r,i)=>{
     // will this reign carry Maud's one struck-out word? its own seeded roll, so new annals never move it
     const SR=rng(((G.seed||1)*131+(r.rf|0)*7+1)>>>0),hw=r.live||r.open?null:(r.k.how||(r.k.died!=null&&Math.abs(r.k.died-r.rt)<2?'died':'gone')),endK=hw==='died'?r.k.cause:hw,
@@ -1905,7 +1905,7 @@ function chronicle(){
     let lead;
     if(i===0&&r.rf<DPS){const sp=(k.sp||[]).map(id=>K[id]).filter(Boolean)[0];lead=fill(pk(CHSTART.first),Object.assign({},o,{y:Y0}))+(sp?' '+pk([`${sp.name} came too, and did most of the lifting.`,`${sp.name} came along, mainly to keep an eye on things.`]):'')}
     else lead=fill(pk(o.a<1?CHSTART.babe:o.a<11?CHSTART.child:o.a<16?CHSTART.teen:o.a>=55?CHSTART.old:CHSTART.adult),o);
-    const gl=r.ep&&(sAt==='ep'?sPk(CHSTRK[r.ep]):CHEP[r.ep]?pk(CHEP[r.ep]):EPWHY[r.ep]);p.push(lead+(gl?' '+fill(gl,o):''));
+    const gl=r.ep&&(sAt==='ep'?sPk(CHSTRK[r.ep]):CHEP[r.ep]?(()=>{const L=CHEP[r.ep],u=L.filter(x=>!epUsed.has(x)),g=pk(u.length?u:L);epUsed.add(g);return g})():EPWHY[r.ep]);p.push(lead+(gl?' '+fill(gl,o):''));
     // the big moments of this reign in order, then a count of the small ones
     const mine=A.filter((e,j)=>j>0&&(i===0?e.d>=r.rf:e.d>r.rf||e.d===r.rf&&/ rules as regent /.test(e.t))&&(r.live||e.d<=r.rt)).map(e=>({e,v:rate(e.t,r)})).filter(x=>x.v);
     const cnt=c=>mine.filter(x=>x.v[1]===c).length,nb=cnt('built'),nk=cnt('born'),nd=cnt('died'),nr=cnt('revolt'),nc=cnt('cross'),ce=mine.filter(x=>x.v[1]==='crusend').map(x=>/ won/.test(x.e.t)?'w':/truce/.test(x.e.t)?'t':'l'),fold=nc>1||ce.length>1,rk=mine.filter(x=>x.v[1]==='rank'),kf=mine.filter(x=>x.v[1]==='faith'),
@@ -6114,7 +6114,7 @@ function tick(){
 // KNOWN FOR (Specialising part 2): text only, no bonus. G.fsrc counts the year's food by source (work()); at each new year a food starts the name when it made over 55% of the year's food
 // and loses it below 45% (no flicker); a year with under 30 food made keeps the old name. G.known holds it ('' or a place type): the hook for the house-reputation session.
 const KNOWN={field:{w:'its grain',m:['notes that House {h} is known for its grain now. "Bread, bread and more bread," she writes, and means it kindly.','notes that the valley has decided House {h} is a grain house. There are worse things to be known for. She lists several.'],r:['"They say House {h} could feed the valley, if the valley would only stop by," says {l}.','"Their barns are full and their dinners are boring," says {l} of House {h}, wistfully.','"Bread at House {h} again," says {l}. "One day they will serve a pie, and the whole valley will faint."']},
-  fishery:{w:'its fish',m:['notes that House {h} is known for its fish. The hold smells of it, and she has stopped complaining. Mostly.','notes that the valley calls House {h} the river folk now. She finds fish scales in the ink.'],r:['"House {h} lives on fish. One smells them before one sees the hold," says {l}, with a certain respect.','"Their fishermen tell tall tales, and the tall tales are all true," says {l} of House {h}.','"Ask House {h} the time and they tell you the tide," says {l}, not unkindly.']},
+  fishery:{w:'its fish',m:['notes that House {h} is known for its fish. The hold smells of it, and she has stopped complaining. Mostly.','notes that the valley calls House {h} the river folk now. She finds fish scales in the ink.'],r:['"House {h} lives on fish. One smells them before one sees the hold," says {l}, with a certain respect.','"Their fisherfolk tell tall tales, and the tall tales are all true," says {l} of House {h}.','"Ask House {h} the time and they tell you the tide," says {l}, not unkindly.']},
   orchard:{w:'its apples',m:['notes that House {h} is known for its apples. She has written "pie" in the margin three times.','notes that House {h} is the apple house of the valley, and has not been seen without a basket since.'],r:['"House {h} lives on apples and cider," says {l}. "Their wars smell of pie."','"Everything at House {h} is baked, stewed or pressed from an apple," says {l}, with a satisfied sigh.','"Their cider could start a war, or end one," says {l} of House {h}. "Nobody can remember which."']},
   pasture:{w:'its sheep',m:['notes that House {h} is known for its sheep. "Wool in the ink," she adds, "and mutton in the porridge."','notes that House {h} is a shepherd house now. She is not allowed to say what the flock thinks of the choir.'],r:['"House {h} keeps more sheep than sense," says {l}. "Fine mutton, though."','"The folk of House {h} count sheep to fall asleep, and wake up with the right number," says {l}.','"House {h} has more wool than walls," says {l}. "Warm walls, though."']}};
 function knownYear(){
@@ -6130,12 +6130,13 @@ function knownYear(){
   G.known=nw;
   // a hold's first name being grain is news about nothing (every hold starts on fields), so the annals and the Chronicle only tell a change (hunt 13)
   // G.kgr: 1 while that first grain name is untold (its loss is untold too), 2 once anything has been told
-  if(nw==='field'&&!old&&!G.kgr)G.kgr=1;
+  let mk=null;// the untold first grain name gets no note from Maud either (hunt 14)
+  if(nw==='field'&&!old&&!G.kgr){G.kgr=1;mk='field'}
   else if(!nw&&old==='field'&&G.kgr===1)G.kgr=2;
   else{G.kgr=2;
     if(nw)annal(old?`House ${G.house} is known for ${KNOWN[nw].w} now, no longer for ${KNOWN[old].w}.`:`House ${G.house} is now known for ${KNOWN[nw].w}.`,'good');
     else annal(`House ${G.house} is no longer known for ${KNOWN[old].w}. It lives on a bit of everything.`,'story')}
-  G.kmaud=null}
+  G.kmaud=mk}
 // Maud's note about it (once per change, picked up by maudDay) and a neighbour's remark now and then (from a season start)
 function knownSeason(){
   if(!G.known)return;const K=KNOWN[G.known],rv=rivals().filter((x,i)=>x&&x.lord&&rvFree(i));
@@ -6161,7 +6162,7 @@ const wpCap=t=>WPN*(G.built[t]||0);
 const wpTotal=()=>FOODP.reduce((a,t)=>a+wpCap(t),0);
 const wpOf=s=>FOODP.includes(s.wp)?s.wp:'field';
 // the words for each food work (Specialising part 2): job name, plural, skill, head of the trade. Display only: one skill, skills.farm, behind them all
-const FOODL={field:['Farmer','farmers','Farming','the head farmer'],fishery:['Fisherman','fishermen','Fishing','the head fisherman'],orchard:['Apple picker','apple pickers','Picking','the head picker'],pasture:['Shepherd','shepherds','Herding','the head shepherd']};
+const FOODL={field:['Farmer','farmers','Farming','the head farmer'],fishery:['Fisher','fishers','Fishing','the head fisher'],orchard:['Apple picker','apple pickers','Picking','the head picker'],pasture:['Shepherd','shepherds','Herding','the head shepherd']};
 const foodL=(s,i)=>FOODL[s&&s.job==='farm'?wpOf(s):'field'][i];
 const aN=w=>(/^[aeiou]/i.test(w)?'an ':'a ')+w;
 // the Farm group's headcount by place: {field:n,...}; foodLead is the place that has over half the workers, or '' when mixed or empty (the group card's words follow it)
@@ -7093,18 +7094,18 @@ function evNoBite(){
   const nm=wpRoom('fishery'),fw=G.settlers.filter(s=>s.job==='farm'&&!isChild(s)&&wpOf(s)==='fishery').length,mv=Math.min(fw,nm);
   return {kind:'Weather',title:"The fish won't bite",text:pickLine(NOBITEO,'nobite'),
     choices:[
-      {t:'Move the fishermen',d:`${mv} fisher${mv===1?'man':'men'} work elsewhere for the spell, then go back. The free catch still halves.`,dis:!mv,why:fw?'No free place elsewhere':'Nobody is fishing',fn(){G.nobite=G.day+12;const n=wpMove('fishery');return `${n} fisher${n===1?'man':'men'} put the nets down and pick up something else. The river is left to think about what it has done.`}},
+      {t:'Move the fishers',d:mv?`${mv} fisher${mv===1?' works':'s work'} elsewhere for the spell, then go back. The free catch still halves.`:fw?'No free place elsewhere.':'Nobody is fishing.',dis:!mv,why:fw?'No free place elsewhere':'Nobody is fishing',fn(){G.nobite=G.day+12;const n=wpMove('fishery');return `${n} fisher${n===1?' puts the nets down and picks':'s put the nets down and pick'} up something else. The river is left to think about what it has done.`}},
       {t:'Try the deep pool',d:'3 gold for bait and a long row. About half the time it ends in five days, else it drags on.',dis:G.gold<3,why:'Not enough gold',fn(){G.gold-=3;if(chance(.5)){G.nobite=G.day+5;return 'The deep pool is full of surprised fish. The spell breaks in a few days.'}G.nobite=G.day+14;return 'Deep water, same sulking fish, worse tempers. Two weeks of it.'}},
-      {t:'Wait it out',d:'Fish catches halve for about twelve days.',fn(){G.nobite=G.day+12;return 'The nets come up thin. The fishermen tell each other it is the moon.'}}
+      {t:'Wait it out',d:'Fish catches halve for about twelve days.',fn(){G.nobite=G.day+12;return 'The nets come up thin. The fisherfolk tell each other it is the moon.'}}
     ]};
 }
-const NOBITEO=[[()=>true,()=>'The nets come up empty, morning after morning. The old hands shrug: the fish ain\'t biting, and nobody can say why. The cat sulks at the river.'],[()=>true,()=>'Not a nibble. The fishermen sit on the jetty and glare at the water, and the water glares back. The fish ain\'t biting.'],[()=>true,()=>'The river has gone quiet and clever. Whatever the fish are doing, they are not doing it on your hooks.']];
+const NOBITEO=[[()=>true,()=>'The nets come up empty, morning after morning. The old hands shrug: the fish aren\'t biting, and nobody can say why. The cat sulks at the river.'],[()=>true,()=>'Not a nibble. The fisherfolk sit on the jetty and glare at the water, and the water glares back. Not a bite all week.'],[()=>true,()=>'The river has gone quiet and clever. Whatever the fish are doing, they are not doing it on your hooks.']];
 function evFrost(){
   const nm=wpRoom('orchard'),fw=G.settlers.filter(s=>s.job==='farm'&&!isChild(s)&&wpOf(s)==='orchard').length,mv=Math.min(fw,nm);
   return {kind:'Weather',title:'A late frost',text:pickLine(FROSTO,'frost'),
     choices:[
       {t:'Light smoke fires',d:'6 wood. About 60% to save the blossom, otherwise the harvest halves.',dis:G.wood<6,why:'Not enough wood',fn(){G.wood-=6;if(chance(.6))return 'Smoke hangs in the rows all night, and the blossom lives. The orchard smells like a smithy, and nobody minds.';G.frost=1;return 'The fires smoulder and the frost comes anyway. This autumn\'s apples will be half as many.'}},
-      {t:'Move the pickers',d:`${mv} picker${mv===1?'':'s'} work elsewhere until the harvest is in. The harvest halves.`,dis:!mv,why:fw?'No free place elsewhere':'Nobody is picking',fn(){G.frost=1;const n=wpMove('orchard');return `${n} picker${n===1?'':'s'} leave the thin orchard for better work. The trees look wounded.`}},
+      {t:'Move the pickers',d:mv?`${mv} picker${mv===1?' works':'s work'} elsewhere until the harvest is in. The harvest halves.`:fw?'No free place elsewhere.':'Nobody is picking.',dis:!mv,why:fw?'No free place elsewhere':'Nobody is picking',fn(){G.frost=1;const n=wpMove('orchard');return `${n} picker${n===1?' leaves':'s leave'} the thin orchard for better work. The trees look wounded.`}},
       {t:'Hope for the best',d:'About 30% it was a light one. Otherwise the harvest halves.',fn(){if(chance(.3))return 'The blossom shakes off the frost, and so does everyone else. A near thing.';G.frost=1;return 'Brown petals in the grass by noon. This autumn\'s apples will be half as many.'}}
     ]};
 }
@@ -10190,15 +10191,17 @@ function rpSeason(){try{if(!G||G.over||G.tut>=0)return;const g=rp(),D=RPD[G.diff
 // what is left of a deed after fading (roughly), so old deeds sink below new ones
 const rpLeft=(v,d)=>Math.abs(v)*Math.pow(v>0?.96:.98,Math.max(0,G.day-d)/DPS);
 // the weightiest deeds still remembered: big ones first, routine years to fill
-// the same big deed by the same ruler on several houses is told once (hunt 13: "Reeve Jasper burned ... and Reeve Jasper burned ..."); FOLDK the deeds that read well folded
+// the same big deed by the same ruler on several houses is told once; Five years without starting a war is told once with its years (hunt 14) (hunt 13: "Reeve Jasper burned ... and Reeve Jasper burned ..."); FOLDK the deeds that read well folded
 const FOLDK=['burn','take','war','oath','refuse'];
 function rpTop(n){const g=rp(),y=Math.floor(G.day/DPY),bg=[];
-  for(const x of g.b){const o=FOLDK.includes(x.k)&&x.w&&x.h?bg.find(z=>z.k===x.k&&z.by===x.by&&z.w===x.w):null;if(o){if(!o.hs.includes(x.h))o.hs.push(x.h);o.d0=Math.min(o.d0,x.d);o.d=Math.max(o.d,x.d);o.v=Math.min(o.v,x.v)}else bg.push(Object.assign({},x,{hs:x.h?[x.h]:[],d0:x.d}))}
+  for(const x of g.b){const o=FOLDK.includes(x.k)&&x.w&&x.h?bg.find(z=>z.k===x.k&&z.by===x.by&&z.w===x.w):x.k==='peace5'?bg.find(z=>z.k==='peace5'):null;if(o){if(x.h&&!o.hs.includes(x.h))o.hs.push(x.h);o.ys.push(yearOf(x.d));o.d0=Math.min(o.d0,x.d);o.d=Math.max(o.d,x.d);o.v=x.v<0?Math.min(o.v,x.v):Math.max(o.v,x.v)}else bg.push(Object.assign({},x,{hs:x.h?[x.h]:[],d0:x.d,ys:[yearOf(x.d)]}))}
   const big=bg.map(x=>{const y0=yearOf(x.d0),y1=yearOf(x.d),t=x.hs.length>1?RPK[x.k].t({who:x.w,h:andW(x.hs.map((h,i)=>i?'House '+h:h))}):x.t;
-    return {t,k:x.k,y:y0===y1?y0:y0+'–'+y1,w:rpLeft(x.v||1,x.d)*1.5,s:x.s,v:x.v,b:1}});
+    return {t,k:x.k,y:y0===y1?y0:x.k==='peace5'?x.ys.join(', '):y0+'–'+y1,w:rpLeft(x.v||1,x.d)*1.5,s:x.s,v:x.v,b:1}});
   // a routine deed done more than once: "Kindnesses (three times, to 1112)"
   const nm=n=>['','','twice','three times'][n]||`${numW(n)} times`;
-  const rou=g.d.map(x=>{const p=RPK[x.k]&&RPK[x.k].p||['A deed','Deeds'];return {t:x.n>1?p[1]:p[0],y:x.n>1?`${nm(x.n)}, to ${Y0+x.y}`:Y0+x.y,w:rpLeft((x.sg||1)*x.v,x.y*DPY+DPY/2),s:x.s,v:(x.sg||1)*x.v}});
+  // five years without a war already says the quiet years it covers (hunt 14: both were listed)
+  const pz=bg.filter(x=>x.k==='peace5').map(x=>[yearOf(x.d0)-5,yearOf(x.d)]),cov=x=>x.k==='quiet'&&pz.some(([a,b])=>Y0+x.y>=a&&Y0+x.y<=b);
+  const rou=g.d.filter(x=>!cov(x)).map(x=>{const p=RPK[x.k]&&RPK[x.k].p||['A deed','Deeds'];return {t:x.n>1?p[1]:p[0],y:x.n>1?`${nm(x.n)}, to ${Y0+x.y}`:Y0+x.y,w:rpLeft((x.sg||1)*x.v,x.y*DPY+DPY/2),s:x.s,v:(x.sg||1)*x.v}});
   return big.concat(rou).filter(x=>x.w>=.2).sort((a,b)=>b.w-a.w).slice(0,n||3)}
 // the scale that stands out: the worst bad one, else the best good one, else none
 function rpWorst(){const g=rp();let w=null;for(const k of RPS)if(rpBand(k,g)===0&&(!w||g[k]<g[w]))w=k;return w}
@@ -10212,7 +10215,11 @@ const RPLINE={
   Gentle:['The valley speaks of you the way folk speak of fresh bread: fondly, and rather often.','Beggars walk an extra day to reach your gate.','They say even the hounds of House {h} are polite.'],
   Peaceable:['Your banner on the road means a feast, not a fight. Folk set out cups.','Smiths in the valley grumble that you never order swords.','When House {h} rides out, the valley asks who is getting married.'],
   mid:['The valley has not quite made up its mind about House {h}. Give it time.','Neither loved nor feared. It is a start.','Folk say House {h} is fair enough, which is the most folk ever say.']};
-function rpLine(){const w=rpWorst(),b=rpBest(),k=w?rpWord(w):b?rpWord(b):'mid',L=RPLINE[k];return L[Math.floor(G.day/DPS)%L.length].replace(/{h}/g,G.house)}
+// no word stands out but a scale leans (as rpLean): Maud says which way (hunt 14: "Neither loved nor feared" while two seals leaned bad)
+const rpLeanBad=()=>RPS.some(k=>rpBand(k)===1&&rp()[k]<=-18),rpLeanGood=()=>RPS.some(k=>rpBand(k)===1&&rp()[k]>=18);
+function rpLine(){const w=rpWorst(),b=rpBest(),k=w?rpWord(w):b?rpWord(b):'mid';
+  if(k==='mid'&&(rpLeanBad()||rpLeanGood()))return `The valley is making up its mind about House ${G.house}, and it is ${rpLeanBad()?'not leaning':'leaning'} your way.`;
+  const L=RPLINE[k];return L[Math.floor(G.day/DPS)%L.length].replace(/{h}/g,G.house)}
 // to mend the worst scale: buttons only to things the game has (goFix keys in 09-rule.js)
 function rpMend(){const w=rpWorst();if(!w)return '';const r=ruler(),it=[];
   if(w==='h'){it.push(['A vigil in the chapel',G.built.chapel?['Call a vigil','a:pray']:null,G.built.chapel?'':' (build a chapel first)']);
@@ -10235,7 +10242,7 @@ function rpHTML(){if(!ruler()||!G||G.tut>=0)return '';
     +(rpTitle()?`<div class="rtitle">${rpTitleN()}<small>${RPTK[rpTitle()].t}</small></div>`:'')
     +`<div class="vmar">${maudPic(28,w?'brow':b?'smile':'sigh')}<i>${rpLine()}</i></div>`
     +(top.length?`<h4 class="mh">Remembered for</h4><ul>${top.map(x=>`<li>${x.t} <em>(${x.y})</em></li>`).join('')}</ul>`:`<div class="sub">Nothing much yet. The valley is still watching.</div>`)
-    +(w?rpMend():`<div class="mend calm">Nothing to mend. Do try not to spoil it.</div>`)+'</div>'}
+    +(w?rpMend():top.length?`<div class="mend calm">${rpLeanBad()?'Nothing to mend yet. Mind the leaning ones.':'Nothing to mend. Do try not to spoil it.'}</div>`:'')+'</div>'}
 /* ---------- what reads it (part 2) ----------
    Each read is one small, capped term added to a sum the game already keeps; middle words add nothing. Tuned here and nowhere else. */
 // a neighbour's season drift (rivalsSeason): Word for everyone (Greedy twice, Sly not at all), Hand for the Pious, a Warlike Sword for the Warlike (respect) and the Proud (outshone)
@@ -10325,7 +10332,7 @@ function rpTitle(){if(!G)return null;if(RPTC.g===G&&RPTC.d===G.day)return RPTC.t
 const rpTouch=k=>!!G&&!(G.tut>=0)&&rpTitle()===k;
 const rpTitleN=()=>{const t=rpTitle();return t?RPTK[t].n:''};
 // the Chronicle's line for the title
-const rpTitleChron=()=>{const t=rpTitle();return t?`The valley has a name for the house by now: ${RPTK[t].n.replace(/^A /,'a ')}. Three rulers earned it between them, or two, and the third did not spoil it.`:''};
+const rpTitleChron=()=>{const t=rpTitle();return t?`The valley has a name for the house by now: ${RPTK[t].n.replace(/^A /,'a ')}. Their deeds earned it between them.`:''};
 /* the sworn fresh start */
 const rpFs=()=>{const g=G&&G.rp;return g&&g.fs&&g.fs.e>G.day?g.fs:null};
 // would this deed break the oath? a big bad deed, or a bad deed on a scale that was bad when it was sworn (a dead ruler's name never does)
@@ -10363,9 +10370,10 @@ function rpOldFig(k,dead){const live=byId(k.id);const s=live||{id:k.id,born:k.bo
   return `<figure>${dead?portrait(s,66,1).replace('class="pt"','class="pt dead"')+SKULL:portrait(s,66)}<figcaption>${k.name}${k.ep?`<small class="role">${k.ep}</small>`:''}</figcaption></figure>`}
 const RPMAUD={Faithless:'They will want it in writing from you. Then in stone.',Harsh:'Mothers still use the name to get children to bed.',Warlike:'They keep their spears by the door, and their eyes on yours.',
   Trusted:'They will take your word on a handshake. Try not to spend it all at once.',Gentle:'Beggars still walk an extra day to reach your gate.',Peaceable:'They set out cups when your banner is on the road.'};
+const lc=s=>s.charAt(0).toLowerCase()+s.slice(1);
 function rpInheritTop(ev){const k=(G.kin||{})[ev.oid];if(!k)return '';const h=ruler(),dead=ev.how==='died',g=rp(),top=rpTop(2),w=rpWorst(),b=rpBest(),tn=rpTitleN();
   const ll=h?`the ${ev.age16?'young':'new'} ${titleOf(h).toLowerCase()}`:'the new ruler';
-  const note=(top.length?`The valley remembers ${andW(top.map(x=>`${!x.b||/^(A|An|Five|Three) /.test(x.t)?x.t.charAt(0).toLowerCase()+x.t.slice(1):x.k==='ep'?x.t:'how '+x.t} (${x.y})`))}. `:'')+(RPMAUD[w?rpWord(w):b?rpWord(b):'']||'');
+  const note=(top.length?`The valley remembers ${andW(top.map(x=>`${!x.b||x.k==='poison'||x.k==='peace5'?lc(x.t):x.k==='ep'?x.t:'how '+(/^A regent /.test(x.t)?lc(x.t):x.t)} (${x.y})`))}. `:'')+(RPMAUD[w?rpWord(w):b?rpWord(b):'']||'');
   return `<div class="whorow rpass">${rpOldFig(k,dead)}<div class="arr"><b>→</b>${dead?'leaves':'hands'}<br>you</div>${h?`<figure>${portrait(h,66)}<figcaption>${h.name}<small class="role">aged ${age(h)}</small></figcaption></figure>`:''}</div>`
     +`<div class="rp rpin"><div class="seals">${RPS.map(s=>{const c=RPCLS[rpBand(s,g)];return `<figure><small>${RPN[s].toUpperCase()}</small><div class="rseal ${c}">${ic(RPIC[s],22)}</div><b class="w-${c}">${rpWord(s)}</b></figure>`}).join('')}</div>`
     +(tn?`<div class="rtitle">${tn}</div>`:'')+`<span class="vlet"><span class="vfrom">${maudPic(30,w?'brow':'smile')}<span><b>Sister Maud</b>, for ${ll}:</span></span>"${note}"</span></div>`}
@@ -10379,7 +10387,7 @@ function evInherit(h,oid,how,a16){const g=rp(),w=rpWorst(),c=rpAmendCost(),rv=w?
     text:a16?`${h.name} is sixteen, and rules in ${hisW(h)} own right. The house's name comes too, whether ${heW(h)} wants it or not.`:`The high seat passes, and the house's name passes with it.`,choices:C}}
 /* the league: when your Word is Faithless or your Sword Warlike, a second cold house may join a neighbour's war on you, after a warning season.
    Never on Easy, never before year 5 (day 4*DPY, as dwSeason); at most once in 20 years on Normal, 10 on Hard (G.rp.ly). The ally only adds strength (G.pw.lg {id,h,st}). */
-const LGWARN=['House {a} and House {b} have been seen dining together, which never ends well.','House {a} and House {b} have started sending each other cakes. Nobody sends cakes for nothing.','A rider of House {b} was seen at the gate of House {a}, and he stayed for supper. Two suppers.'];
+const LGWARN=['House {a} and House {b} have been seen dining together, which never ends well.','House {a} and House {b} have started sending each other cakes. Nobody sends cakes for nothing.','A rider of House {b} was seen at the gate of House {a}, and stayed for supper. Two suppers.'];
 function rpLeagueOk(){if(!G||G.diff===0||G.tut>=0||G.day<4*DPY)return false;const g=rp();if(g.ly!=null&&G.day-g.ly<(G.diff===2?10:20)*DPY)return false;return rpBand('w',g)===0||rpBand('s',g)===0}
 const rpLgFree=(y,j)=>!!y&&rvFree(j)&&!atWar(j)&&!pwPeace(y)&&!hushed(y)&&y.att<=-50;
 // a season's warning: one partner at a time, the coldest free house that is not the one spoiling for war (dwSeason, after its own warnings)
@@ -12270,7 +12278,7 @@ function wpPanel(){
   const rows=FOODP.filter(t=>G.built[t]).map(t=>{const n=man&&T[t]!=null?Math.min(T[t],wpCap(t)):(c[t]||0);
     return `<div class="wprow"><span class="wpn">${ic(t,18)}${WPPL[t]}</span><button class="wpb" data-act="wpd" data-t="${t}" data-d="-1" aria-label="One fewer at ${WPPL[t].toLowerCase()}"${n<=0?' disabled':''}>−</button><b class="wpv">${n}</b><button class="wpb" data-act="wpd" data-t="${t}" data-d="1" aria-label="One more at ${WPPL[t].toLowerCase()}"${n>=wpCap(t)?' disabled':''}>+</button><small>of ${wpCap(t)}</small></div>`}).join('');
   return `<div class="parch card wpanel"><div class="wph"><b>Where they work</b><button class="wpauto${auto?' on':''}" data-act="wpa" aria-pressed="${auto}">Auto${auto?' ✓':''}</button></div>${rows}<small class="wpnote">${auto?'The hold sends people where they bring in most. Tap − or + to choose.':'Your choice stands. Spare hands go where they bring in most; with too few, the place you set last gives first.'}</small></div>`}
-function foodChips(){const si=seasonIdx(),f=foodWork(si,workTl()),c=foodBy();if(!FOODP.some(t=>t!=='field'&&c[t]))return '';const h=FOODP.filter(t=>c[t]).map(t=>`<span class="fchip" title="${FOODL[t][1]}">${ic(t,16)}<b>${c[t]}</b>·${num(f.by[t]||0)}</span>`).join('');return h?`<span class="fchips">${h}</span>`:''}
+function foodChips(){const si=seasonIdx(),f=foodWork(si,workTl()),c=foodBy();if(!FOODP.some(t=>t!=='field'&&c[t]))return '';const h=FOODP.filter(t=>c[t]).map(t=>`<span class="fchip" title="${FOODL[t][1]}, food a day">${ic(t,16)}<b>${c[t]}</b>·${t==='orchard'&&si!==2&&(f.by[t]||0)<.5?'autumn':num(f.by[t]||0)}</span>`).join('');return h?`<span class="fchips">${h}</span>`:''}
 // a group card: the job's place from the map, name and count, what it brings in, a wry line; folded it also names who is in it
 function groupHead(k,title,n,stat,list,open,st){
   const u=list.filter(s=>s.mood<35&&!isChild(s)).length,sk=list.filter(sick).length;
