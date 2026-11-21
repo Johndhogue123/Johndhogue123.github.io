@@ -184,9 +184,7 @@ canvas#map{display:block;width:100%;height:auto;aspect-ratio:15/11;max-width:100
 .rp .mend{border-top:1px dashed rgba(120,80,30,.45);padding-top:7px;display:grid;gap:6px}
 .rp .calm{font-size:15px;font-style:italic;color:var(--ink2)}
 .rtitle{text-align:center;font-family:var(--f-display);font-size:17px;color:var(--rubric);margin:4px 0 0}.rtitle small{display:block;font-family:var(--f-body);font-size:14px;font-style:italic;color:var(--ink2)}
-.rpass{align-items:center;gap:8px}.rpass .arr{display:grid;justify-items:center;font-family:var(--f-display);font-size:13px;line-height:1.1;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);text-align:center}.rpass .arr b{font-size:24px;font-weight:400;color:var(--rubric)}
-.rpass figcaption small.role{display:block;font-style:italic;font-size:13.5px;color:var(--ink2)}
-.rp.rpin{display:grid;gap:4px;margin-top:6px}.rp.rpin .vlet{margin:4px 0 0}.rp.rpin .vfrom{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:14px}
+.rp.rpin{display:grid;gap:4px;margin:2px 0 8px}.rpin .rpmore{display:block;margin-top:4px;font-style:italic;color:var(--ink2)}.rpnr{display:grid;gap:8px;margin:8px 0}.rp.rpin .vlet{margin:4px 0 0}.rp.rpin .vfrom{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:14px}
 .cost{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .upg{margin-top:10px;padding-top:8px;border-top:1px dashed var(--edge)}.upg .sub{margin-top:6px}.upg .btn{margin-top:8px}
 .upips{display:flex;gap:4px}.upips i{flex:1;text-align:center;font-style:normal;font-family:var(--f-display);font-size:13px;padding:1px 0;border-radius:3px;border:1px solid var(--edge);opacity:.5}.upips i.on{opacity:1;background:rgba(199,171,114,.55)}
@@ -986,7 +984,7 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 .bscn img{display:block;width:100%;height:auto}
 .ihead>svg.hp,.ihead>svg{display:block;width:100%;height:auto}
 /* a short window (the itch.io box is 940x620): the page picture drawn smaller, so the words start in view (hunt 13); same shape and frame */
-@media (max-height:700px){.ihead{width:min(100%,240px)}.rpass svg.pt{width:46px;height:46px}}
+@media (max-height:700px){.ihead{width:min(100%,240px)}}
 </style>
 
 <div id="app">
@@ -1586,7 +1584,7 @@ function succeed(old){
     log(`${old.name} leaves no trueborn heir. ${h.name}, ${old.name}'s child born out of wedlock, takes the high seat of House ${G.house}${age(h)<14?', though still a child':''}. There is nobody left to argue.`,'story',true);annal(`${h.name}, born out of wedlock to ${old.name}, takes the high seat of House ${G.house}.`)}
   else if(line==='kin'){log(`${old.name} leaves no child. ${h.name}, of the blood of House ${G.house}, takes the high seat${age(h)<14?', though still a child':''}.`,'story',true);annal(`${h.name}, of the blood of House ${G.house}, takes the high seat.`)}
   else{if(age(h)<14)gainAch('child');log(`${h.name} takes the high seat of House ${G.house}${age(h)<14?', though still a child. The elders will guide the hold.':'.'}`,'story',true);annal(`${h.name} takes the high seat of House ${G.house}${age(h)<14?(age(h)<1?', still in the cradle':' at the age of '+age(h)):''}.`)}
-  rpInheritQ(old,h);// What you inherit: after the End of a reign card and any claim card (09-repute.js)
+  rpInheritQ(old,h);// a new reign's choices wait on the Repute card (09-repute.js)
 }
 // a coup or revolt drives the ruler out: the seat passes down the bloodline and the house falls a rank. With no blood heir, the house ends.
 function usurp(p){
@@ -6081,7 +6079,7 @@ function tick(){
   jailbreak();
   if(G.spy&&G.day>=G.spy.until)resolveSpy();
   igDay();// agents abroad: the daily cleanup (09-scheme.js)
-  tutorTick();regencyTick();rpDaily();// rpDaily: a child ruler's What you inherit at sixteen, the league's ally (09-repute.js)
+  tutorTick();regencyTick();rpDaily();// rpDaily: a child ruler's new-reign choices at sixteen, the league's ally (09-repute.js)
   for(const s of G.settlers.slice()){
     const a=age(s);
     if(a>=58&&chance((a-57)*.0006))kill(s,'age');
@@ -10079,7 +10077,7 @@ function resetNamer(){nameQ=[];nameCur=null;$('#namer').hidden=true;$('#namer').
    - what reads it (part 2): rpPullRaw, rpPull, rpStart, rpMind (neighbours), rpLoy, rpLoyWhy (vassals, daughter holds), rpTrace (intrigue), rpHome, rpMood (home),
      RPECHOK, rpRemember, rpEcho (echoes, ECHO.rp in 08-story.js), VREP, rpVrep, rpEnd (the story); each a small capped term, middle words add nothing
    - the heir's side (part 3): RPTK, rpTitle, rpTouch, rpTitleN, rpTitleChron (house titles); rpFs, rpFsBreaks, rpFsNote, rpFsChoice (the sworn fresh start);
-     rpInheritQ, rpDaily, rpWronged, rpAmends, rpSwear, RPPROUD, rpProud, rpOldFig, RPMAUD, rpInheritTop, evInherit (What you inherit);
+     rpInheritQ, rpWindow, rpNrOpen, rpOpenNow, rpDaily, rpWronged, rpAmends, rpSwear, RPPROUD, rpProud, RPMAUD, rpReignNote, rpNrChoices, rpTake, rpNrHTML (a new reign);
      LGWARN, rpLeagueOk, rpLgFree, rpLeague, rpLgJoin, rpLgStart, rpLgSt, rpLgCheck, rpLgGift, rpLgEnd (the league)
    - More: docs/rule.md (House repute)
    Names: docs/where.md. Keep this list true when a section is added or moved. */
@@ -10087,7 +10085,7 @@ function resetNamer(){nameQ=[];nameCur=null;$('#namer').hidden=true;$('#namer').
    G.rp = {w, h, s: -100..100 (plus is Trusted, Gentle, Peaceable; 0 the middle words), b: big deeds (last 8, {k,s,v,t,d,by,hid}),
    d: routine deeds folded by key and year (last 12, {k,y,n,v}), bad: {w,h,s: the years of bad deeds, for the pattern guard},
    cd: {key: the day it may count again}, r0: the words when this reign began, n: {key: count} (for the bots), jl: justice days this year,
-   qb, qn: the quiet years' block, fs: a sworn fresh start {d,e,b}, ly: the day of the last league, ih: a child ruler's card waiting for sixteen {id,oid,how} } */
+   qb, qn: the quiet years' block, fs: a sworn fresh start {d,e,b}, ly: the day of the last league, ih: a child ruler waiting for sixteen {id,oid}, nr: a new reign's choices waiting {id,oid,u,a16} } */
 const RPS=['w','h','s'],RPN={w:'Word',h:'Hand',s:'Sword'};
 const RPW={w:['Faithless','Doubted','Trusted'],h:['Harsh','Fair','Gentle'],s:['Warlike','Steady','Peaceable']};
 const RPU=12;// one deed on Normal; the bands are 35 wide each side of the middle, so a big deed (24) moves a scale one word at most
@@ -10235,12 +10233,12 @@ const rpDots=()=>`<span class="minis">${RPS.map(k=>`<i class="${RPCLS[rpBand(k)]
 // a middle word well on its way to one side (half way or more to the next word) says so, so the seals are seen to move (his playthrough, 2026-11-20)
 const rpLean=k=>{const v=rp()[k];return rpBand(k)!==1||Math.abs(v)<18?'':RPW[k][v>0?2:0]};
 function rpHTML(){if(!ruler()||!G||G.tut>=0)return '';
-  if(!HO.rp)return `<div class="parch card rp"><button class="rfold" data-act="rpo"><span>Repute<small>${rpDots()}${rpWords()}</small></span><span class="chev">›</span></button></div>`;
+  if(!rpOpenNow())return `<div class="parch card rp"><button class="rfold" data-act="rpo"><span>Repute<small>${rpDots()}${rpWords()}${rpNrOpen()?' · a choice waits':''}</small></span><span class="chev">›</span></button></div>`;
   const w=rpWorst(),b=rpBest(),top=rpTop(3);
   return `<div class="parch card bcard rp"><button class="rfold open" data-act="rpo"><span>Repute</span><span class="chev">›</span></button>`
     +`<div class="seals">${RPS.map(k=>{const c=RPCLS[rpBand(k)];return `<figure><small>${RPN[k].toUpperCase()}</small><div class="rseal ${c}">${ic(RPIC[k],24)}</div><b class="w-${c}">${rpWord(k)}</b>${rpLean(k)?`<small class="lean">leaning ${rpLean(k)}</small>`:''}</figure>`}).join('')}</div>`
     +(rpTitle()?`<div class="rtitle">${rpTitleN()}<small>${RPTK[rpTitle()].t}</small></div>`:'')
-    +`<div class="vmar">${maudPic(28,w?'brow':b?'smile':'sigh')}<i>${rpLine()}</i></div>`
+    +`<div class="vmar">${maudPic(28,w?'brow':b?'smile':'sigh')}<i>${rpLine()}</i></div>`+rpNrHTML()
     +(top.length?`<h4 class="mh">Remembered for</h4><ul>${top.map(x=>`<li>${x.t} <em>(${x.y})</em></li>`).join('')}</ul>`:`<div class="sub">Nothing much yet. The valley is still watching.</div>`)
     +(w?rpMend():top.length?`<div class="mend calm">${rpLeanBad()?'Nothing to mend yet. Mind the leaning ones.':'Nothing to mend. Do try not to spoil it.'}</div>`:'')+'</div>'}
 /* ---------- what reads it (part 2) ----------
@@ -10310,7 +10308,7 @@ function rpEnd(){const g=rp(),b=RPS.map(k=>rpBand(k,g)),w=RPS.map(rpWord);
   return `The valley called House ${G.house} ${andW(w)}, which is a mixed sort of name, and the truest kind.`}
 /* ---------- the heir's side (part 3) ----------
    House titles: rpTitle from the last three rulers who reigned a year or more (RPTK, two of three of a kind), never saved; one 5% touch each (rpTouch).
-   What you inherit: evInherit (queued by succeed in 02-people.js, or at sixteen for a child, rpDaily), with rpAmends, rpSwear, rpProud.
+   A new reign: the End of a reign card shows the seals (rpReignNote); the choices (rpAmends, rpSwear, rpProud) wait on the Repute card two years (G.rp.nr, opened by succeed in 02-people.js, or at sixteen for a child, rpDaily).
    The sworn fresh start: G.rp.fs {d, e (the day it is kept), b: the scales that were bad when sworn}; bad fades twice as fast; rpFsBreaks, rpFsNote.
    The league: rpLeagueOk, rpLeague (the warning, rv.lgw on the partner), rpLgJoin (rv.lg on the foe when it declares), rpLgStart (G.pw.lg),
    rpLgCheck (dropped when the ally is not free), rpLgGift, rpLgEnd (the ally signs the peace too), LGWARN. Still no luck in here. */
@@ -10340,13 +10338,21 @@ function rpFsBreaks(k){const f=rpFs(),d=RPK[k];if(!f||!d||k==='ep'||k==='fsb')re
 const rpFsNote=k=>rpFsBreaks(k)?' This breaks your sworn fresh start.':'';
 // an event choice's hint while sworn (renderModal)
 function rpFsChoice(ev,c){try{if(!rpFs())return '';const x=rpChoiceKind(ev,c);return x==='h'?rpFsNote('harsh'):''}catch(e){return ''}}
-/* What you inherit (mock-up 2B): the old ruler and the heir, the seals, the title, Maud's note, three ways to carry the name */
-// queue it from succeed: after the End of a reign card and any claim card (both queued first); only when a word is not the middle one
-function rpInheritQ(old,h){try{if(!G||G.over||G.tut>=0||!old||!h)return;const k=(G.kin||{})[old.id],how=k&&k.how||'died',g=rp();
-  if(age(h)<16){g.ih={id:h.id,oid:old.id,how};return}delete g.ih;if(RPS.every(s=>rpBand(s,g)===1))return;queueEvent(evInherit(h,old.id,how,0))}catch(e){RPERR=RPERR||e}}
-// daily: a child ruler gets the card at sixteen; the league is dropped when the ally is no longer free
-function rpDaily(){try{if(!G||G.over)return;rpLgCheck();const g=G.rp;if(!g||!g.ih)return;const r=ruler();
-  if(!r||r.id!==g.ih.id||G.tut>=0){delete g.ih;return}if(age(r)<16)return;const x=g.ih;delete g.ih;if(RPS.every(s=>rpBand(s,g)===1))return;queueEvent(evInherit(r,x.oid,x.how,1))}catch(e){RPERR=RPERR||e}}
+/* A new reign (was the What you inherit card, folded into the End of a reign card, his call 2026-11-21): the End of a reign card shows the seals and
+   Maud's note (rpReignNote), and the three ways to carry the name wait on the House tab's Repute card for two years (G.rp.nr), with a Hold tab notice. */
+// from succeed only (not a usurping, an exile's return or a lost claim, as before): a child heir's window opens at sixteen
+function rpInheritQ(old,h){try{if(!G||G.over||G.tut>=0||!old||!h)return;const g=rp();delete g.nr;
+  if(age(h)<16){g.ih={id:h.id,oid:old.id};return}delete g.ih;rpWindow(h,old.id,0)}catch(e){RPERR=RPERR||e}}
+// open the window (none when every word is the middle one); HO.rp null lets the card open itself while it waits
+function rpWindow(h,oid,a16){const g=rp();delete g.nr;if(RPS.every(s=>rpBand(s,g)===1))return;g.nr={id:h.id,oid,u:G.day+2*DPY,a16:a16?1:0};if(typeof HO==='object')HO.rp=null}
+// the window, while the ruler it was opened for still sits and two years have not passed
+const rpNrOpen=()=>{const n=G&&G.rp&&G.rp.nr,r=G&&ruler();return n&&typeof n==='object'&&!G.over&&!(G.tut>=0)&&r&&r.id===n.id&&n.u>G.day?n:null};
+// is the Repute card open: the player's fold wins, else open while a choice waits
+const rpOpenNow=()=>HO.rp!=null?!!HO.rp:!!rpNrOpen();
+// daily: a child ruler's window at sixteen (Maud says so); the league is dropped when the ally is no longer free
+function rpDaily(){try{if(!G||G.over)return;rpLgCheck();const g=G.rp;if(g&&g.nr&&!rpNrOpen())delete g.nr;if(!g||!g.ih)return;const r=ruler();
+  if(!r||r.id!==g.ih.id||G.tut>=0){delete g.ih;return}if(age(r)<16)return;const x=g.ih;delete g.ih;rpWindow(r,x.oid,1);
+  if(rpNrOpen())maudNote(`notes that ${r.name} is sixteen, and rules in ${hisW(r)} own right. The house's name comes too: how to carry it waits on the Repute card in the House tab.`)}catch(e){RPERR=RPERR||e}}
 // the house the worst bad deed on a scale wronged, if it still stands
 function rpWronged(s){const g=rp(),b=g.b.filter(x=>x.s===s&&x.v<0&&x.hid!=null).sort((a,b)=>rpLeft(b.v,b.d)-rpLeft(a.v,a.d))[0];return b?rivals().find(x=>x.id===b.hid&&!x.burnt)||null:null}
 const rpAmendCost=()=>20+20*G.rank;
@@ -10365,26 +10371,32 @@ function rpProud(){const g=rp(),tr=new Set();for(const s of RPS){const b=rpBand(
   const f=G.settlers.filter(s=>!isChild(s)&&s.traits.some(t=>tr.has(t)));for(const s of f)addBuff(s,'Proud of the name',4,DPS);g.n.proud=(g.n.proud||0)+1;
   maudNote(`writes that House ${G.house} means to go on as it began. ${f.length?`${f.length===1?'One of the hold cheers':capW(f.length)+' of the hold cheer'}. Everyone else writes it down.`:'Nobody cheers. Everyone writes it down.'}`);
   return f.length?`${andW(f.slice(0,3).map(s=>s.name))}${f.length>3?' and others':''} ${f.length===1?'cheers':'cheer'} loudest. The rest of the hold looks at its boots and makes a note.`:'The hold nods politely, and goes back to work.'}
-// the old ruler's face from the kin book (drawn with X.X eyes when dead), as the End of a reign card draws them
-function rpOldFig(k,dead){const live=byId(k.id);const s=live||{id:k.id,born:k.born,sex:k.sex,lk:k.lk,traits:[],mood:55,ag:Math.max(0,Math.floor(((k.died!=null?k.died:k.gone!=null?k.gone:G.day)-k.born)/DPY)),gone:1,scar:k.scar,eye:k.eye,cv:k.cv,wb:k.wb};
-  return `<figure>${dead?portrait(s,66,1).replace('class="pt"','class="pt dead"')+SKULL:portrait(s,66)}<figcaption>${k.name}${k.ep?`<small class="role">${k.ep}</small>`:''}</figcaption></figure>`}
 const RPMAUD={Faithless:'They will want it in writing from you. Then in stone.',Harsh:'Mothers still use the name to get children to bed.',Warlike:'They keep their spears by the door, and their eyes on yours.',
   Trusted:'They will take your word on a handshake. Try not to spend it all at once.',Gentle:'Beggars still walk an extra day to reach your gate.',Peaceable:'They set out cups when your banner is on the road.'};
 const lc=s=>s.charAt(0).toLowerCase()+s.slice(1);
-function rpInheritTop(ev){const k=(G.kin||{})[ev.oid];if(!k)return '';const h=ruler(),dead=ev.how==='died',g=rp(),top=rpTop(2),w=rpWorst(),b=rpBest(),tn=rpTitleN();
-  const ll=h?`the ${ev.age16?'young':'new'} ${titleOf(h).toLowerCase()}`:'the new ruler';
+// on the End of a reign card, under its story: the seals, the title and Maud's note of what the heir inherits (only when a word is not the middle one).
+// Built from G.rp, the same before and after the seat passes; the heir's name only once renderModal has set ev.heir.
+function rpReignNote(ev){try{if(!G||G.tut>=0)return '';const g=rp();if(RPS.every(s=>rpBand(s,g)===1))return '';const h=ev.heir,top=rpTop(2),w=rpWorst(),b=rpBest(),tn=rpTitleN(),n=rpNrOpen();
+  const ll=h?`the new ${titleOf(h).toLowerCase()}`:'whoever sits next';
   const note=(top.length?`The valley remembers ${andW(top.map(x=>`${!x.b||x.k==='poison'||x.k==='peace5'?lc(x.t):x.k==='ep'?x.t:'how '+(/^A regent /.test(x.t)?lc(x.t):x.t)} (${x.y})`))}. `:'')+(RPMAUD[w?rpWord(w):b?rpWord(b):'']||'');
-  return `<div class="whorow rpass">${rpOldFig(k,dead)}<div class="arr"><b>→</b>${dead?'leaves':'hands'}<br>you</div>${h?`<figure>${portrait(h,66)}<figcaption>${h.name}<small class="role">aged ${age(h)}</small></figcaption></figure>`:''}</div>`
-    +`<div class="rp rpin"><div class="seals">${RPS.map(s=>{const c=RPCLS[rpBand(s,g)];return `<figure><small>${RPN[s].toUpperCase()}</small><div class="rseal ${c}">${ic(RPIC[s],22)}</div><b class="w-${c}">${rpWord(s)}</b></figure>`}).join('')}</div>`
-    +(tn?`<div class="rtitle">${tn}</div>`:'')+`<span class="vlet"><span class="vfrom">${maudPic(30,w?'brow':'smile')}<span><b>Sister Maud</b>, for ${ll}:</span></span>"${note}"</span></div>`}
-function evInherit(h,oid,how,a16){const g=rp(),w=rpWorst(),c=rpAmendCost(),rv=w?rpWronged(w):null,mid=RPW[w||'h'][1];
+  const more=n&&n.oid===ev.oid?'How to carry the name waits on the Repute card, in the House tab.':g.ih&&g.ih.oid===ev.oid&&h?`When ${h.name} is sixteen, how to carry the name will wait on the Repute card.`:'';
+  return `<div class="rp rpin"><div class="seals">${RPS.map(s=>{const c=RPCLS[rpBand(s,g)];return `<figure><small>${RPN[s].toUpperCase()}</small><div class="rseal ${c}">${ic(RPIC[s],22)}</div><b class="w-${c}">${rpWord(s)}</b></figure>`}).join('')}</div>`
+    +(tn?`<div class="rtitle">${tn}</div>`:'')+`<span class="vlet"><span class="vfrom">${maudPic(30,w?'brow':'smile')}<span><b>Sister Maud</b>, for ${ll}:</span></span>"${note}"${more?`<span class="rpmore">${more}</span>`:''}</span></div>`}catch(e){RPERR=RPERR||e;return ''}}
+// the ways to carry the name, while the window is open (the Repute card's buttons; the bots pick from these too)
+function rpNrChoices(){const g=rp(),w=rpWorst(),c=rpAmendCost(),rv=w?rpWronged(w):null,mid=RPW[w||'h'][1];
   const C=[];
-  if(w)C.push({t:'Make amends',d:`${c} gold${rv?` to House ${rv.house}`:', in alms and mended roofs'}. Your ${RPN[w]} steps from ${rpWord(w)} toward ${mid}.`,get dis(){return G.gold<rpAmendCost()},why:`Needs ${c} gold`,rp:0,fn(){return rpAmends()}});
-  if(w)C.push({t:'Swear a fresh start',d:'Free. Keep five clean years and old stains fade twice as fast. Break it, and your Word suffers for it.',rp:0,fn(){return rpSwear()}});
-  C.push({t:'Wear it proudly',d:`Free. Folk who like ${w?'a name like that':'a good name'} cheer for a season. Everyone else writes it down.`,rp:0,fn(){return rpProud()}});
-  if(!w)C.push({t:'Say nothing of it',d:'Free. A good name speaks for itself, mostly.',rp:0,fn(){return 'Maud writes "modest" in the margin, then crosses it out and writes "sly".'}});
-  return {kind:'A new reign',title:'What you inherit',seal:shield(G.house,34),oid,how,age16:a16,top:1,stale:()=>ruler()!==h||!!G.over,
-    text:a16?`${h.name} is sixteen, and rules in ${hisW(h)} own right. The house's name comes too, whether ${heW(h)} wants it or not.`:`The high seat passes, and the house's name passes with it.`,choices:C}}
+  if(w)C.push({t:'Make amends',d:`${c} gold${rv?` to House ${rv.house}`:', in alms and mended roofs'}. Your ${RPN[w]} steps from ${rpWord(w)} toward ${mid}.`,dis:G.gold<c,why:`Needs ${c} gold`,fn(){return rpAmends()}});
+  if(w)C.push({t:'Swear a fresh start',d:'Free. Keep five clean years and old stains fade twice as fast. Break it, and your Word suffers for it.',fn(){return rpSwear()}});
+  C.push({t:'Wear it proudly',d:`Free. Folk who like ${w?'a name like that':'a good name'} cheer for a season. Everyone else writes it down.`,fn(){return rpProud()}});
+  C.push(w?{t:'Let it lie',d:'Free. The valley will make up its own mind, in its own time.',fn(){return 'Maud closes the book on it, for now. The valley goes on talking.'}}
+    :{t:'Say nothing of it',d:'Free. A good name speaks for itself, mostly.',fn(){return 'Maud writes "modest" in the margin, then crosses it out and writes "sly".'}});
+  return C}
+// take one: the window closes; returns the result text ('' if nothing was taken)
+function rpTake(i){try{if(!rpNrOpen())return '';const c=rpNrChoices()[i];if(!c||c.dis)return '';delete rp().nr;return c.fn()||''}catch(e){RPERR=RPERR||e;return ''}}
+// the Repute card's block while the window is open
+function rpNrHTML(){const n=rpNrOpen();if(!n)return '';const r=ruler();
+  return `<div class="rpnr"><h4 class="mh">A new reign</h4><div class="sub">${n.a16?`${r.name} is sixteen now, and the house's name comes too.`:`The high seat has passed to ${r.name}, and the house's name with it.`} How will ${heW(r)} carry it?</div>`
+    +rpNrChoices().map((c,i)=>`<button class="choice" data-act="rpnr" data-i="${i}"${c.dis?' disabled':''}><b>${c.t}</b><span>${c.dis?c.why:c.d}</span></button>`).join('')+'</div>'}
 /* the league: when your Word is Faithless or your Sword Warlike, a second cold house may join a neighbour's war on you, after a warning season.
    Never on Easy, never before year 5 (day 4*DPY, as dwSeason); at most once in 20 years on Normal, 10 on Hard (G.rp.ly). The ally only adds strength (G.pw.lg {id,h,st}). */
 const LGWARN=['House {a} and House {b} have been seen dining together, which never ends well.','House {a} and House {b} have started sending each other cakes. Nobody sends cakes for nothing.','A rider of House {b} was seen at the gate of House {a}, and stayed for supper. Two suppers.'];
@@ -10701,6 +10713,7 @@ function goFix(k){
   if(w==='council')return house('rule',()=>headAt('The council'));
   if(w==='cellar')return house('rule',()=>document.querySelectorAll('#v-house .pris'));
   if(w==='rivals')return house('court',()=>headAt('Neighbours'));
+  if(w==='rp'){HO.rp=1;return house('rule',()=>document.querySelector('#v-house .rp'))}
   if(w==='perks')return openBinfo({perks:1});
   if(w==='build'){setView('build');return}
   if(w==='hall')return house('court',()=>headAt('The Lord\'s Hall'));
@@ -12041,6 +12054,7 @@ function alerts(){
   else if(!G.settlers.some(s=>active(s,'wood'))){const need=Math.ceil(pop*winterWood()*DPS);if(si<3&&G.wood<need)a.push([si===2||G.wood<5?'warn':'info',`Nobody is chopping wood. Winter fires will need about ${need}, and you have ${fmt(G.wood)}.`,'j:wood']);else if(G.wood<5)a.push(['info','Nobody is chopping wood, and building needs it.','j:wood'])}
   {const rl=ruler();if(rl&&G.day>=DPY&&!bloodHeir(rl))a.push(['bad',`${rl.name} has no heir of the blood. If ${rl.sex==='m'?'he':'she'} dies, the house ends.`,!rl.spouse&&matchable().includes(rl)?'match':'heir'])}
   if(!G.settlers.some(s=>active(s,'farm')))a.push(['warn','No one is farming.','j:farm']);
+  {const n=rpNrOpen(),r=ruler();if(n&&r)a.push(['info',`${r.name} may choose how to carry the house's name. Maud has it on the Repute card.`,'rp',1])}// a new reign (09-repute.js)
   if(G.proj&&!G.settlers.some(s=>active(s,'build')))a.push(['warn','A project is waiting, but no one is set to Build.','j:build']);
   if(!G.proj){const bn=G.settlers.filter(s=>active(s,'build')).length,sh=nextShort();
     if(nq().length&&sh)a.push(['warn',`Next up, the ${nextBName(nq()[0])} waits for ${sh}.`,'build']);
@@ -12679,13 +12693,12 @@ function renderModal(){
   if(fresh&&ev.echo&&!ev.res){const ok=ev.echo.endsWith('+');auPlay('scroll');setTimeout(()=>auPlay(ok?'eureka':'doom'),250);w.classList.remove('eureka','bolt');void w.offsetWidth;w.classList.add(ok?'eureka':'bolt');if(!ok)FLASH=1}
   else if(fresh&&ev.pred)auPlay('scroll');
   else if(fresh){auPlay('scroll');const ms={Raid:'horn',Beast:'howl',Monster:'roar',Haunting:'wail',Dragon:'roar',Fire:'crackle',Weather:'rush',Festival:'wedding',Murder:'toll',Revolt:'horn','A new rank':'fanfare','Golden Age':'fanfare','Lord of the Valley':'fanfare','Lady of the Valley':'fanfare'}[ev.kind];if(ms)setTimeout(()=>auPlay(ms),300);if(ev.kind==='Dragon')setTimeout(()=>auPlay('horn'),900)}
-  if(ev.oid!=null&&!ev.top){const h=ruler();ev.heir=h&&h.id!==ev.oid&&!G.over?h:null}
+  if(ev.oid!=null){const h=ruler();ev.heir=h&&h.id!==ev.oid&&!G.over?h:null}
   // a rank-up's ruler already stands in the picture, so their face is left out to keep Continue on a phone screen
   const who=ev.pic&&ev.kind==='A new rank'?[]:(ev.heir?(ev.who||[]).concat(ev.heir):ev.who||[]).slice(0,3);
   let h=`<div class="scroll"><div class="roller"></div><div class="unroll${fresh?' fresh':''}"><div class="sheet parch${ev.war?' war':''}">${ev.pic?`<div class="hpic">${holdPic(ev.pic)}</div>`:''}<div class="shead"><div><div class="kind">${ev.kind}</div><h2>${ev.title}</h2></div>${ev.seal?'<div class="wseal">'+ev.seal+'</div>':`<div class="waxseal">${ic(KINDIC[ev.kind]||'renown',24)}</div>`}</div>`;
-  if(ev.top)h+=rpInheritTop(ev);// What you inherit (09-repute.js): two faces, the seals and Maud's note
-  else if(who.length)h+=`<div class="whorow">${fresh&&!ev.res&&ev.kind==='Courtship'?loveHearts(ev.tempt):''}${who.map((s,wi)=>`<figure${G.settlers.includes(s)&&!(ev.dead&&s===ev.who[0])?` class="tapme mr${s.mood>=75?' hi':s.mood<25&&!isChild(s)?' low':''}" style="--mc:${moodCol(s.mood)}" data-act="whonote" data-id="${s.id}" role="button" tabindex="0"`:''}>${ev.dead&&s===ev.who[0]?portrait(s,66,1).replace('class="pt"','class="pt dead"')+SKULL:portrait(s,66)}<figcaption>${s.name}${ev.roles&&ev.roles[wi]?`<small class="role">${ev.roles[wi]}</small>`:''}</figcaption></figure>`).join('')}</div><div class="whonote" hidden></div>`;
-  if(ev.res)h+=`<p class="out">${ev.res.text}${ev.heir?`<span class="rl"><b>${ev.heir.name} takes the high seat${age(ev.heir)<16?(age(ev.heir)<1?', still in the cradle':' at '+age(ev.heir)):''}.</b></span>`:''}</p>${resChips(ev.res.dl)}<button class="choice go" data-act="cont"><b>${ev.heir?'Continue as '+ev.heir.name:'Continue'}</b></button>${ev.oid!=null?'<button class="cgo ftcard" data-act="tree">See the family tree ›</button>':''}`;
+  if(who.length)h+=`<div class="whorow">${fresh&&!ev.res&&ev.kind==='Courtship'?loveHearts(ev.tempt):''}${who.map((s,wi)=>`<figure${G.settlers.includes(s)&&!(ev.dead&&s===ev.who[0])?` class="tapme mr${s.mood>=75?' hi':s.mood<25&&!isChild(s)?' low':''}" style="--mc:${moodCol(s.mood)}" data-act="whonote" data-id="${s.id}" role="button" tabindex="0"`:''}>${ev.dead&&s===ev.who[0]?portrait(s,66,1).replace('class="pt"','class="pt dead"')+SKULL:portrait(s,66)}<figcaption>${s.name}${ev.roles&&ev.roles[wi]?`<small class="role">${ev.roles[wi]}</small>`:''}</figcaption></figure>`).join('')}</div><div class="whonote" hidden></div>`;
+  if(ev.res)h+=`<p class="out">${ev.res.text}${ev.heir?`<span class="rl"><b>${ev.heir.name} takes the high seat${age(ev.heir)<16?(age(ev.heir)<1?', still in the cradle':' at '+age(ev.heir)):''}.</b></span>`:''}</p>${resChips(ev.res.dl)}${ev.kind==='End of a reign'?rpReignNote(ev):''}<button class="choice go" data-act="cont"><b>${ev.heir?'Continue as '+ev.heir.name:'Continue'}</b></button>${ev.oid!=null?'<button class="cgo ftcard" data-act="tree">See the family tree ›</button>':''}`;
   else{h+=`<p class="ev-text">${ev.text}</p>${ev.post||''}`;ev.choices.forEach((c,i)=>{h+=`<button class="choice" data-act="choice" data-i="${i}" ${c.dis?'disabled':''}><b>${c.t}</b><span>${c.dis&&c.why?c.why:(c.d||'')+rpFsChoice(ev,c)}</span></button>`})}
   w.innerHTML=h+'</div><div class="morecue" aria-hidden="true">More below &#9662;</div></div><div class="roller"></div></div>';renderTip();moreCue(fresh);
 }
@@ -12698,14 +12711,18 @@ function moreCue(fresh){const w=$('#modal'),sh=w.querySelector('.sheet'),u=w.que
 // holdSnap() notes what stood at a moment; G.snaps keeps one from the founding (f0) and each rank-up, so old pictures show the hold as it was then.
 // r rank, d day, h hall (0 lord's house, 1 great hall, 2 keep, 3 palace), c cottages and cl their level, w wall level (-1 none), t tower (level+1),
 // ch chapel 1 or cathedral 2, m windmill, fl fields, col/e banner colour and emblem, g golden (a big sun), f folk before the hall:
-// [skin, hair, cloak, flags] with flags 1 woman, 2 beard, 4 child, 8 the ruler, 16 waves. Always daytime, season from the day.
+// [skin, hair, cloak, flags] with flags 1 woman, 2 beard, 4 child, 8 the ruler, 16 waves, and the ruler's look (rulerBits). Always daytime, season from the day.
+// the ruler's look for the hold pictures, by portrait's and garb's own rules (his pick D, 2026-11-21): 16384 matched, 32 long beard, 64 bald, 128 curls,
+// 256 long hair, 512 braids, 1024 moustache, then what a ruler wears by rank: 2048 a white collar (Village), 4096 a gold chain (Barony), 8192 a cloak (Earldom)
+function rulerBits(s,a,rank){const f=s.sex==='f',ch=a<14,v=((s.id|0)*2654435761+(s.born|0)*40503)>>>0,vb=k=>(v>>>k)&15,fs=vb(3)%3===2?0:vb(3)%3,bald=!f&&!ch&&a>=58&&vb(7)%2,bd=!f&&!ch&&beardOf(s);
+  return 16384|(f&&fs===0?256:0)|(f&&fs===1?512:0)|(bald?64:0)|(!f&&!bald&&vb(11)%3===0?128:0)|(bd&&longBeard(s,a)?32:0)|(!f&&!ch&&!bd&&vb(21)%4===0?1024:0)|(a>=2&&rank>=1?2048:0)|(a>=2&&rank>=2?4096:0)|(a>=2&&rank>=3?8192:0)}
 function snapFolk(){
   const rl=ruler(),out=rl?[rl]:[],sp=rl&&byId(rl.spouse);
   for(const s of [sp,rl&&heirOf(rl)])if(s&&!out.includes(s)&&!away(s))out.push(s);
   const rest=G.settlers.filter(s=>!out.includes(s)&&!away(s)&&age(s)>=2).sort((a,b)=>((a.id*2654435761+G.day)>>>0)%101-((b.id*2654435761+G.day)>>>0)%101);
   while(out.length<5&&rest.length)out.push(rest.shift());
   return out.map((s,i)=>{const a=age(s),ch=isChild(s),hr=a>=42?mixHex(hairOf(s),'#d2cfc6',clamp((a-42)/18,0,1)):hairOf(s);
-    return [skinOf(s),hr,s.ruler?houseCol():ch?'#8a6a36':(CLOAK[s.job]||'#7a6a52'),(s.sex==='f'?1:0)|(s.sex!=='f'&&!ch&&beardOf(s)?2:0)|(ch?4:0)|(s.ruler?8:0)|(i===2||i===4?16:0)]});
+    return [skinOf(s),hr,s.ruler?houseCol():ch?'#8a6a36':(CLOAK[s.job]||'#7a6a52'),(s.sex==='f'?1:0)|(s.sex!=='f'&&!ch&&beardOf(s)?2:0)|(ch?4:0)|(s.ruler?8|rulerBits(s,a,G.rank|0):0)|(i===2||i===4?16:0)]});
 }
 function holdSnap(){
   const b=G.built,l=k=>(G.lv&&G.lv[k])|0;
@@ -12836,18 +12853,30 @@ function holdPic(p){
   // cottages in front, nearest the hall first, alternating sides: thatch, a stone ground floor, then a timber upper storey
   const lit=[];{const o=hpCot(p,S,wi,snow);g+=o.g;lit.push(...o.lit)}
   if(wi)g+=`<path d="M0 96 Q75 92 150 95 T300 94 V120 H0Z" fill="${snow}" opacity=".55"/>`;
-  // folk: the ruler at the hall door, the rest on the path before it
+  // folk: the ruler at the hall door, the rest on the path before it. A ruler with the matched flag (16384, rulerBits) is drawn a third bigger
+  // and a step forward, with the portrait's hair, beard, brows and what a ruler wears by rank (his pick D, 2026-11-21); old snaps draw as before
   const pos=[[150,102],[128,113],[172,113],[110,117],[190,117]];
-  (p.f||[]).slice(0,5).forEach(([sk,hr,cl,fl],i)=>{const [x,y]=pos[i],ch=fl&4,k=ch?.95:1.3,w=fl&1,hy=-14.5;
+  (p.f||[]).slice(0,5).forEach(([sk,hr,cl,fl],i)=>{const M=(fl&16384)&&(fl&8),[x,y0]=pos[i],y=M?y0+4:y0,ch=fl&4,k=M?(ch?1.25:1.7):ch?.95:1.3,w=fl&1,hy=-14.5;
     let s=`<g transform="translate(${x} ${y}) scale(${k})"><ellipse cx="0" cy="0" rx="5" ry="1.3" fill="rgba(0,0,0,.18)"/>`;
-    if(w)s+=`<path d="M-3.6 ${hy} Q-4.3 -7.5 -2.4 -8.5 H2.4 Q4.3 -7.5 3.6 ${hy}Z" fill="${hr}"/>`;
-    s+=`<path d="M-4.3 0 L-3.4 -9.5 Q0 -11.8 3.4 -9.5 L4.3 0Z" fill="${cl}"/>`+(w?`<path d="M-4.6 0 L-3.7 -5 H3.7 L4.6 0Z" fill="${mixHex(cl,'#000000',.25)}"/>`:'');
+    if(M&&(fl&256))s+=`<path d="M-4.2 ${hy} Q-6 -6 -5 -4.6 H5 Q6 -6 4.2 ${hy}Z" fill="${hr}"/>`;
+    else if(w&&!(M&&(fl&512)))s+=`<path d="M-3.6 ${hy} Q-4.3 -7.5 -2.4 -8.5 H2.4 Q4.3 -7.5 3.6 ${hy}Z" fill="${hr}"/>`;
+    if(M&&(fl&8192))s+=`<path d="M-4.6 0 L-3.6 -9.6 Q0 -12 3.6 -9.6 L4.6 0Z" fill="${cl}"/><path d="M-1.8 0 L-1.4 -9.4 Q0 -10.2 1.4 -9.4 L1.8 0Z" fill="${mixHex(cl,'#efe6d2',.3)}"/>`;
+    else s+=`<path d="M-4.3 0 L-3.4 -9.5 Q0 -11.8 3.4 -9.5 L4.3 0Z" fill="${cl}"/>`+(w?`<path d="M-4.6 0 L-3.7 -5 H3.7 L4.6 0Z" fill="${mixHex(cl,'#000000',.25)}"/>`:'');
+    if(M&&(fl&2048))s+=`<path d="M-2.8 -10.3 Q0 -8.2 2.8 -10.3 L2.2 -11.2 Q0 -10 -2.2 -11.2Z" fill="#f2ece0"/>`;
+    if(M&&(fl&4096))s+=`<path d="M-1.8 -9.8 Q0 -7.4 1.8 -9.8" stroke="#e0b954" stroke-width=".55" fill="none"/><circle cx="0" cy="-7.9" r=".6" fill="#e0b954"/>`;
+    if(M&&(fl&512))s+=[-4.1,2.9].map(bx=>`<rect x="${bx}" y="${hy+.5}" width="1.2" height="7" rx=".6" fill="${hr}"/>`).join('');
     if(fl&16)s+=`<path d="M3 -8.8 L6.4 -14.6" stroke="${cl}" stroke-width="2" stroke-linecap="round"/><circle cx="6.8" cy="-15.4" r="1.2" fill="${sk}"/>`;
-    s+=`<circle cx="0" cy="${hy}" r="3.4" fill="${sk}"/><path d="M-3.6 ${hy+.3} Q-3.6 ${hy-4.4} 0 ${hy-4.2} Q3.6 ${hy-4.4} 3.6 ${hy+.3} Q1.8 ${hy-2.4} -3.6 ${hy+.3}Z" fill="${hr}"/>`;
-    // a beard: sideburns down to the jaw, flat under the nose (a curved top edge read as a big grin), a rounded chin
-    if(fl&2)s+=`<path d="M-3.5 ${hy+.6} L-3.3 ${hy+2.8} Q-2 ${hy+6.6} 0 ${hy+6.8} Q2 ${hy+6.6} 3.3 ${hy+2.8} L3.5 ${hy+.6} L2.2 ${hy+2.5} H-2.2 Z" fill="${hr}"/>`;
+    s+=`<circle cx="0" cy="${hy}" r="3.4" fill="${sk}"/>`;
+    if(M&&(fl&64))s+=`<path d="M-3.6 ${hy+.4} q0 -2.4 1 -3 v3z M3.6 ${hy+.4} q0 -2.4 -1 -3 v3z" fill="${hr}"/>`;
+    else{s+=`<path d="M-3.6 ${hy+.3} Q-3.6 ${hy-4.4} 0 ${hy-4.2} Q3.6 ${hy-4.4} 3.6 ${hy+.3} Q1.8 ${hy-2.4} -3.6 ${hy+.3}Z" fill="${hr}"/>`;
+      if(M&&(fl&128))s+=[-2.4,-1.2,0,1.2,2.4].map(c=>`<circle cx="${c}" cy="${(hy-3.3+Math.abs(c)*.35).toFixed(2)}" r=".95" fill="${hr}"/>`).join('')}
+    // a beard: sideburns down to the jaw, flat under the nose (a curved top edge read as a big grin), a rounded chin; a long one (60 and over) to the chest
+    if(M&&(fl&32))s+=`<path d="M-3.5 ${hy+.6} L-3.3 ${hy+2.8} Q-2 ${hy+10} 0 ${hy+11} Q2 ${hy+10} 3.3 ${hy+2.8} L3.5 ${hy+.6} L2.2 ${hy+2.5} H-2.2 Z" fill="${hr}"/>`;
+    else if(fl&2)s+=`<path d="M-3.5 ${hy+.6} L-3.3 ${hy+2.8} Q-2 ${hy+6.6} 0 ${hy+6.8} Q2 ${hy+6.6} 3.3 ${hy+2.8} L3.5 ${hy+.6} L2.2 ${hy+2.5} H-2.2 Z" fill="${hr}"/>`;
+    else if(M&&(fl&1024))s+=`<path d="M-2.2 ${hy+2.4} q1.1 -.9 2.2 -.3 q1.1 -.6 2.2 .3 q-1.1 .4 -2.2 0 q-1.1 .4 -2.2 0z" fill="${hr}"/>`;
+    if(M)s+=`<path d="M-2 ${hy-1.1} h1.5M.5 ${hy-1.1} h1.5" stroke="${mixHex(hr,'#2a1b10',.45)}" stroke-width=".5" stroke-linecap="round"/>`;
     s+=`<circle cx="-1.2" cy="${hy}" r=".5" fill="#2a1b10"/><circle cx="1.2" cy="${hy}" r=".5" fill="#2a1b10"/>`;
-    if(fl&8)s+=`<path d="M-3 ${hy-3.2} l.6 -3 l1.6 1.5 l.8 -2.4 l.8 2.4 l1.6 -1.5 l.6 3z" fill="#e0b954" stroke="#8a6a1e" stroke-width=".4"/>`;
+    if(fl&8)s+=M?`<path d="M-3.3 ${hy-3.2} l.7 -3.4 l1.7 1.6 l.9 -2.7 l.9 2.7 l1.7 -1.6 l.7 3.4z" fill="#e0b954" stroke="#8a6a1e" stroke-width=".4"/>`:`<path d="M-3 ${hy-3.2} l.6 -3 l1.6 1.5 l.8 -2.4 l.8 2.4 l1.6 -1.5 l.6 3z" fill="#e0b954" stroke="#8a6a1e" stroke-width=".4"/>`;
     g+=s+'</g>'});
   // dusk (the title page): the light fades, cottage windows glow and their chimneys smoke (CSS .hpsmk)
   if(p.dk){g+=`<defs><linearGradient id="${id}d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1440" stop-opacity="0"/><stop offset=".55" stop-color="#2a1a48" stop-opacity=".22"/><stop offset="1" stop-color="#1a1030" stop-opacity=".5"/></linearGradient></defs><rect width="300" height="120" fill="url(#${id}d)"/>`;
@@ -12990,7 +13019,7 @@ function startSave(){if(SSV!==undefined)return SSV;SSV=null;try{const g=JSON.par
 function stPicP(g){
   if(!g){const s=stSig();return {r:0,d:0,h:1,c:4,cl:0,w:0,t:0,ch:1,m:1,fl:2,col:SIGC[s.c].c,e:s.e,dk:1}}
   const b=g.built||{},l=k=>(g.lv&&g.lv[k])|0,s=sigOf(g.sig||g.house),r=g.settlers.find(x=>x.id===g.rulerId)||g.settlers.find(x=>x.ruler);
-  const c=r&&{id:r.id,lk:r.lk},a=r?Math.floor(((g.day|0)-(r.born|0))/DPY):0,f=r?[[skinOf(c),a>=42?mixHex(hairOf(c),'#d2cfc6',clamp((a-42)/18,0,1)):hairOf(c),SIGC[s.c%SIGC.length].c,(r.sex==='f'?1:0)|(r.sex!=='f'&&beardOf(c)?2:0)|(a<14?4:0)|8]]:[];
+  const c=r&&{id:r.id,lk:r.lk},a=r?Math.floor(((g.day|0)-(r.born|0))/DPY):0,f=r?[[skinOf(c),a>=42?mixHex(hairOf(c),'#d2cfc6',clamp((a-42)/18,0,1)):hairOf(c),SIGC[s.c%SIGC.length].c,(r.sex==='f'?1:0)|(r.sex!=='f'&&beardOf(c)?2:0)|(a<14?4:0)|8|rulerBits({id:r.id,lk:r.lk,sex:r.sex,born:r.born},a,g.rank|0)]]:[];
   return {f,r:g.rank|0,d:g.day|0,h:b.palace?3:b.keep?2:b.hall?1:0,c:b.hut|0,cl:l('hut'),w:b.palisade?l('palisade'):-1,t:b.tower?1+l('tower'):0,ch:b.cathedral?2:b.chapel?1:0,m:b.mill?1:0,fl:b.field|0,col:SIGC[s.c%SIGC.length].c,e:s.e,dk:1,st:hstyPermFor(g.seed)[0]};
 }
 function renderStartPic(){const el=$('#startPic');if(el)el.innerHTML='<div class="stsky">'+holdPic(stPicP(startSave())).replace('<svg class="hp"','<svg class="hp" preserveAspectRatio="xMidYMax slice"')+'</div><i class="vn vtl"></i><i class="vn vtr"></i><i class="vn vbl"></i><i class="vn vbr"></i>'}
@@ -13163,7 +13192,8 @@ document.addEventListener('click',e=>{
   else if(a==='secret'){if(G&&!G.modal&&!G.over){auPlay('tap');const ev=evSecret(+t.dataset.j);if(ev)queueEvent(ev)}}
   else if(a==='nbpic'||a==='rvo'){auPlay('tap');openNb(+t.dataset.i)}
   else if(a==='leso'){auPlay('tap');HO.les=1;renderHouse()}
-  else if(a==='rpo'){auPlay('tap');HO.rp=!HO.rp;renderHouse()}
+  else if(a==='rpo'){auPlay('tap');HO.rp=!rpOpenNow();renderHouse()}
+  else if(a==='rpnr'){auPlay('tap');const r=rpTake(+t.dataset.i);if(r)log(r,'story',true);renderHouse();renderHold()}// a new reign's choice on the Repute card (09-repute.js)
   else if(a==='res'){auPlay('tap');openSheet(t.dataset.k)}
   else if(a==='jail')jail(+t.dataset.i,t.dataset.m);
   else if(a==='rival'){rivalAct(+t.dataset.i,t.dataset.m,t.dataset.v);if(BI&&BI.nb!=null)$('#binfo').innerHTML=binfoHTML()}
