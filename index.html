@@ -978,6 +978,13 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 .cstop p{margin:0;font-size:14.5px;line-height:1.3}.cstop p small{color:var(--ink2)}.cstop .cwent{font-size:13.5px;color:var(--ink2)}
 .cfell{display:flex;align-items:center;gap:5px;font-size:14px;color:#6e1e12}.cskull{width:16px;height:16px;flex:none}
 .crelic{justify-self:start;display:inline-flex;align-items:center;gap:4px;padding:1px 8px;border-radius:10px;background:rgba(224,185,84,.28);font-size:13.5px;color:#6a4a10}
+/* the template's seal beside the title, and a building page's picture (bldScene): the building big on a strip of sky and grass */
+.illum .bhead{display:flex;align-items:center;justify-content:space-between;gap:10px}.iseal{flex:none;display:flex}
+.ihead>img,.ihead .bscn{display:block;width:100%}
+.bscn{display:block;border-radius:2px;background:linear-gradient(180deg,#9fd0ec,#e2f1f6 62%,#9bbf6a 62%,#7fa552)}
+.bscn.s2{background:linear-gradient(180deg,#b9cfe0,#f1e3c0 62%,#b8a35a 62%,#9a8640)}.bscn.s3{background:linear-gradient(180deg,#b8c6d2,#eef2f4 62%,#e8eef2 62%,#cdd8de)}
+.bscn img{display:block;width:100%;height:auto}
+.ihead>svg.hp,.ihead>svg{display:block;width:100%;height:auto}
 </style>
 
 <div id="app">
@@ -4984,7 +4991,9 @@ function route(from,to,tr,sg){
   if(pal&&fi!==ti){
     const D=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]),gs=[[GATE_IN(),GATE_OUT()]].concat(sg?roads().gates.map(g=>[sPt(g.ix,g.iy),sPt(g.ox,g.oy)]):[]);
     // the nearest way through, a way through the river counting seven times its length
-    const C=g=>D(fr,g[0])+D(g[1],to)+6*(wetLen(fr,g[0])+wetLen(g[1],to)),g=gs.map(g=>fi?g:[g[1],g[0]]).map(g=>[g,C(g)]).sort((a,b)=>a[1]-b[1])[0][0];
+    // (the wet part counts the whole walk on each side, round the wall too: the straight line alone chose a far gate whose walk round the wall's river side waded, 2026-11-20)
+    const pw=(a,ps,b)=>{let w=0,p=a;for(const q of ps.concat([b])){w+=wetLen(p,q);p=q}return w};
+    const C=g=>D(fr,g[0])+D(g[1],to)+6*(pw(fr,walk(fr,g[0],fi),g[0])+pw(g[1],walk(g[1],to,ti),to)),g=gs.map(g=>fi?g:[g[1],g[0]]).map(g=>[g,C(g)]).sort((a,b)=>a[1]-b[1])[0][0];
     return pts.concat(walk(fr,g[0],fi),[g[0],g[1]],walk(g[1],to,ti),[to]);
   }
   return pts.concat(walk(fr,to,fi),[to]);
@@ -8371,10 +8380,10 @@ const ovTrb=()=>Math.round((10+G.settlers.length*.6+G.rank*5)*((G.ovh||0)>G.day?
 const rvWild=i=>{const rv=(G.rivals||[])[i];return !!rv&&!rv.burnt&&!rv.held&&rv.ov==null&&rv.nov==null&&!rv.nhb};
 const rvFree=i=>rvWild(i)&&G.ov!==i;
 function loyDrift(rv){const q=fightPower()/Math.max(1,rivalStr(rv));
-  return {t:rv.trb==='l'?1.5:rv.trb==='h'?-3:-.5,s:q>=1.5?2:q>=1.15?1:q>=.9?-1:-3,n:{pious:1,greedy:-.5,sly:-1,proud:-1.5,warlike:-1.5}[rv.trait]||0,a:rv.att>=20?1:rv.att<=-20?-1:0,r:rpLoy('v'),q}}
+  return {t:rv.trb==='l'?1.5:rv.trb==='h'?-3:-.5,s:q>=1.5?2:q>=1.15?1:q>=.9?-1:-3,n:{pious:1,greedy:-.5,sly:-1,proud:-1.5,warlike:-1.5}[rv.trait]||0,a:rv.att>=20?1:rv.att<=-60?-2.5:rv.att<=-20?-1:0,r:rpLoy('v'),q}}
 // the line under the loyalty bar, said plainly
 function loyWhy(rv){const d=loyDrift(rv),w=loyWord(rv.loy||0);
-  return `${TRBN[rv.trb||'f']} tribute, and ${d.q>=1.5?'you are much stronger':d.q>=1.15?'you are stronger':d.q>=.9?'you are about as strong as they are':'they are stronger than you, which they have noticed'}. ${{Loyal:'They mean every bow.',Content:'They grumble, but quietly.',Restless:'They grumble, and not quietly.',Defiant:'They are counting spears.'}[w]}${rpLoyWhy()}${wardOf(rv)?' Their heir is in your hall, so they will not rise.':''}`}
+  return `${TRBN[rv.trb||'f']} tribute, and ${d.q>=1.5?'you are much stronger':d.q>=1.15?'you are stronger':d.q>=.9?'you are about as strong as they are':'they are stronger than you, which they have noticed'}. ${{Loyal:'They mean every bow.',Content:'They grumble, but quietly.',Restless:'They grumble, and not quietly.',Defiant:'They are counting spears.'}[w]}${rv.att<=-60?' They have not forgiven you, and it eats at them.':''}${rpLoyWhy()}${wardOf(rv)?' Their heir is in your hall, so they will not rise.':''}`}
 function cqSeason(){if(!G||G.over)return;const rs=rivals();
   if(G.ov!=null&&!pwOn(G.ov)){const ov=rs[G.ov];if(ov&&(ov.nov!=null||ov.nhb)){log(`House ${ov.house} has a master of its own now, and forgets to send for your tribute. House ${G.house} is its own again.`,"good",true);ovFree()}}// your overlord knelt to a neighbour or lost its seat: you go free
   if(doy()===0&&G.day>0)cqYear();
@@ -12842,11 +12851,9 @@ function nbBondHTML(i){const rv=rivals()[i];let h='';
 function callWhy(i){const w=G.pw,rv=rivals()[i];if(!w)return 'In a war of yours';if(pwOn(i))return 'They are the war';if((w.vq||[]).includes(rv.id))return (w.va||[]).includes(rv.id)?'With your host':'They sent regrets';return ''}
 // a burned seat's page: the ashes, and when newcomers might come
 function ashPageHTML(i){const rv=rivals()[i],p=nbSnap(i),ch=vChr(rv),left=Math.max(0,(rv.nwd||G.day)-G.day),ss=Math.max(1,Math.round(left/DPS));
-  return `<div class="scroll"><div class="sheet parch nbpage"><div class="shead"><div><div class="kind">Ashes</div><h2>House ${rv.house}</h2></div>${shield(rv.house,34)}</div><div class="hpic nbbig">${holdPic(p)}</div>`
-   +`<p>House ${rv.bbh||G.house} burned this seat in ${yearOf(rv.burnt)}. Nobody lives there now but crows and one very stubborn goat.</p>`
+  return illumPage({kind:'Ashes',title:`House ${rv.house}`,seal:shield(rv.house,34),cls:'nbpage',pic:holdPic(p),body:illumHs(`<p>House ${rv.bbh||G.house} burned this seat in ${yearOf(rv.burnt)}. Nobody lives there now but crows and one very stubborn goat.</p>`
    +`<p>${left>0?`Newcomers are expected in about ${ss} season${ss===1?'':'s'}, once the ground has cooled and somebody has asked the goat.`:'Newcomers are on their way, with carts.'}</p>`
-   +`<h3>Their chronicler</h3><span class="vlet"><span class="vfrom">${chrPic(ch.k,40,CHMOOD[ch.k][ch.k==='os'?0:1])}<span>${ch.n} waits by the ashes, with a dry quill, for whoever comes next. Maud sends a blanket.</span></span></span>`
-   +'<button class="btn wax" data-act="biclose">Close</button></div></div>'}
+   +`<h3>Their chronicler</h3><span class="vlet"><span class="vfrom">${chrPic(ch.k,40,CHMOOD[ch.k][ch.k==='os'?0:1])}<span>${ch.n} waits by the ashes, with a dry quill, for whoever comes next. Maud sends a blanket.</span></span></span>`)})}
 function nbPageHTML(i){if(rivals()[i].burnt)return ashPageHTML(i);const rv=rivals()[i],p=nbSnap(i),L=nbLook(i),S=HSTY[p.st],w=p.gw.map(t=>BUILD[t].n),kn=knows(rv),end=G.over,ch=vChr(rv);
   const what=`${RANKS[p.r].n==='Earldom'?'An':'A'} ${RANKS[p.r].n.toLowerCase()} ${NBLD[L.ld]}, about ${vFolk(rv)} souls, ${L.dk?'at dusk and ':''}${NBSEA[L.si]}, as ever. They build in ${S.n.toLowerCase()}, with ${S.tn}.`;
   const H=vHeir(rv),hp=portrait({id:0,lk:H.lk,sex:H.sex,born:G.day-H.age*DPY,mood:50,col:houseCol(rv.house),sick:0},38);
@@ -12856,7 +12863,8 @@ function nbPageHTML(i){if(rivals()[i].burnt)return ashPageHTML(i);const rv=rival
   const vr=G.vr||{},pp=vr.k&&vr.p&&vr.p[vr.k],L0=VLISTS.find(x=>x.k===vr.k);
   const K=vrK(rv),roll=pp&&L0&&pp[K]!=null?`${L0.n}, ${Y0+vr.n*5}: <b>${VPL[pp[K]]}</b>.${pp.me!=null?` You were ${VPL[pp.me]}.`:''}`:'No roll yet. The first comes in year 5, with a great deal of ink.';
   const v=rv.vl,let1=v?`<span class="vlet"><span class="vfrom">${chrPic(ch.k,40,v.mood)}<span>${v.mar?`<b>${ch.n}</b>, their chronicler, wrote in ${yearOf(v.d)}:`:`Their chronicler's latest news, ${yearOf(v.d)}:`}</span></span>${v.mar?`"${v.t}"<span class="vmar">${maudPic(26,v.mm||'sigh')}<i>${v.mar}</i></span>`:v.t}</span>`:`<span class="vlet"><span class="vfrom">${chrPic(ch.k,40)}<span>${NBCI[ch.k]}</span></span></span>`;
-  let h=`<div class="scroll"><div class="sheet parch nbpage"><div class="shead"><div><div class="kind">${rv.held?'Held by you':rv.ov==='p'?'Your vassal':G.ov===i?'Your overlord':nbOv(rv)?'Vassal of House '+nbOv(rv).house:nbHd(rv)?'Held by House '+nbHd(rv).house:'Neighbour'}</div><h2>House ${rv.house}</h2></div>${shield(rv.house,34)}</div><div class="hpic nbbig">${holdPic(p)}</div><div class="sub">${what}${w.length?` Great Works: ${w.join(', ')}.`:''}${atWar(i)?' Smoke on the skyline: they are at war.':''}</div>`
+  const nbk=rv.held?'Held by you':rv.ov==='p'?'Your vassal':G.ov===i?'Your overlord':nbOv(rv)?'Vassal of House '+nbOv(rv).house:nbHd(rv)?'Held by House '+nbHd(rv).house:'Neighbour';
+  let h=`<div class="sub">${what}${w.length?` Great Works: ${w.join(', ')}.`:''}${atWar(i)?' Smoke on the skyline: they are at war.':''}</div>`
    +`<div class="prow">${rportrait(rv,54)}<div><b>${lordOf(rv)}</b>, ${rage(rv)}<small>${rv.held?(RPTD[rv.pt]?RPTD[rv.pt]+'.':''):`${RTRAIT[rv.trait].n}, ${RTRAIT[rv.trait].d}.${RPTD[rv.pt]?` ${RPTD[rv.pt]}.`:''}`}${rv.held?` Your ${rv.held.b===false?'steward':rv.sex==='m'?'kinsman':'kinswoman'}, ruling it for House ${G.house} since ${yearOf(rv.held.d)}.`:''}</small></div></div>${heir}`+nbBondHTML(i)
    +(rv.held||rv.ov==='p'?'':`<h3>How they feel</h3><p><b class="${attCls(rv.att)}">${attWord(rv.att)}</b>. ${ATTL[attWord(rv.att)]}${pwOn(i)?' They are at war with you.':rv.dww?' They are spoiling for war with you: a gift might cool them, and more guards or higher walls might make them think again.':''}${foeOf(i)>=0?` They are at war with House ${rivals()[foeOf(i)].house}.`:''}</p><p class="fs">${rpMind(rv)}</p>`)
    +`<h3>Between your houses</h3>${rows?`<div class="kv">${rows}</div>`:'<p>Nothing yet. Early days.</p>'}${pl.length?`<div class="sub">Before: ${pl.join(', ')}.</div>`:''}`
@@ -12870,7 +12878,7 @@ function nbPageHTML(i){if(rivals()[i].burnt)return ashPageHTML(i);const rv=rival
      +(rv.held?'':`<button class="btn" data-act="rival" data-i="${i}" data-m="spy" ${md||G.spy||!s||ag?'disabled':''}><span class="t">Spy<small>${sp}</small></span></button>`)
      +(rvFree(i)?`<button class="btn" data-act="rival" data-i="${i}" data-m="demand" ${md||dl?'disabled':''}><span class="t">Tribute<small>${dl?`In ${nDays(dl)}`:kn?`About ${Math.round(demandOdds(rv)*100)}%`:'Risky'}</small></span></button>`:'')+'</div>'}
   if(!end)h+=agPageHTML(i)+pwPageHTML(i);
-  return h+'<button class="btn wax" data-act="biclose">Close</button></div></div>'}
+  return illumPage({kind:nbk,title:`House ${rv.house}`,seal:shield(rv.house,34),cls:'nbpage',pic:holdPic(p),body:illumHs(h)})}
 // your own war on a house's page: how it stands while it lasts, else Declare war (from year 3) with its cost shown before you tap
 function pwPageHTML(i){const rv=rivals()[i];if(G.day<PWYR)return '';
   if(pwOn(i))return '<h3>Your war</h3>'+pwCardHTML();
@@ -13277,10 +13285,14 @@ function relicHTML(){const n=G.relics||0;
    Every new pop-up page is built with illumPage, so it wears the game's look without thinking about it: the book-of-hours border with
    vines (.sheet.illum), the title opening with the illuminated drop letter on the gold divider, a painted picture in the map's frame
    with vine corners (pic: an svg), sections headed with red gems (illumH), and Maud's word at the foot (maud: [face, text]).
-   o = {kind: small line above the title, title, pic, body (html), maud, noClose}. Cards inside stay plain. Rules: docs/screens.md. */
+   o = {kind: small line above the title, title, seal (a wax seal or shield beside the title), cls (extra sheet class), pic, body (html), maud, noClose}. Cards inside stay plain. Rules: docs/screens.md. */
 const VNS='<i class="vn vtl"></i><i class="vn vtr"></i><i class="vn vbl"></i><i class="vn vbr"></i>';
+// headings written the old way (h3) turned into the template's red-gem headings
+const illumHs=x=>x.replace(/<h3 class="sh">/g,'<h2 class="hh">').replace(/<h3>/g,'<h2 class="hh">').replace(/<\/h3>/g,'</h2>');
+// a building's picture for its page: the building as on the Build tab, big, on a strip of sky and grass in the season
+const bldScene=(t,L)=>{const u=bPic(t,L,340,130);return u?`<span class="bscn s${seasonIdx()}"><img src="${u}" alt=""></span>`:''};
 const illumH=t=>`<h2 class="hh">${t}</h2>`;
-function illumPage(o){return `<div class="scroll illumf"><div class="sheet parch illum">${o.kind?`<div class="kind">${o.kind}</div>`:''}<div class="bhead"><h3>${o.title}</h3></div>`
+function illumPage(o){return `<div class="scroll illumf"><div class="sheet parch illum${o.cls?' '+o.cls:''}">${o.kind?`<div class="kind">${o.kind}</div>`:''}<div class="bhead"><h3>${o.title}</h3>${o.seal?`<span class="iseal">${o.seal}</span>`:''}</div>`
   +(o.pic?`<div class="bookb ihead">${o.pic}${VNS}</div>`:'')+(o.body||'')+(o.maud?`<div class="vend">${maudPic(32,o.maud[0])}<i>${o.maud[1]}</i></div>`:'')
   +(o.noClose?'':'<button class="btn wax" data-act="biclose">Close</button>')+'</div></div>'}
 function binfoHTML(){
@@ -13296,7 +13308,7 @@ function binfoHTML(){
   // a named Great Work shows its name, with what it is underneath
   {const gk=t==='chapel'&&G.built.cathedral?'cathedral':t==='hall'&&G.built.palace?'palace':t;if(GREAT.includes(gk)&&G.gwn&&G.gwn[gk]){n=gwCap(gk);fx=BUILD[gk].n+'. '+BUILD[gk].fx}}
   const lt=UPG[t]&&G.built[t]?ULV[lv(t)]:'';
-  let h=`<div class="scroll"><div class="sheet parch" style="gap:12px"><div class="shead"><div><div class="kind">${site?'Being built':lt?lt+' building':'Building'}</div><h2>${n}</h2></div><div class="waxseal">${ic(ICONS[t]?t:'hall',24)}</div></div><div class="sub">${fx}</div>`;
+  let h=`<div class="sub">${fx}</div>`;
   if(site){const f=Math.min(100,Math.round(p.done/p.need*100));h+=`<div class="bar"><i style="width:${f}%"></i></div><div class="sub">${f}% done.</div>`}
   else if(p&&p.up&&p.type===t){const f=Math.min(100,Math.round(p.done/p.need*100));h+=`<div class="sub">Upgrading: ${f}% done.</div><div class="bar"><i style="width:${f}%"></i></div>`}
   else if(UPG[t]&&G.built[t])h+=upgHTML(t);
@@ -13305,8 +13317,8 @@ function binfoHTML(){
   else if(!site)h+=`<div class="sub">Nobody needs to work here. It serves the whole hold.</div>`;
   if(r)h+=`<h3 class="sh">Lives here</h3>`+(r.length?pchips(r):'<div class="sub">Empty for now.</div>');
   if(t==='chapel'&&!site&&G.built.chapel)h+=relicHTML();
-  {const ac=ACTBLD[t];if(ac&&!site&&(G.built[t]||t==='hall'))h+='<h3 class="sh">What you can do here</h3>'+ac.map(actBtn).join('')}
-  return h+`<button class="btn wax" data-act="biclose">Close</button></div></div>`;
+  {const ac=ACTBLD[t];if(ac&&!site&&(G.built[t]||t==='hall'))h+=illumH('What you can do here')+ac.map(actBtn).join('')}
+  return illumPage({kind:site?'Being built':lt?lt+' building':'Building',title:n,seal:`<span class="waxseal">${ic(ICONS[t]?t:'hall',24)}</span>`,pic:bldScene(t,G.built[t]?lv(t):null),body:illumHs(h)});
 }
 // the sheet behind a top-bar number: what it is doing, the law that touches it, and the acts that help
 const RESJOB={food:'farm',wood:'wood',stone:'stone',iron:'stone'};
@@ -13346,25 +13358,24 @@ function sheetHTML(k){
 const PJOB={farm:'Farming',wood:'Woodcutting',stone:'Mining',build:'Building',guard:'Guarding'};
 function perkSheetHTML(){
   const pp=G.settlers.filter(s=>s.perkPts>0);
-  let h=`<div class="scroll"><div class="sheet parch" style="gap:12px"><div class="shead"><div><div class="kind">Training</div><h2>Ready to learn</h2></div><div class="waxseal">${ic('build',24)}</div></div>`
-    +`<div class="sub">${pp.length?'Each can take one calling: get better at their own work, or help the whole hold.':'Nobody is waiting to learn a perk.'}</div>`;
+  let h=`<div class="sub">${pp.length?'Each can take one calling: get better at their own work, or help the whole hold.':'Nobody is waiting to learn a perk.'}</div>`;
   for(const s of pp){
     const lv=s.perks.length?10:5;
     h+=`<div class="pkrow"><button class="pwho" data-act="whoat" data-id="${s.id}">${portrait(s,46)}<span><b>${s.name}</b><small>${isChild(s)?'Child':jobTitle(s)}, level ${lv} perk${s.perkPts>1?' (2 waiting)':''}</small></span></button>`
       +perkOffer(s).map(k=>{const P=PERKS[k];return `<button class="btn" data-act="learn" data-id="${s.id}" data-k="${k}"><span class="t">${P.n}<small>${P.job?PJOB[P.job]:'For the hold'}: ${P.d[0].toLowerCase()+P.d.slice(1)}</small></span></button>`}).join('')+'</div>';
   }
-  return h+`<button class="btn wax" data-act="biclose">Close</button></div></div>`;
+  return illumPage({kind:'Training',title:'Ready to learn',seal:`<span class="waxseal">${ic('build',24)}</span>`,body:h,maud:pp.length?['smile','Old dogs, new tricks. I have seen it happen. Once.']:null});
 }
 // a past event, reopened from its news line: what happened, what you chose, what came of it, and who was there
 function pastHTML(l){
   const e=l.ev,ps=e.w.map(([id])=>byId(id)).filter(Boolean),gone=e.w.filter(([id])=>!byId(id)).map(x=>x[1]),all=e.ti+' '+e.x;
   const rv=(G.rivals||[]).map((r,i)=>[r,i]).filter(([r])=>all.includes('House '+r.house));
-  let h=`<div class="scroll"><div class="sheet parch" style="gap:12px"><div class="shead"><div><div class="kind">${e.k}, ${stamp(l.d)} ${yearOf(l.d)}</div><h2>${e.ti}</h2></div><div class="waxseal">${ic(KINDIC[e.k]||'renown',24)}</div></div>`;
+  let h='';
   if(ps.length)h+=pchips(ps);
   if(gone.length)h+=`<div class="sub">${gone.length>1?gone.slice(0,-1).join(', ')+' and '+gone[gone.length-1]+' are':gone[0]+' is'} no longer in the hold.</div>`;
-  h+=`<div class="sub">${e.x}</div><h3 class="sh">You chose: ${e.c}</h3><div class="sub">${l.t}</div>${resChips(e.dl)}`;
+  h+=`<div class="sub">${e.x}</div>${illumH('What you chose')}<div class="sub"><b>${e.c}.</b> ${l.t}</div>${resChips(e.dl)}`;
   for(const [r,i] of rv)h+=`<button class="btn" data-act="gofix" data-k="r:${i}">See House ${r.house}</button>`;
-  return h+`<button class="btn wax" data-act="biclose">Close</button></div></div>`;
+  return illumPage({kind:`${e.k}, ${stamp(l.d)} ${yearOf(l.d)}`,title:e.ti,seal:`<span class="waxseal">${ic(KINDIC[e.k]||'renown',24)}</span>`,body:h});
 }
 // a perk tag on the Folk card; a job perk sleeps (faded) while they do other work
 function perkTag(s,p){const P=PERKS[p],off=P.job&&s.job!==P.job;return `<span class="tag perk${off?' off':''}" data-act="perktag" data-id="${s.id}" data-t="${p}" role="button">${P.n}</span>`}
