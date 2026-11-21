@@ -907,7 +907,7 @@ body.tipon .toast{bottom:calc(50px + var(--tiph,112px))}body.tipon #main{padding
 .sch{font-size:15px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:2px}.sch .pips,.kv .pips{display:inline-flex;gap:4px;vertical-align:middle}.sch .pips i,.kv .pips i{width:11px;height:11px}
 .spym .mh{margin:10px 0 2px;font-size:16px}
 .secr{display:flex;gap:10px;align-items:center;padding:7px 0;border-top:1px dashed rgba(120,80,30,.45)}.secr>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;font-size:15.5px;line-height:1.25}.secr small{font-size:14px;color:var(--ink2);font-style:italic}
-.seal{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#c0503a,#7a2a1e);box-shadow:0 0 0 2px #e0b25a;flex:none}
+.sseal{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#c0503a,#7a2a1e);box-shadow:0 0 0 2px #e0b25a;flex:none}
 .spym .warnline{margin-top:8px;padding:7px 9px;border-radius:6px;background:rgba(122,42,30,.1);border-left:3px solid #7a2a1e;font-size:15px;font-style:italic;line-height:1.3}
 figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2);font-variant:normal;text-transform:none;letter-spacing:0}
 
@@ -936,6 +936,28 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 :root{--divider:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'300'%20height%3D'18'%20viewBox%3D'0%200%20300%2018'%3E%3Cdefs%3E%3ClinearGradient%20id%3D'l'%20x1%3D'0'%20x2%3D'1'%3E%3Cstop%20offset%3D'0'%20stop-color%3D'%23b8862a'%20stop-opacity%3D'0'%2F%3E%3Cstop%20offset%3D'1'%20stop-color%3D'%23b8862a'%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D'r'%20x1%3D'1'%20x2%3D'0'%3E%3Cstop%20offset%3D'0'%20stop-color%3D'%23b8862a'%20stop-opacity%3D'0'%2F%3E%3Cstop%20offset%3D'1'%20stop-color%3D'%23b8862a'%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20x%3D'0'%20y%3D'8.4'%20width%3D'124'%20height%3D'1.2'%20fill%3D'url(%23l)'%2F%3E%3Crect%20x%3D'176'%20y%3D'8.4'%20width%3D'124'%20height%3D'1.2'%20fill%3D'url(%23r)'%2F%3E%3Cg%20fill%3D'none'%20stroke%3D'%23b8862a'%20stroke-width%3D'1.2'%20stroke-linecap%3D'round'%3E%3Cpath%20d%3D'M124%209c6%200%208-6%2013-6s5%205%206%206'%2F%3E%3Cpath%20d%3D'M176%209c-6%200-8-6-13-6s-5%205-6%206'%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D'134'%20cy%3D'13'%20r%3D'1.4'%20fill%3D'%235d8a3a'%2F%3E%3Ccircle%20cx%3D'166'%20cy%3D'13'%20r%3D'1.4'%20fill%3D'%235d8a3a'%2F%3E%3Crect%20x%3D'144.5'%20y%3D'3.5'%20width%3D'11'%20height%3D'11'%20fill%3D'%23a8322a'%20stroke%3D'%23d4a43a'%20stroke-width%3D'1.2'%20transform%3D'rotate(45%20150%209)'%2F%3E%3C%2Fsvg%3E")}
 .view .bhead::after,.view .rp .rfold.open::after{left:0;right:0;width:auto;max-width:none;height:18px;bottom:-4px;background:var(--divider) 50% 0/min(300px,100%) 18px no-repeat}
 .view .bhead,.view .rp .rfold.open{padding-bottom:16px}
+/* the build list under the project (up to five, in turn) */
+.nql{margin-top:8px;border-top:1px dashed var(--edge);padding-top:4px}.nql .nqr{margin-top:0;min-height:40px}.nqs{font-style:italic;color:var(--ink2)}
+.nql .x{flex:none;width:40px;height:40px;border:0;background:none;font-size:20px;color:var(--ink);cursor:pointer}
+/* a farmstead's panel on the House tab (landPanel): what you can do for it */
+.lpanel{margin-top:-2px;padding:8px 10px;display:grid;gap:8px}.lpanel .btnrow{flex-wrap:wrap}.lpanel .btn{flex:1 1 140px}
+.rrow.land .rrin{min-height:56px}
+/* the chapel's reliquary (relicHTML) */
+.relics{display:flex;gap:6px;font-size:22px;color:#b8892c;text-shadow:0 1px 0 #fff8}
+/* the Work view's tiles: someone just moved keeps their place this visit, the button saying where they went */
+.ptile.moved .pjob{filter:saturate(.55) brightness(1.08)}
+.fgrp .pwall{margin:4px 0 8px}
+.pwall.mini{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.pwall.mini .pface{padding:6px 2px 4px}.pwall.mini .pface b{font-size:13.5px}
+.pwall.mini .pjob{min-height:36px;font-size:13px;gap:3px}.pwall.mini .pbad{transform:scale(.85);transform-origin:top right}.pwall.mini .pbadge{font-size:9px}
+.pwall.mini .pring{width:40px;height:40px}
+/* the food sheet's larder list (foodSrcHTML) */
+.larder{display:grid;gap:2px}.lrow{display:grid;grid-template-columns:24px 1fr auto 86px;align-items:center;gap:8px;min-height:32px;border-bottom:1px dashed var(--edge)}
+.lrow .lc{font-family:var(--f-display);font-size:17px;text-align:right}.lrow .ld{color:var(--ink2);font-style:italic;text-align:right}.lrow .li{display:flex;color:var(--rubric)}
+/* the quiet Crusades card opens the Crusade Roll (crusRollHTML) */
+.crow{display:grid;gap:6px;width:100%;text-align:left;font:inherit;color:var(--ink);cursor:pointer}.crow .cgo{justify-self:end}
+.croll{padding:8px 10px;display:grid;gap:3px}.croll .bhead b{font-family:var(--f-display);font-weight:400;font-size:17px}.croll .sub.dn{color:#8a2a22}
+.croll .bhead b{color:var(--ink);text-shadow:none}
+.seals .lean{display:block;font-size:11.5px;font-style:italic;color:var(--ink2);text-transform:none;letter-spacing:0}
 </style>
 
 <div id="app">
@@ -1095,7 +1117,7 @@ Object.assign(BUILD,{
 });
 Object.assign(BUILD,{
   guildhall:{n:'Guildhall',cost:{wood:50,stone:40,gold:40},work:22,max:1,req:()=>G.built.market>0&&G.rank>=2,reqT:()=>!G.built.market?'Needs a market':'Needs Barony rank',fx:'+2 gold and +0.3 renown a day. Wages cost a third less.'},
-  fishery:{n:'Fishery',cost:{wood:25,stone:5},work:10,max:3,fx:'Room for two fishers, who land about 3 food a day each (2 in winter). The fishery itself lands 1 a day (half in winter), manned or not. Built on the river bank.'},
+  fishery:{n:'Fishery',cost:{wood:25,stone:5},work:10,max:3,fx:'Room for two fishermen, who land about 3 food a day each (2 in winter). The fishery itself lands 1 a day (half in winter), manned or not. Built on the river bank.'},
   orchard:{n:'Orchard',cost:{wood:20,gold:8},work:10,max:4,req:()=>G.rank>=1,reqT:'Needs Village rank',fx:'Room for two pickers. Each gives 0.5 food a day and 20 more over the autumn apple picking, and pickers bring in far more. +2 mood. Outside the walls.'},
   stables:{n:'Stables',cost:{wood:40,stone:20,gold:15},work:16,max:1,req:()=>G.built.palisade>0,reqT:'Needs a palisade',fx:'+4 defense. Spies ride faster and are caught less. Ambushes hit harder.'}
 });
@@ -1109,7 +1131,7 @@ Object.assign(BUILD,{
 Object.assign(BUILD,{
   gwall:{n:'Great Wall',cost:{wood:40,stone:280,iron:20,gold:150},work:60,max:1,req:()=>G.rank>=3&&G.built.palisade>0,reqT:()=>G.rank<3?'Needs Earldom rank':'Needs a palisade',fx:'Rebuilds the palisade as a tall stone curtain wall with towers and a gatehouse. Raiders and monsters come a fifth weaker. +0.4 renown a day.'},
   statue:{n:"Founder's Statue",cost:{stone:70,iron:10,gold:50},work:20,max:1,req:()=>G.rank>=2,reqT:'Needs Barony rank',fx:'The founder of the house in bronze, in the square before the hall. +1 mood and +0.3 renown a day. Each great ruler after gets a plaque on it (+3 renown).'},
-  harbour:{n:'Harbour',cost:{wood:80,stone:80,iron:5,gold:60},work:35,max:1,req:()=>G.rank>=2&&G.built.fishery>0&&!!harbourSpot(),reqT:()=>G.rank<2?'Needs Barony rank':!G.built.fishery?'Needs a fishery':'No room on the riverbank',fx:'A stone quay on the river, with boats. +2 food (+1 in winter) and +2 gold a day, and fishers catch 15% more. Outside the walls.'}
+  harbour:{n:'Harbour',cost:{wood:80,stone:80,iron:5,gold:60},work:35,max:1,req:()=>G.rank>=2&&G.built.fishery>0&&!!harbourSpot(),reqT:()=>G.rank<2?'Needs Barony rank':!G.built.fishery?'Needs a fishery':'No room on the riverbank',fx:'A stone quay on the river, with boats. +2 food (+1 in winter) and +2 gold a day, and fishermen catch 15% more. Outside the walls.'}
 });
 const GREAT=['bridge','lists','palace','cathedral','gwall','statue','harbour'];
 // a Great Work's name once the hold has named it on opening day (G.gwn, e.g. "the Long Step"), else the plain name; gwCap for the start of a line
@@ -1120,7 +1142,7 @@ const UPG={
   hut:[{n:'Stone cottages',fx:'Every cottage gets a stone ground floor and houses two more people. +2 mood.',cost:{stone:45},work:16},{n:'Iron stoves',fx:'Every cottage gets an upper storey and houses two more again. Winters burn a fifth less wood.',cost:{iron:20,stone:10},work:14}],
   granary:[{n:'Stone granaries',fx:'Each granary holds 60 more food.',cost:{stone:30},work:10},{n:'Iron-bound bins',fx:'Each holds 60 more again, and summer rot is halved.',cost:{iron:12,wood:10},work:10}],
   pasture:[{n:'Stone sheepfolds',fx:'Pastures give 50% more wool and food, and shepherds bring in 35% more.',cost:{stone:25},work:8},{n:'Iron shears',fx:'Pastures give 50% more again, and shepherds 35% more.',cost:{iron:8,wood:6},work:6}],
-  fishery:[{n:'Stone jetties',fx:'Fisheries land 50% more, and fishers catch 25% more.',cost:{stone:25},work:8},{n:'Iron hooks and nets',fx:'Fisheries land 50% more again, and fishers 25% more.',cost:{iron:10,wool:6},work:6}],
+  fishery:[{n:'Stone jetties',fx:'Fisheries land 50% more, and fishermen catch 25% more.',cost:{stone:25},work:8},{n:'Iron hooks and nets',fx:'Fisheries land 50% more again, and fishermen 25% more.',cost:{iron:10,wool:6},work:6}],
   palisade:[{n:'Stone curtain wall',fx:'Rebuilds the palisade in stone. +6 defense.',cost:{stone:80,wood:10},work:24},{n:'Iron gates',fx:'+5 defense, and barring the gates is much stronger.',cost:{iron:25,stone:10},work:16}],
   tower:[{n:'Stone tower',fx:'+4 defense. Thieves and killers are caught more often.',cost:{stone:35},work:12},{n:'Iron ballista',fx:'+6 defense.',cost:{iron:20,wood:15},work:12}],
   barracks:[{n:'Stone barracks',fx:'Guards fight 10% harder. Houses two more people.',cost:{stone:50},work:16},{n:'Iron armoury',fx:'Guards fight 15% harder again.',cost:{iron:30},work:16}],
@@ -1454,12 +1476,15 @@ function fightPower(o){
 }
 // where someone's mood settles: 50 plus every reason; each day it moves a third of the way there
 const moodAim=s=>clamp(50+moodMods(s).reduce((a,m)=>a+m[1],0),0,100);
+// relics kept in the chapel (relicHTML in 10): each of the first three gives everyone +1 mood and brings pilgrims, +0.5 gold a day
+const relicN=()=>G.built.chapel?Math.min(3,G.relics||0):0;
 function moodMods(s){
   const m=[];
   s.traits.forEach(t=>{if(TRAITS[t].mood)m.push([TRAITS[t].n+' by nature',TRAITS[t].mood])});
   if(G.built.tavern){m.push(['Tavern',6+up('tavern',2,2)]);if(s.traits.includes('drunkard')&&!isChild(s))m.push(['Loves the ale',4])}
   if(G.built.chapel){m.push(['Chapel',4+up('chapel',2,0)]);if(s.traits.includes('pious'))m.push(['Devout',4])}
   if(G.relics&&s.traits.includes('pious'))m.push(['Holy relics',Math.min(6,2*G.relics)]);
+  if(relicN())m.push(['Relics in the chapel',relicN()]);
   if(G.built.cathedral){m.push(['Cathedral',4]);if(s.traits.includes('pious'))m.push(['Awed',2])}
   if(spl().tapestry)m.push(['Fine hall',2]);
   if(G.built.hall)m.push(['Great Hall',2]);
@@ -1741,7 +1766,7 @@ const CHLAW={tax0:['The taxes stayed light, and the tax man took up whittling.',
 const EPLAW={'the Grasping':'tax2','the Openhanded':'tax0','the Bountiful':'food0','the Lean':'food2','the Taskmaster':'work2','the Easygoing':'work0'};
 // the annals speak in the present; the chronicle tells it as the past
 const CHPAST={flees:'fled',flee:'fled',is:'was',are:'were',rises:'rose',goes:'went',defeats:'defeated',takes:'took',marches:'marched',drives:'drove',falls:'fell',adds:'added',weds:'wed',finishes:'finished',pays:'paid',refuses:'refused',sacks:'sacked',burns:'burned',returns:'returned',leaves:'left',rules:'ruled',make:'made',makes:'made',bring:'brought',brings:'brought',swears:'swore',saves:'saved',keeps:'kept',ends:'ended',wins:'won',avenges:'avenged',comes:'came',dies:'died',gives:'gave',loses:'lost',founds:'founded',succumbs:'succumbed',starves:'starved',rides:'rode',has:'had',kills:'killed'};
-const chPast=t=>t.replace(/\bhas (\w+ed)\b/g,'$1').replace(/\b[a-z]+\b/g,w=>CHPAST[w]||w),chAn=t=>t.replace(/\ba (?=[AEIOU])/g,'an ');
+const chPast=t=>t.replace(/\bis now known for\b/,'became known for').replace(/\bis known for (.+?) now, no longer for\b/,'became known for $1 instead of').replace(/\bhas (\w+ed)\b/g,'$1').replace(/\b[a-z]+\b/g,w=>CHPAST[w]||w),chAn=t=>t.replace(/\ba (?=[AEIOU])/g,'an ');
 const capW=n=>{const w=NUMW[n];return w&&n<11?w.charAt(0).toUpperCase()+w.slice(1):String(n)},numW=n=>NUMW[n]&&n<11?NUMW[n]:String(n);
 // Sister Maud, who sighs a lot: the hold's chronicler, the same nun in every game. She tells the Chronicle, and now and then writes in the news log (maudDay, 06-day.js)
 const MAUD='Sister Maud',MAUDT='Sister Maud, who sighs a lot';
@@ -1804,22 +1829,23 @@ function chronicle(){
     if(t.startsWith(r.name+', ')&&/ of House /.test(t))return null;// the ruler's own death is told at the end
     if(/^(Lord|Lady) .* of House .* dies,/.test(t))return [2,'news'];// told with the neighbours at the end
     if(/rises to a/.test(t))return [10,'rank'];
-    if(/ is hailed (Lord|Lady) of the Valley.$/.test(t))return [10,'rank'];
+    if(/ is hailed (Lord|Lady) of the Valley.$/.test(t))return [10,'lov'];// told on its own, never folded into the rank count
     // conquest: your own wars, knees and seats (a neighbour's against another neighbour is told on the last page, cqlLines)
-    if(t.startsWith('House '+G.house+' wins the war with'))return [8,'war'];
+    if(t.startsWith('House '+G.house+' wins the war with'))return [8,'war','win'];
     if(t.startsWith('House '+G.house+' loses the war with'))return [8,'bad'];
     if(t.startsWith('House '+G.house+' bends the knee to'))return [9,'bad'];
-    if(/ (bends the knee|kneels again) to House /.test(t))return t.endsWith('House '+G.house+'.')?[8,'war']:[2,'news'];
+    if(/ (bends the knee|kneels again) to House /.test(t))return t.endsWith('House '+G.house+'.')?[8,'war','knee']:[2,'news'];
     if(/ takes the seat of House /.test(t))return t.includes(' of House '+G.house+' takes ')?[9,'war']:[2,'news'];
     if(/burns the seat of House .* to the ground/.test(t))return t.startsWith('House '+G.house+' ')?[8,'war']:[2,'news'];
     if(/ wins its freedom from House /.test(t))return t.endsWith('House '+G.house+'.')?[7,'bad']:[2,'news'];
     if(/ rises against House |puts down the rising|goes free of House|fights House .* to a standstill|answers to nobody now|goes its own way|takes back its old seat|exiles of House .* (are beaten|give up)/.test(t))return [2,'news'];
     if(/family leave to settle new land/.test(t))return [0,'settle'];// told as a count
     if(/ of the family to take up .* from now on.$/.test(t))return [6,'good'];
-    if(gw.some(w=>t.toLowerCase().includes(w)))return [9,'good'];
+    if(gw.some(w=>t.toLowerCase().includes(w)))return /^House /.test(t)&&!t.startsWith('House '+G.house+' ')?[2,'news']:[9,'good','gw'];// a neighbour's great work is their news, not your reign's
     if(/is raised\.$/.test(t))return [0,'built'];
     if(/is born to/.test(t))return [t.includes(r.name)?4:0,'born'];
     if(/^A revolt led by .* is crushed/.test(t))return [8,'revolt'];
+    if(/ is pardoned and comes home[.]$/.test(t))return [8,'good'];// told with the return from exile, so a pardoned pretender does not vanish from the story
     if(/claim is crushed/.test(t))return [8,'war'];// a crushed claim is a win for the ruler
     if(/ rules as regent for the young /.test(t))return t.endsWith('young '+r.name+'.')?[5,'reg']:0;// told in the child's own chapter, with no cheer after it
     if(/drives .* from the high seat|returns from exile|claim|revolt|regency/.test(t))return [8,'bad'];
@@ -1851,11 +1877,16 @@ function chronicle(){
     const gl=r.ep&&(sAt==='ep'?sPk(CHSTRK[r.ep]):CHEP[r.ep]?pk(CHEP[r.ep]):EPWHY[r.ep]);p.push(lead+(gl?' '+fill(gl,o):''));
     // the big moments of this reign in order, then a count of the small ones
     const mine=A.filter((e,j)=>j>0&&(i===0?e.d>=r.rf:e.d>r.rf||e.d===r.rf&&/ rules as regent /.test(e.t))&&(r.live||e.d<=r.rt)).map(e=>({e,v:rate(e.t,r)})).filter(x=>x.v);
-    const cnt=c=>mine.filter(x=>x.v[1]===c).length,nb=cnt('built'),nk=cnt('born'),nd=cnt('died'),nr=cnt('revolt'),nc=cnt('cross'),ce=mine.filter(x=>x.v[1]==='crusend').map(x=>/ won/.test(x.e.t)?'w':/truce/.test(x.e.t)?'t':'l'),fold=nc>1||ce.length>1,rk=mine.filter(x=>x.v[1]==='rank'),kf=mine.filter(x=>x.v[1]==='faith');
+    const cnt=c=>mine.filter(x=>x.v[1]===c).length,nb=cnt('built'),nk=cnt('born'),nd=cnt('died'),nr=cnt('revolt'),nc=cnt('cross'),ce=mine.filter(x=>x.v[1]==='crusend').map(x=>/ won/.test(x.e.t)?'w':/truce/.test(x.e.t)?'t':'l'),fold=nc>1||ce.length>1,rk=mine.filter(x=>x.v[1]==='rank'),kf=mine.filter(x=>x.v[1]==='faith'),
+      gwl=mine.filter(x=>x.v[2]==='gw'),gwF=gwl.length>2,wn=mine.filter(x=>x.v[2]==='win'),kn=mine.filter(x=>x.v[2]==='knee'),wF=wn.length+kn.length>=3;// many great works, or wars won and knees bent, are told as one line each
     // several risings, crusades, rank-ups or old friends keeping faith are told once, as a count
-    const top=mine.filter(x=>x.v[0]>=3&&!(x.v[1]==='revolt'&&nr>1)&&!(fold&&(x.v[1]==='cross'||x.v[1]==='crusend'))&&!(rk.length>1&&x.v[1]==='rank')&&!(kf.length>1&&x.v[1]==='faith')).sort((a,b)=>b.v[0]-a.v[0]||a.e.d-b.e.d).slice(0,rs.length===1?5:3).sort((a,b)=>a.e.d-b.e.d);
+    const top=mine.filter(x=>x.v[0]>=3&&!(x.v[1]==='revolt'&&nr>1)&&!(fold&&(x.v[1]==='cross'||x.v[1]==='crusend'))&&!(rk.length>1&&x.v[1]==='rank')&&!(kf.length>1&&x.v[1]==='faith')&&!(gwF&&x.v[2]==='gw')&&!(wF&&(x.v[2]==='win'||x.v[2]==='knee'))).sort((a,b)=>b.v[0]-a.v[0]||a.e.d-b.e.d).slice(0,rs.length===1?5:((r.live?G.day:r.rt)-r.rf)>=15*DPY?4:3).sort((a,b)=>a.e.d-b.e.d);
     let py=null;const ev=top.map(x=>{const y=yearOf(x.e.d),ss=SEASONS[Math.floor((x.e.d%DPY)/DPS)].toLowerCase(),t=y===py?pk(['That same year, {s}','{s}','Soon after, {s}']):pk(py===null?CHTIME.filter(z=>!/^(Then|The year)/.test(z)):CHTIME);py=y;
       let s=fill(t,{y,ss,s:chPast(t.startsWith('{s}')?x.e.t:low(x.e.t))});const tl=CHTAIL[x.v[1]]&&CHTAIL[x.v[1]].filter(z=>!used.has(z));if(R()<.4&&tl&&tl.length)s+=' '+pk(tl);return s});
+    if(gwF){const nm=gwl.map(x=>(x.e.t.match(/named (.+?)[.]$/)||[])[1]).filter(Boolean),y1=yearOf(gwl[0].e.d),y2=yearOf(gwl[gwl.length-1].e.d);
+      ev.push(nm.length?pk([`${capW(gwl.length)} great works went up between ${y1} and ${y2}: ${andW(nm)}. The masons still talk of nothing else.`,`Between ${y1} and ${y2} the hold raised ${numW(gwl.length)} great works: ${andW(nm)}. I ran out of ways to say "magnificent".`]):`${capW(gwl.length)} great works went up between ${y1} and ${y2}.`)}
+    if(wF){const hs=a=>[...new Set(a.map(x=>(x.e.t.match(/House (\w+)/g)||[]).map(z=>z.slice(6)).find(h=>h!==G.house)).filter(Boolean))].map(h=>'House '+h),W=hs(wn),Kn=hs(kn);
+      ev.push(`${o.He} won ${wn.length===1?'a war':numW(wn.length)+' wars'}${W.length?', against '+andW(W):''}${Kn.length?`, and ${Kn.length===1?Kn[0]:numW(Kn.length)+' houses'} bent the knee`:''}. `+pk(['The valley learned to knock first.','The banners in the hall multiplied.','The neighbours began writing very politely.']))}
     if(rk.length>1)ev.push(chRanks(rk,pk));
     if(kf.length>1)ev.push(chFaith(kf,pk));
     if(nr>1)ev.push(pk([`${capW(nr)} revolts rose and were put down, which is more than anyone would like.`,`The hold rose up ${nr===2?'twice':numW(nr)+' times'}, and sat back down again each time.`,`There were ${numW(nr)} revolts, each one crushed, each one somehow a surprise.`,`Revolt came knocking ${numW(nr)} times, and was sent home ${numW(nr)} times without supper.`]));
@@ -2088,26 +2119,28 @@ function harbourSpot(){
   const h=G.bld.find(q=>q.type==='harbour');if(h)return [h.x,h.y];
   const br=G.bld.find(q=>q.type==='bridge')||(bridgeSpot()?{y:bridgeSpot()[1]}:null),fi=G.bld.find(q=>q.type==='fishery');let best=null,bd=1e9;
   for(let y=0;y<ROWS;y++){const row=G.map[y];let wx=-1;while(row[wx+1]==='w')wx++;const x=wx+1;
-    if(wx<0||x>=COLS||row[x]!=='g'||occupied(x,y)||(()=>{const dx=x+.9-HX-.5,dy=y+.5-HY-.5;return Math.hypot(dx,dy)<wallR(Math.atan2(dy,dx))+.6})()||(br&&br.y===y))continue;
-    const d=(fi?Math.abs(fi.y-y)+Math.abs(fi.x-x)*.5:Math.abs(y-HY))+(br&&Math.abs(br.y-y)===1?50:0);if(d<bd){bd=d;best=[x,y]}}
+    if(wx<0||x>=COLS||!'grt'.includes(row[x])||occupied(x,y)||(()=>{const dx=x+.9-HX-.5,dy=y+.5-HY-.5;return Math.hypot(dx,dy)<wallR(Math.atan2(dy,dx))+.6})()||(br&&br.y===y))continue;
+    const d=(fi?Math.abs(fi.y-y)+Math.abs(fi.x-x)*.5:Math.abs(y-HY))+(br&&Math.abs(br.y-y)===1?50:0)+(row[x]!=='g'?30:0);if(d<bd){bd=d;best=[x,y]}}
   return best;
 }
+// once there is a fishery and until the harbour stands, its riverbank square is kept free: other buildings go there only when nothing else is left
+function hbKeep(){if(G.built.harbour||!G.built.fishery)return null;const h=harbourSpot();return h&&G.map[h[1]][h[0]]==='g'?h:null}
 function occupied(x,y){return G.bld.some(b=>b.x===x&&b.y===y)||(G.proj&&G.proj.x===x&&G.proj.y===y)||!!(G.yard&&G.yard[0]===x&&G.yard[1]===y)}
 // the tiles below the hall are kept clear for the main road to the gate
 function takeSlot(south){
-  const free=G.slots.filter(s=>!occupied(s[0],s[1])&&!(s[0]===HX&&s[1]>HY));
+  const hk=hbKeep(),f0=G.slots.filter(s=>!occupied(s[0],s[1])&&!(s[0]===HX&&s[1]>HY)),f1=hk?f0.filter(s=>s[0]!==hk[0]||s[1]!==hk[1]):f0,free=f1.length?f1:f0;
   if(south){const f=free.find(s=>s[1]>=HY+1);if(f)return f}
   return free[0]||null;
 }
 function takeOuter(t){
-  const c=[];
+  const c=[],hk=hbKeep();
   for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){
     if(G.map[y][x]!=='g'||(x===HX&&y>HY))continue;const d=Math.hypot(x-HX,y-HY);if(d<4.6||d>8||occupied(x,y))continue;
     let k=d;if(t==='mine'){let m=9;for(const r of G.rocks)m=Math.min(m,Math.hypot(r[0]-x,r[1]-y));k=m*2+d*.2}
     if(t==='fishery'){let m=9;for(let yy=0;yy<ROWS;yy++)for(let xx=0;xx<COLS;xx++)if(G.map[yy][xx]==='w')m=Math.min(m,Math.hypot(xx-x,yy-y));k=m*3+d*.2}
     if(t==='orchard')k=-d+th(x,y,600)*2;if(t==='lists')k=-d;
     // never drawn on the wall line (built or not), unless no other spot is left
-    c.push([x,y,k+(wallClash(x,y)?100:0)]);
+    c.push([x,y,k+(wallClash(x,y)?100:0)+(hk&&hk[0]===x&&hk[1]===y?200:0)]);
   }
   c.sort((a,b)=>a[2]-b[2]);return c[0]||null;
 }
@@ -5238,7 +5271,7 @@ function plan(s,a,r){
     const T=nearList(G.rocks,4),t=T[(id+(a.n>>2))%T.length];
     q.push({go:[t[0]-.6,t[1]+.24]},{act:'mine',t:5+rnd()*4,face:1});fumble(s,q);
     if(chance(.6))q.push({carry:G.built.mine&&chance(.3)?'ore':'stone'},{go:STONEPILE()},{act:'drop',t:.6,face:1},{carry:null});return}
-  if(r==='farm'&&wpOf(s)!=='field'&&wpBld(s)){const b=wpBld(s);// fishers, pickers and shepherds: to their own place (the map's poses are the map session's)
+  if(r==='farm'&&wpOf(s)!=='field'&&wpBld(s)){const b=wpBld(s);// fishermen, pickers and shepherds: to their own place (the map's poses are the map session's)
     if(wpOf(s)==='fishery'&&seasonIdx()!==3){const fs=fishSpot(s);if(fs){q.push({go:fs.at},{act:'fish',t:8+rnd()*8,face:fs.f});return}}
     q.push({go:[b.x+.3+((id+a.n)%3)*.2,b.y+.7]},{act:'look',t:5+rnd()*5,faceTo:[b.x+.5,b.y]});return}
   if(r==='farm'){const f=G.bld.filter(b=>b.type==='field');if(f.length){
@@ -5776,7 +5809,7 @@ function drawMap(now){
   const cv=$('#map');if(!cv||!G||!G.map)return;
   const ctx=cv.getContext('2d'),W=COLS*TS,H=ROWS*TS,si=seasonIdx();
   if(MZ.z>1)TZHI=1;
-  const key=TZHI+'|'+G.seed+'|'+si+'|'+(G.rank||0)+'|'+G.bld.length+'|'+G.built.hall+'|'+G.built.keep+'|'+(G.built.palace||0)+'|'+G.house+'|'+Object.keys(spl()).length+'|'+JSON.stringify(G.lv||{})+'|'+(G.yard?G.yard.join(','):'')+'|'+Math.min(G.graves||0,12)+yardKey()+'|'+homeKey()+'|'+wearKey()+'|'+(si===2&&doy()%DPS>=6)+'|'+fellKey()+'|'+(POPB?1:0);
+  const key=TZHI+'|'+G.seed+'|'+si+'|'+(G.rank||0)+'|'+G.bld.length+'|'+G.built.hall+'|'+G.built.keep+'|'+(G.built.palace||0)+'|'+G.house+'|'+Object.keys(spl()).length+'|'+JSON.stringify(G.lv||{})+'|'+(G.yard?G.yard.join(','):'')+'|'+Math.min(G.graves||0,12)+yardKey()+'|'+homeKey()+'|'+wearKey()+'|'+(si===2&&doy()%DPS>=6)+'|'+fellKey()+'|'+(POPB?1:0)+'|'+G.rocks.length+'|'+G.trees.length;
   if(key!==terrainKey||!terrain){terrainKey=key;buildTerrain()}
   const dt=clamp(((now-lastT)/1000)||0,0,.06);lastT=now;
   // zoomed: a sharper canvas (up to the screen's pixels) and the view's part of the world scaled up
@@ -5854,7 +5887,7 @@ function frame(now){
 
 /* Contents of 06-day.js: The day: building, work, food, births; the events engine; levels, perks and monsters.
    - construction: bcost, canBuild, startBuild, startUpgrade, mendOld, finishBuild, Great Works' opening day and names (GWNOUN, GWFOLK, GWLINE, founderK, evNameWork)
-   - food workers (Specialising part 1, above `yWood`): FOODP, WPN, WPSH, wpCap, wpTotal, wpOf, pickDay, yPlace, wpAnnual, foodWork, wpCheck, fillWP (the Farm job's work places, auto fill, the autumn apple picking in `work`); part 3 (the Barony setting): wpMan, wpFw, wpSeed, wpSet, wpAuto (targets G.wpT, G.wpO, G.wpAuto; fillWP's manual branch), BOUNTY (the bounty card by food); part 2: FOODL, foodL, aN (Farmer/Fisher/Apple picker/Shepherd words), foodBy, foodLead, MASTF (masters by place), wpRoom, wpMove, wpBack ("move the workers"), KNOWN, knownYear, knownSeason (known for, text only; G.fsrc, G.known)
+   - food workers (Specialising part 1, above `yWood`): FOODP, WPN, WPSH, wpCap, wpTotal, wpOf, pickDay, yPlace, wpAnnual, foodWork, wpCheck, fillWP (the Farm job's work places, auto fill, the autumn apple picking in `work`); part 3 (the Barony setting): wpMan, wpFw, wpSeed, wpSet, wpAuto (targets G.wpT, G.wpO, G.wpAuto; fillWP's manual branch), BOUNTY (the bounty card by food); part 2: FOODL, foodL, aN (Farmer/Fisherman/Apple picker/Shepherd words), foodBy, foodLead, MASTF (masters by place), wpRoom, wpMove, wpBack ("move the workers"), KNOWN, knownYear, knownSeason (known for, text only; G.fsrc, G.known)
    - the day: tick, work, eat, relations, births, riseRank, goldenAge (its life lines GOLDLF), tourney, pedlars, headDay
    - family trades: tradeSeason, teach, grownTrade
    - events: queueEvent (a gentle third card on one day waits: LATER, nextCard, laterCard), DIFF, dif, drawEvent, choose, EVENTS, everyday events
@@ -5898,7 +5931,7 @@ function startBuild(t){
   else if(t==='tower'){x=HX+3;y=HY-3}
   else if(t==='hall'||t==='keep'||t==='palace'){x=HX;y=HY}
   else if(t==='bridge'){[x,y]=bridgeSpot()}
-  else if(t==='harbour'){[x,y]=harbourSpot()}
+  else if(t==='harbour'){[x,y]=harbourSpot();if(G.map[y][x]!=='g'){G.map[y]=G.map[y].slice(0,x)+'g'+G.map[y].slice(x+1);G.rocks=G.rocks.filter(r=>r[0]!==x||r[1]!==y);G.trees=G.trees.filter(r=>r[0]!==x||r[1]!==y)}}// a rock or a tree on the bank is cleared for the quay
   else if(t==='gwall'){x=HX;y=HY+3.4}
   else if(t==='statue'){x=HX;y=HY+1}
   else if(t==='cathedral'){const ch=G.bld.find(b=>b.type==='chapel');x=ch.x;y=ch.y}
@@ -5909,20 +5942,24 @@ function startBuild(t){
   log(`Work begins on the ${b.n.toLowerCase()}.`,'info');auPlay('hammer');
   retarget();
 }
-// one building or upgrade may wait its turn (G.next {t,up}); its goods are taken when it starts, so it waits while they are short
+// up to QMAX buildings or upgrades may wait their turn, in order (G.nq [{t,up}]; G.next, the single slot before 2026-11-20, is read once);
+// their goods are taken when each starts, so the first waits while its goods are short and the rest wait behind it
+const QMAX=5;
+const nq=()=>{if(!G.nq){G.nq=G.next?[G.next]:[];delete G.next}return G.nq};
 const nextBName=n=>n.up?UPG[n.t][Math.min(lv(n.t),UPG[n.t].length-1)].n.toLowerCase():BUILD[n.t].n.toLowerCase();
 const nextCost=n=>n.up?ucost(n.t):bcost(n.t);
-function nextShort(){const n=G.next;if(!n)return '';const co=nextCost(n),s=[];for(const k in co)if((G[k]||0)<co[k])s.push(Math.ceil(co[k]-(G[k]||0))+' more '+k);return andW(s)}
+const inQ=(t,up)=>nq().findIndex(n=>n.t===t&&!!n.up===!!up);
+function nextShort(n){n=n||nq()[0];if(!n)return '';const co=nextCost(n),s=[];for(const k in co)if((G[k]||0)<co[k])s.push(Math.ceil(co[k]-(G[k]||0))+' more '+k);return andW(s)}
 function queueOk(t,up){
-  if(!G.proj)return false;const p=G.proj;
+  if(!G.proj&&!nq().length)return false;if(nq().length>=QMAX||inQ(t,up)>=0)return false;const p=G.proj||{};
   if(up){const u=UPG[t];return !!(u&&G.built[t]&&lv(t)<u.length)&&!(p.up&&p.type===t&&lv(t)+1>=u.length)}
-  const b=BUILD[t];return G.built[t]<b.max&&(!b.req||b.req())&&!(!p.up&&p.type===t&&G.built[t]+1>=b.max)}
-function setNext(t,up){if(G.next&&G.next.t===t&&!!G.next.up===!!up)G.next=null;else if(queueOk(t,up))G.next={t,up:up?1:0}}
+  const b=BUILD[t],q=nq().filter(n=>!n.up&&n.t===t).length;return G.built[t]+q<b.max&&(!b.req||b.req())&&!(!p.up&&p.type===t&&G.built[t]+q+1>=b.max)}
+function setNext(t,up){const i=inQ(t,up);if(i>=0)nq().splice(i,1);else if(queueOk(t,up))nq().push({t,up:up?1:0})}
 function startNext(){
-  const n=G.next;if(!n||G.proj)return;const w=n.up?upWhy(n.t):(canBuild(n.t).why||'');
-  if(!w){G.next=null;n.up?startUpgrade(n.t):startBuild(n.t);return}
+  const n=nq()[0];if(!n||G.proj)return;const w=n.up?upWhy(n.t):(canBuild(n.t).why||'');
+  if(!w){nq().shift();n.up?startUpgrade(n.t):startBuild(n.t);return}
   if(/^Short/.test(w))return;
-  G.next=null;log(`The ${nextBName(n)} cannot go ahead (${w==='Built'||w==='Done'?'it is done already':w.toLowerCase()}), so it comes off the plans.`,'info')}
+  nq().shift();log(`The ${nextBName(n)} cannot go ahead (${w==='Built'||w==='Done'?'it is done already':w.toLowerCase()}), so it comes off the plans.`,'info');startNext()}
 // a day's building work from everyone set to Build
 const buildRate=()=>G.settlers.filter(s=>active(s,'build')).reduce((a,s)=>a+workMul()*sf(s,'build')*wm(s),0);
 // stopping work: every good back if under a tenth done, else half
@@ -5995,7 +6032,7 @@ function tick(){
   }
   if(!G.settlers.length||G.over)return;
   wpCheck();work(si);
-  if(!G.proj&&G.next)startNext();
+  if(!G.proj&&nq().length)startNext();
   eat(si);
   if(G.over)return;
   // moods
@@ -6041,11 +6078,11 @@ function tick(){
 // KNOWN FOR (Specialising part 2): text only, no bonus. G.fsrc counts the year's food by source (work()); at each new year a food starts the name when it made over 55% of the year's food
 // and loses it below 45% (no flicker); a year with under 30 food made keeps the old name. G.known holds it ('' or a place type): the hook for the house-reputation session.
 const KNOWN={field:{w:'its grain',m:['notes that House {h} is known for its grain now. "Bread, bread and more bread," she writes, and means it kindly.','notes that the valley has decided House {h} is a grain house. There are worse things to be known for. She lists several.'],r:['"They say House {h} could feed the valley, if the valley would only stop by," says {l}.','"Their barns are full and their dinners are boring," says {l} of House {h}, wistfully.']},
-  fishery:{w:'its fish',m:['notes that House {h} is known for its fish. The hold smells of it, and she has stopped complaining. Mostly.','notes that the valley calls House {h} the river folk now. She finds fish scales in the ink.'],r:['"House {h} lives on fish. One smells them before one sees the hold," says {l}, with a certain respect.','"Their fishers tell tall tales, and the tall tales are all true," says {l} of House {h}.']},
+  fishery:{w:'its fish',m:['notes that House {h} is known for its fish. The hold smells of it, and she has stopped complaining. Mostly.','notes that the valley calls House {h} the river folk now. She finds fish scales in the ink.'],r:['"House {h} lives on fish. One smells them before one sees the hold," says {l}, with a certain respect.','"Their fishermen tell tall tales, and the tall tales are all true," says {l} of House {h}.']},
   orchard:{w:'its apples',m:['notes that House {h} is known for its apples. She has written "pie" in the margin three times.','notes that House {h} is the apple house of the valley, and has not been seen without a basket since.'],r:['"House {h} lives on apples and cider," says {l}. "Their wars smell of pie."','"Everything at House {h} is baked, stewed or pressed from an apple," says {l}, with a satisfied sigh.']},
   pasture:{w:'its sheep',m:['notes that House {h} is known for its sheep. "Wool in the ink," she adds, "and mutton in the porridge."','notes that House {h} is a shepherd house now. She is not allowed to say what the flock thinks of the choir.'],r:['"House {h} keeps more sheep than sense," says {l}. "Fine mutton, though."','"The folk of House {h} count sheep to fall asleep, and wake up with the right number," says {l}.']}};
 function knownYear(){
-  const f=G.fsrc||{},tot=FOODP.reduce((a,t)=>a+(f[t]||0),0);G.fsrc={};
+  const f=G.fsrc||{},tot=FOODP.reduce((a,t)=>a+(f[t]||0),0);G.fsrc={};G.fsrcL=f;// last year's, for the food sheet early in the year
   if(tot<30)return;
   const old=G.known||'';let nw=old;
   if(old&&(f[old]||0)/tot<.45)nw='';
@@ -6082,7 +6119,7 @@ const wpCap=t=>WPN*(G.built[t]||0);
 const wpTotal=()=>FOODP.reduce((a,t)=>a+wpCap(t),0);
 const wpOf=s=>FOODP.includes(s.wp)?s.wp:'field';
 // the words for each food work (Specialising part 2): job name, plural, skill, head of the trade. Display only: one skill, skills.farm, behind them all
-const FOODL={field:['Farmer','farmers','Farming','the head farmer'],fishery:['Fisher','fishers','Fishing','the head fisher'],orchard:['Apple picker','apple pickers','Picking','the head picker'],pasture:['Shepherd','shepherds','Herding','the head shepherd']};
+const FOODL={field:['Farmer','farmers','Farming','the head farmer'],fishery:['Fisherman','fishermen','Fishing','the head fisherman'],orchard:['Apple picker','apple pickers','Picking','the head picker'],pasture:['Shepherd','shepherds','Herding','the head shepherd']};
 const foodL=(s,i)=>FOODL[s&&s.job==='farm'?wpOf(s):'field'][i];
 const aN=w=>(/^[aeiou]/i.test(w)?'an ':'a ')+w;
 // the Farm group's headcount by place: {field:n,...}; foodLead is the place that has over half the workers, or '' when mixed or empty (the group card's words follow it)
@@ -6117,19 +6154,20 @@ function wpCheck(){
   const fw=G.settlers.filter(s=>s.job==='farm'&&!isChild(s)),bs=FOODP.map(t=>G.built[t]||0).join(),ws=fw.map(s=>s.id).join(),ss=doy()%DPS===0;
   if(!ss&&bs===G.wpB&&ws===G.wpW)return;
   fillWP(fw,ss||bs!==G.wpB);G.wpB=bs;G.wpW=ws}
-// "Where they work" (Specialising part 3, from Barony): the wanted headcount per place, G.wpT {type:n}, and the order they were set, G.wpO (the last set gives way first
+// "Where they work" (Specialising part 3; from Barony until 2026-11-20, now as soon as the hold has two kinds of food place, wpOn: Barony was far too late for fishing): the wanted headcount per place, G.wpT {type:n}, and the order they were set, G.wpO (the last set gives way first
 // when there are too few hands). G.wpAuto false means the targets rule; true or missing means auto fill, and the targets are kept for later. Moved workers (wpH) sit out while a spell lasts.
-const wpMan=()=>G.rank>=2&&G.wpAuto===false&&!!G.wpT&&Object.keys(G.wpT).length>0;
+const wpOn=()=>FOODP.filter(t=>G.built[t]).length>=2;
+const wpMan=()=>wpOn()&&G.wpAuto===false&&!!G.wpT&&Object.keys(G.wpT).length>0;
 const wpFw=()=>G.settlers.filter(s=>s.job==='farm'&&!isChild(s));
 function wpSeed(){const c=foodBy(),T=G.wpT||(G.wpT={});for(const x of FOODP)if(G.built[x]&&T[x]==null){T[x]=Math.min(c[x]||0,wpCap(x));G.wpO=(G.wpO||[]).filter(y=>y!==x);G.wpO.unshift(x)}}
 function wpSet(t,d){// + or - at place t: the first tap turns Auto off and starts every place from the headcount it has now. + takes a hand from the place set longest ago; - gives the hand to the best place with room
-  if(G.rank<2||!G.built[t])return;wpSeed();const T=G.wpT,cap=x=>wpCap(x),hands=wpFw().length,O=()=>(G.wpO||[]).filter(x=>T[x]!=null);
+  if(!wpOn()||!G.built[t])return;wpSeed();const T=G.wpT,cap=x=>wpCap(x),hands=wpFw().length,O=()=>(G.wpO||[]).filter(x=>T[x]!=null);
   T[t]=Math.min(T[t],cap(t));
   if(d>0){if(T[t]>=cap(t))return;T[t]++;let sum=0;for(const x of O())sum+=Math.min(T[x],cap(x));
     if(sum>hands){const g=O().find(x=>x!==t&&T[x]>0);if(g)T[g]--;else T[t]--}}
   else{if(T[t]<=0)return;const o=FOODP.filter(x=>x!==t&&G.built[x]&&T[x]!=null&&T[x]<cap(x)).sort((a,b)=>wpAnnual(b)-wpAnnual(a))[0];if(!o)return;T[t]--;T[o]++;G.wpO=(G.wpO||[]).filter(x=>x!==o);G.wpO.push(o)}
   G.wpAuto=false;G.wpO=(G.wpO||[]).filter(x=>x!==t);G.wpO.push(t);fillWP(wpFw(),false)}
-function wpAuto(on){if(G.rank<2)return;if(on)G.wpAuto=true;else{wpSeed();G.wpAuto=false}fillWP(wpFw(),false)}
+function wpAuto(on){if(!wpOn())return;if(on)G.wpAuto=true;else{wpSeed();G.wpAuto=false}fillWP(wpFw(),false)}
 function fillWP(fw,move){
   const T=FOODP.filter(t=>wpCap(t)>0);
   if(G.wpT){for(const t of Object.keys(G.wpT))if(!G.built[t])delete G.wpT[t];G.wpO=(G.wpO||[]).filter(t=>G.wpT[t]!=null)}// a lost building drops its target
@@ -6172,7 +6210,7 @@ function work(si){
       if(v<10&&chance(.012*lib*(1.5-.1*v)*(top[s.job]>=v+3?1.5:1))){s.skills[k]++;if(G.ssn)(G.ssn.sk||(G.ssn.sk=[])).push([s.name,k]);
         if(v+1===9){life(s,`Becomes a master of ${k==='farm'?foodL(s,2).toLowerCase():SKN[k]}. ${pick(['Others come to watch.','Has opinions about it now, and shares every one.',s.ruler?'The hold pretends not to notice the ruler in the mud.':'Now has an eye on the feathered cap.','Takes it very seriously indeed.'])}`)}}}}
   for(const s of G.settlers){if(!isChild(s)&&!sick(s)&&!away(s)&&s.job!=='rest')addXp(s,1)}
-  G.gold+=taxHead()+taxMul()*((.5+.5*lv('tavern'))*G.built.tavern+G.built.hall+(1.5+up('market',1,1.5))*(G.built.market||0)+(G.built.keep||0)+(2+up('guildhall',1,0))*(G.built.guildhall||0)+2*(G.built.bridge||0)+2*(G.built.palace||0)+2*(G.built.harbour||0));
+  G.gold+=taxHead()+taxMul()*((.5+.5*lv('tavern'))*G.built.tavern+G.built.hall+(1.5+up('market',1,1.5))*(G.built.market||0)+(G.built.keep||0)+(2+up('guildhall',1,0))*(G.built.guildhall||0)+2*(G.built.bridge||0)+2*(G.built.palace||0)+2*(G.built.harbour||0)+.5*relicN());
   {const pa=(G.built.pasture||0)*1.5**lv('pasture');G.wool+=pa;G.food+=.4*pa;fsr('pasture',.4*pa)}
   // free food at the buildings, worked or not: a fishery lands 1 a day (half in winter), the harbour adds a flat 2 (1), orchards give a little a day and their apples come in over the whole autumn
   {const ff=(G.built.fishery||0)*(si===3?.5:1)*1.5**lv('fishery')*(G.nobite>G.day?.5:1)+(G.built.harbour?(si===3?1:2):0),fo=(.5+up('orchard',.25,0))*(G.built.orchard||0);G.food+=ff+fo;fsr('fishery',ff);fsr('orchard',fo)}
@@ -7013,12 +7051,12 @@ function evNoBite(){
   const nm=wpRoom('fishery'),fw=G.settlers.filter(s=>s.job==='farm'&&!isChild(s)&&wpOf(s)==='fishery').length,mv=Math.min(fw,nm);
   return {kind:'Weather',title:"The fish won't bite",text:pickLine(NOBITEO,'nobite'),
     choices:[
-      {t:'Move the fishers',d:`${mv} fisher${mv===1?'':'s'} work elsewhere for the spell, then go back. The free catch still halves.`,dis:!mv,why:fw?'No free place elsewhere':'Nobody is fishing',fn(){G.nobite=G.day+12;const n=wpMove('fishery');return `${n} fisher${n===1?'':'s'} put the nets down and pick up something else. The river is left to think about what it has done.`}},
+      {t:'Move the fishermen',d:`${mv} fisherman${mv===1?'man':'men'} work elsewhere for the spell, then go back. The free catch still halves.`,dis:!mv,why:fw?'No free place elsewhere':'Nobody is fishing',fn(){G.nobite=G.day+12;const n=wpMove('fishery');return `${n} fisherman${n===1?'man':'men'} put the nets down and pick up something else. The river is left to think about what it has done.`}},
       {t:'Try the deep pool',d:'3 gold for bait and a long row. About half the time it ends in five days, else it drags on.',dis:G.gold<3,why:'Not enough gold',fn(){G.gold-=3;if(chance(.5)){G.nobite=G.day+5;return 'The deep pool is full of surprised fish. The spell breaks in a few days.'}G.nobite=G.day+14;return 'Deep water, same sulking fish, worse tempers. Two weeks of it.'}},
-      {t:'Wait it out',d:'Fish catches halve for about twelve days.',fn(){G.nobite=G.day+12;return 'The nets come up thin. The fishers tell each other it is the moon.'}}
+      {t:'Wait it out',d:'Fish catches halve for about twelve days.',fn(){G.nobite=G.day+12;return 'The nets come up thin. The fishermen tell each other it is the moon.'}}
     ]};
 }
-const NOBITEO=[[()=>true,()=>'The nets come up empty, morning after morning. The old hands shrug: the fish ain\'t biting, and nobody can say why. The cat sulks at the river.'],[()=>true,()=>'Not a nibble. The fishers sit on the jetty and glare at the water, and the water glares back. The fish ain\'t biting.'],[()=>true,()=>'The river has gone quiet and clever. Whatever the fish are doing, they are not doing it on your hooks.']];
+const NOBITEO=[[()=>true,()=>'The nets come up empty, morning after morning. The old hands shrug: the fish ain\'t biting, and nobody can say why. The cat sulks at the river.'],[()=>true,()=>'Not a nibble. The fishermen sit on the jetty and glare at the water, and the water glares back. The fish ain\'t biting.'],[()=>true,()=>'The river has gone quiet and clever. Whatever the fish are doing, they are not doing it on your hooks.']];
 function evFrost(){
   const nm=wpRoom('orchard'),fw=G.settlers.filter(s=>s.job==='farm'&&!isChild(s)&&wpOf(s)==='orchard').length,mv=Math.min(fw,nm);
   return {kind:'Weather',title:'A late frost',text:pickLine(FROSTO,'frost'),
@@ -7444,7 +7482,7 @@ const IDLE=[
   [()=>1,(a,b)=>`The washerwomen have a new favourite subject: ${a} and ${b}, and how often the two of them need something from the hayloft at the same time.`],
   [()=>G.built.mill,(a,b)=>`The miller swears ${a} and ${b} were up at the windmill after dark. The sails were not turning.`],
   [()=>seasonIdx()===0&&G.built.pasture,(a,b)=>`${a} and ${b} have both taken a sudden interest in the new lambs, always at dusk, and always the same lamb.`],
-  [()=>seasonIdx()===1,(a,b)=>`Someone saw ${a} and ${b} down by the river on the hottest day of the year. Neither of them was fishing.`],
+  [()=>seasonIdx()===1,(a,b)=>`On the hottest day of the year, ${a} and ${b} slipped off to the river together. They came back with wet hair, red faces and no fish.`],
   [()=>seasonIdx()===2&&G.built.orchard,(a,b)=>`${a} and ${b} spent all afternoon in the orchard together and came back with three apples between them.`],
   [()=>seasonIdx()===3,(a,b)=>`${a} and ${b} keep offering to fetch firewood together. The woodpile has not grown, but they come back very warm.`]
 ];
@@ -7452,7 +7490,7 @@ const idleLine=(a,b)=>pickLine(IDLE,'idle',a.name,b.name);
 const wifeW=s=>s.sex==='m'?'husband':'wife';
 function evIdle(a,b){
   a.afr=b.afr=1;afHeard(a,b);afN('r');const r=ruler(),sps=[a,b].map(x=>byId(x.spouse)).filter(Boolean),mine=sps.includes(r),oth=sps.filter(x=>x!==r);
-  const tell=mine?` One of them is your own ${wifeW(r.spouse===a.id?a:b)}.`:oth.length?` ${oth.map(x=>x.name).join(' and ')} ${oth.length>1?'have':'has'} not heard. Yet.`:'';
+  const tell=mine?` One of them is your own ${wifeW(r.spouse===a.id?a:b)}.`:oth.length?` ${oth.map(x=>{const w=[a,b].find(y=>y.spouse===x.id);return `${w.name}'s ${wifeW(x)}, ${x.name},`}).join(' and ')} ${oth.length>1?'have':'has'} not heard. Yet.`:'';
   return {who:[a,b],kind:'Scandal',title:'Idle Tongues',stale:()=>afOf(a)!==b||!ruler(),
     text:idleLine(a,b)+tell,
     choices:[
@@ -7852,7 +7890,8 @@ const capF=t=>t[0].toUpperCase()+t.slice(1);
 function batTake(p){const c=G.batc||(G.batc={});c[p]=(c[p]||0)+1;return {p,n:c[p]}}
 const batOf=x=>typeof x==='string'?{p:x,n:1}:x;
 const batTitle=x=>{x=batOf(x);return (x.n>1?`the ${ordN(x.n)} Battle of `:'the Battle of ')+x.p};
-const warTitle=(a,b,n)=>`the ${n>1?ordN(n)+' ':''}War of ${a} and ${b}`;
+// a later war between the same two keeps the first one's order of names (G.warf {pair: [a,b]}; his Chronicle had "Gallowmere and Stormvale", then "the 2nd War of Stormvale and Gallowmere")
+const warTitle=(a,b,n)=>{const k=[a,b].sort().join('|'),f=G?(G.warf||(G.warf={})):{};if(!f[k])f[k]=[a,b];if(n>1)[a,b]=f[k];return `the ${n>1?ordN(n)+' ':''}War of ${a} and ${b}`};
 function warName(){const w=G.rwar,rs=rivals();return capF(warTitle(rs[w.a].house,rs[w.b].house,w.wn||1))}
 // rise: a neighbour's vassal rising against its neighbour overlord (part 5, nbRise); w.rise marks the war
 function startWar(a,b,rise){
@@ -8990,11 +9029,12 @@ function evValley(n){
   const row=o=>`<span class="vrow${o.me?' you':''}"><b class="vpl">${o.p+1}</b>${shield(o.h,22)}<span class="vnm">House ${o.h}${o.me?' (you)':''}${vBond(o)}<small>${o.v} · ${RANKS[o.rk].n}</small></span></span>`;
   const text=`${vFill(vPk(VINTRO,'in'),c0)}<span class="vroll">${rows.map(row).join('')}</span>${lets}<span class="vend">${maudPic(32,me.p===0?'smile':me.p===LP?'wince':'sigh')}<i>${end}</i></span>`;
   const r3=(rr[Math.floor(R0()*rr.length)]||rows.find(o=>!o.me)||me).h;
-  annal(`The Valley Roll of ${yearNum()}, ${L.n.toLowerCase()}: House ${rows[0].h} first, House ${G.house} ${vpl(me.p)}.`,me.p===0?'good':'story');
+  annal(`The Valley Roll of ${yearNum()}, ${L.n.toLowerCase()}: ${me.p===0?`House ${G.house} first`:`House ${rows[0].h} first, House ${G.house} ${vpl(me.p)}`}.`,me.p===0?'good':'story');
   return {kind:'Neighbour',vroll:L.k,title:`The Valley Roll, ${yearNum()}`,text,
     choices:[
-      {t:'Pin it up in the hall',d:me.p===0?'The hold will like that.':'For the record.',fn(){seen();if(me.p===0)allBuff('First on the Valley Roll',2,4);return vFill(vPk(VPIN,'pin',t=>!/children/.test(t)||G.settlers.some(isChild)),{r:r3})}},
-      {t:'Have Maud write back',d:'Free. She has been waiting five years.',fn(){seen();return vPk(VBACK,'bk')}}
+      // pinned up, a good place cheers the hold for a season (first +3, top half +1); a poor one is just for the record. Maud's reply: +1 renown
+      {t:'Pin it up in the hall',d:me.p===0?'+3 mood for everyone for a season. The hold will like that.':me.p<=LP/2?'+1 mood for everyone for a season.':'Just for the record. Nobody will cheer.',fn(){seen();if(me.p===0)allBuff('First on the Valley Roll',3,DPS);else if(me.p<=LP/2)allBuff('High on the Valley Roll',1,DPS);return vFill(vPk(VPIN,'pin',t=>!/children/.test(t)||G.settlers.some(isChild)),{r:r3})}},
+      {t:'Have Maud write back',d:'Free. +1 renown: the other houses read her letters too. She has been waiting five years.',fn(){seen();G.renown+=1;return vPk(VBACK,'bk')}}
     ]};
 }
 // daily: the year's turn (vYear) and, every fifth year from year 5, the roll on a mid-year day from the seed; it waits while the guide runs
@@ -9490,6 +9530,7 @@ function rvBadge(i){const rv=rivals()[i],B=(c,t,s)=>`<span class="bdg ${c}">${t}
   if(rv.held)return B('own'+LC(rv.loy==null?85:rv.loy),'Held by you',LW(rv.loy==null?85:rv.loy));if(rv.ov==='p')return B('vas'+LC(rv.loy||0),'Your vassal',LW(rv.loy||0));if(G.ov===i)return B('ovl','Your overlord','You pay '+ovTrb());return ''}
 // Your lands: your kin's seats (a tap opens the house's page), then the farmsteads settled families made (G.lands, landAdd in 09), newest first;
 // one line each: their face, the name, where, souls and years; a daughter hold says its tithe and wears its loyalty word (mock-up 7). Nothing until there is one
+let LANDO=null;// the farmstead or daughter hold whose panel is open on the House tab; memory only
 function landsHTML(){
   const L=lands().filter(landOn),hs=rivals().map((rv,i)=>[rv,i]).filter(([rv])=>rv.held);if(!L.length&&!hs.length)return '';
   const yrs=l=>{const y=Math.floor((G.day-l.d)/DPY);return y<1?'this year':y===1?'1 year':y+' years'};
@@ -9497,7 +9538,9 @@ function landsHTML(){
   for(const [rv,i] of hs)h+=`<div class="parch card rrow land"><button class="rrin" data-act="rvo" data-i="${i}"><span class="lpic">${rportrait(rv,34)}</span><span class="rn"><b>House ${rv.house}'s seat</b><small>Held by you · ${rv.lord} rules</small></span><span class="bdg own">${loyWord(heldLoy(rv))}</span><span class="chev">›</span></button></div>`;
   const shown=L.slice().reverse().slice(0,8),so=n=>`${n} ${n===1?'soul':'souls'}`;
   for(const l of shown){const t=l.hold&&!l.free?landTithe(l):null;
-    h+=`<div class="parch card rrow land"><span class="lpic">${portrait(landFace(l),34)}</span><span class="rn"><b>${l.nm}</b><small>${t?`Daughter hold · ${so(l.n)} · tithe ${t.food} food, ${t.wood} wood`:l.free?`Free · ${so(l.n)} · writes now and then`:`${l.pl} · ${so(l.n)} · ${yrs(l)}`}</small></span>${t?`<span class="bdg own">${loyWord(l.loy==null?70:l.loy)}</span>`:l.free?`<span class="${l.att>0?'up':'dn'}">${l.att>0?'Fond':'Cross'}</span>`:''}</div>`}
+    const inner=`<span class="lpic">${portrait(landFace(l),34)}</span><span class="rn"><b>${l.nm}</b><small>${t?`Daughter hold · ${so(l.n)} · tithe ${t.food} food, ${t.wood} wood`:l.free?`Free · ${so(l.n)} · writes now and then`:`${l.pl} · ${so(l.n)} · ${yrs(l)}`}</small></span>${t?`<span class="bdg own">${loyWord(l.loy==null?70:l.loy)}</span>`:l.free?`<span class="${l.att>0?'up':'dn'}">${l.att>0?'Fond':'Cross'}</span>`:''}`;
+    // one of yours (a farmstead or a daughter hold): a tap opens what you can do for it, or ask of it (landPanel in 09)
+    h+=l.free?`<div class="parch card rrow land">${inner}</div>`:`<div class="parch card rrow land${LANDO===l.id?' lopen':''}"><button class="rrin" data-act="lando" data-id="${l.id}" aria-expanded="${LANDO===l.id}">${inner}<span class="chev">${LANDO===l.id?'⌄':'›'}</span></button></div>${LANDO===l.id?landPanel(l):''}`}
   if(L.length>shown.length)h+=`<div class="sub later">And ${L.length-shown.length} older farmstead${L.length-shown.length===1?'':'s'}, still writing now and then.</div>`;
   return h;
 }
@@ -9578,7 +9621,9 @@ function crusEnd(){
   else if(res==='lose'){allBuff('The crusade has failed',-4,10);auPlay('toll')}
   const who=home.length?` ${andW(home.map(s=>s.name))} ${home.length>1?'are':'is'} coming home.`:'';
   const tx={win:`The crusade to ${c.to} is won!`,draw:`The crusade to ${c.to} ends in a truce.`,lose:`The crusade to ${c.to} has failed.`}[res];
-  log(`${tx} House ${G.house} earns ${gl} glory (+${rn} renown).${relic?(home.length?' Your soldiers bring home a holy relic':' The King sends a holy relic, with thanks for the silver')+(G.built.chapel?' for the chapel.':', and nobody is sure where to put it.'):''}${who}`,res==='lose'?'bad':'good',true);
+  log(`${tx} House ${G.house} earns ${gl} glory (+${rn} renown).${relic?(home.length?' Your soldiers bring home a holy relic':' The King sends a holy relic, with thanks for the silver')+(G.built.chapel?' for the chapel, to sit by the altar.':', and nobody is sure where to put it. A chapel would give it a home.'):''}${who}`,res==='lose'?'bad':'good',true);
+  // the Crusade Roll keeps who went (G.crusH; older crusades are read back from the annals, crusRoll)
+  {const nm=[...new Set(c.men.map(byId).filter(Boolean).map(x=>x.name).concat(c.fell))];(G.crusH=G.crusH||[]).push({d:c.d,e:G.day,to:c.to,res,gl,men:nm,fell:c.fell.slice(),relic:relic?1:0})}
   annal(`${tx.replace('!','.')}${c.fell.length?` ${c.fell.join(', ')} did not come home.`:''}${relic?' A holy relic is brought home.':''}`,res==='lose'?'bad':'good');
 }
 function crusAct(m){
@@ -9588,9 +9633,26 @@ function crusAct(m){
   else if(m==='man'){const s=crusCands()[0];if(!s||c.mcd>G.day)return;crusSend(c,s);c.mcd=G.day+DPS;log(`${s.name} rides to join the crusade.`,'info')}
   refresh();renderHouse();
 }
+/* the Crusade Roll (his ask, 2026-11-20: the quiet Crusades card did nothing): every crusade the house joined, newest first, from the annals
+   (start: "takes the cross and marches on X"; end: "The crusade to X ..."), with who went and the glory from G.crusH when it was kept; the veterans
+   still in the hold (s.cv, where they went), a tap opening their card; the relics, pointing at the chapel. A sheet (BI.crus, binfoHTML in 10). */
+function crusRoll(){const A=G.annals||[],H=G.crusH||[],L=[];
+  for(const a of A){const m=a.t.match(/takes the cross and marches on (.+)[.]$/);if(!m)continue;const to=m[1];
+    const e=A.find(b=>b.d>=a.d&&b.t.startsWith('The crusade to '+to+' ')),h=H.find(x=>x.d===a.d)||H.find(x=>x.to===to&&e&&x.e===e.d),t=e?e.t:'';
+    const res=h?h.res:!e?'on':/ is won/.test(t)?'win':/truce/.test(t)?'draw':'lose',fm=t.match(/[.] ([^.]+) did not come home[.]/);
+    L.push({y1:yearOf(a.d),y2:e?yearOf(e.d):null,to,res,fell:h?h.fell:fm?fm[1].split(', '):[],relic:h?h.relic:/holy relic/.test(t)?1:0,men:h?h.men:null,gl:h?h.gl:null})}
+  return L.reverse()}
+function crusRollHTML(){const L=crusRoll(),V=G.settlers.filter(s=>s.cv&&!s.crus),RW={win:'Won',draw:'A truce',lose:'Lost',on:'Under way'};
+  let h=`<div class="scroll"><div class="sheet parch" style="gap:12px"><div class="shead"><div><div class="kind">House ${G.house}</div><h2>The Crusade Roll</h2></div><div class="waxseal">${ic('renown',24)}</div></div>`
+    +`<div class="sub">Crusades joined: ${G.crusN||0}, won: ${G.crusW||0}. Glory: ${fmt(G.glory||0)}, which counts toward the house's legacy.</div>`;
+  for(const c of L)h+=`<div class="parch card croll ${c.res}"><div class="bhead"><b>${c.to.charAt(0).toUpperCase()+c.to.slice(1)}</b><span class="${c.res==='win'?'up':c.res==='lose'?'dn':''}">${RW[c.res]}</span></div><div class="sub">${c.y1}${c.y2&&c.y2!==c.y1?'–'+c.y2:''}${c.gl?` · ${fmt(c.gl)} glory`:''}${c.relic?' · brought home a holy relic':''}</div>`
+    +(c.men&&c.men.length?`<div class="sub">Went: ${andW(c.men)}.</div>`:'')+(c.fell.length?`<div class="sub dn">Did not come home: ${andW(c.fell)}.</div>`:c.res!=='on'?'<div class="sub">Everyone came home.</div>':'')+'</div>';
+  if(V.length)h+=`<h3 class="sh">Veterans in the hold</h3><div class="pchips">${V.map(s=>`<button class="pchip" data-act="whoat" data-id="${s.id}">${portrait(s,46)}<b>${s.name}</b><small>${s.cv}</small></button>`).join('')}</div>`;
+  if(G.relics)h+=`<h3 class="sh">Relics</h3><div class="sub">${G.relics===1?'One holy relic':capW(G.relics)+' holy relics'}${G.built.chapel?(G.relics===1?' sits':' sit')+' by the altar in the chapel. Tap the chapel on the map to see what '+(G.relics===1?'it does.':'they do.'):', with nowhere proper to keep them. A chapel would give them a home.'}</div>`;
+  return h+'<button class="btn wax" data-act="biclose">Close</button></div></div>'}
 function crusadeHTML(){
   const c=G.crus,rec=G.crusN?`Crusades joined: ${G.crusN}, won: ${G.crusW||0}. Glory: ${fmt(G.glory||0)}${G.relics?`. Relics: ${G.relics}`:''}.`:'';
-  if(!c)return rec?`<h2 class="hh">Crusades</h2><div class="parch card"><div class="sub">${rec} ${G.day>=(G.crusCd||0)?'The next call may come at any time.':'All is quiet for now.'}</div></div>`:'';
+  if(!c)return rec?`<h2 class="hh">Crusades</h2><button class="parch card crow" data-act="crusroll"><span class="sub">${rec} ${G.day>=(G.crusCd||0)?'The next call may come at any time.':'All is quiet for now.'}</span><span class="cgo">The Crusade Roll ›</span></button>`:'';
   const men=c.men.map(byId).filter(s=>s&&s.crus),g=Math.round(crusPledge()/2),s=crusCands()[0];
   const st=c.sc>0?'The host is winning':c.sc<0?'The host is losing':'Neither side has the upper hand';
   const gw=c.gcd>G.day?`In ${nDays(c.gcd-G.day)}`:G.gold<g?`Needs ${g} gold`:'',mw=c.mcd>G.day?`In ${nDays(c.mcd-G.day)}`:!s?'No guards to spare':'',aw=c.acd>G.day?`In ${nDays(c.acd-G.day)}`:(G.iron||0)<10?'Needs 10 iron':'';
@@ -9599,7 +9661,7 @@ function crusadeHTML(){
     +(c.lt?`<div class="sub"><b>Latest letter, from ${c.lt.n}:</b> <i>"${c.lt.t}"</i></div>`:men.length?'<div class="sub">No letters yet. The roads are long.</div>':'')
     +`<div class="${resVis('iron')?'btnrow3':'btnrow'}"><button class="btn" data-act="crus" data-m="gold" ${gw?'disabled':''}><span class="t">Send gold<small>${gw||g+' gold'}</small></span></button>`
     +`<button class="btn" data-act="crus" data-m="man" ${mw?'disabled':''}><span class="t">Send a guard<small>${mw||s.name}</small></span></button>${resVis('iron')?`<button class="btn" data-act="crus" data-m="arms" ${aw?'disabled':''}><span class="t">Send arms<small>${aw||'10 iron'}</small></span></button>`:''}</div>`
-    +(rec?`<div class="sub">${rec}</div>`:'')+'</div>';
+    +(rec?`<div class="sub">${rec}</div>`:'')+(G.crusN>1||(G.crusH||[]).length?'<button class="cgo" data-act="crusroll">The Crusade Roll ›</button>':'')+'</div>';
 }
 /* ---------- succession and the family tree ---------- */
 // G.kin: every member of the ruling line, kept after they die or leave. Spouses who married in are marked inlaw.
@@ -9984,7 +10046,7 @@ const RPK={
   lawh:{m:[['h',-.5]],nb:1,p:['A year of the iron hand','Years of the iron hand']},
   lawg:{m:[['h',.5]],p:['A year of mercy','Years of mercy']},
   war:{m:[['s',-1]],big:1,t:o=>`${o.who} marched on House ${o.h} unprovoked`},
-  take:{m:[['s',-1.5]],big:1,t:o=>`${o.who} took House ${o.h} by the sword`},
+  take:{m:[['s',-3]],big:1,t:o=>`${o.who} took House ${o.h} by the sword`},
   turn:{m:[['s',1]],cd:48,p:['A war turned away','Wars turned away']},
   quiet:{m:[['s',1]],p:['Three quiet years','Quiet years']},
   ep:{m:[],big:1,t:o=>`${o.name}, remembered as ${o.ep}`},
@@ -10039,7 +10101,8 @@ function rpReign(name,kid){try{if(!G||G.tut>=0)return;const g=rp(),ch=[];
 function rpSeason(){try{if(!G||G.over||G.tut>=0)return;const g=rp(),D=RPD[G.diff>=0&&G.diff<=2?G.diff:1],tf=(G.reign&&G.reign.tf)||{},ls=tf.faith||tf.charm?1.25:1;
   const fs=rpFs();// a sworn fresh start: old stains fade twice as fast; kept five years, Maud says so
   if(g.fs&&!fs){delete g.fs;g.n.fsk=(g.n.fsk||0)+1;maudNote(`notes that House ${G.house} has kept its fresh start five years together. She has stopped checking the date every morning.`)}
-  for(const k of RPS){const v=g[k];g[k]-=v*(v>0?.04:.02*(fs?2:1))*D.f*ls;if(Math.abs(g[k])<.05)g[k]=0;rpGuard(k,g)}
+  // a bad Sword (conquest) fades at half speed: a conqueror is remembered for a generation (his playthrough, 2026-11-20: the whole valley taken, and still Steady)
+  for(const k of RPS){const v=g[k];g[k]-=v*(v>0?.04:(k==='s'?.01:.02)*(fs?2:1))*D.f*ls;if(Math.abs(g[k])<.05)g[k]=0;rpGuard(k,g)}
   for(const rv of rivals())if(rv.pk&&!(rv.peace>G.day)){delete rv.pk;if(!rv.burnt)rpDeed('kept',{rv})}
   if(!G.pw){const b=G.lwar||0;if(g.qb!==b){g.qb=b;g.qn=0}const n=Math.floor((G.day-b)/(3*DPY));if(n>(g.qn||0)){g.qn=n;rpDeed('quiet')}}
 }catch(e){RPERR=RPERR||e}}
@@ -10077,11 +10140,13 @@ function rpMend(){const w=rpWorst();if(!w)return '';const r=ruler(),it=[];
 const RPIC={w:'quill',h:'heart',s:'spear'};
 const rpDots=()=>`<span class="minis">${RPS.map(k=>`<i class="${RPCLS[rpBand(k)]}"></i>`).join('')}</span>`;
 // the House tab card (mock-up 1B): folded to three dots and the words (HO.rp opens it, memory only)
+// a middle word well on its way to one side (half way or more to the next word) says so, so the seals are seen to move (his playthrough, 2026-11-20)
+const rpLean=k=>{const v=rp()[k];return rpBand(k)!==1||Math.abs(v)<18?'':RPW[k][v>0?2:0]};
 function rpHTML(){if(!ruler()||!G||G.tut>=0)return '';
   if(!HO.rp)return `<div class="parch card rp"><button class="rfold" data-act="rpo"><span>Repute<small>${rpDots()}${rpWords()}</small></span><span class="chev">›</span></button></div>`;
   const w=rpWorst(),b=rpBest(),top=rpTop(3);
   return `<div class="parch card bcard rp"><button class="rfold open" data-act="rpo"><span>Repute</span><span class="chev">›</span></button>`
-    +`<div class="seals">${RPS.map(k=>{const c=RPCLS[rpBand(k)];return `<figure><small>${RPN[k].toUpperCase()}</small><div class="rseal ${c}">${ic(RPIC[k],24)}</div><b class="w-${c}">${rpWord(k)}</b></figure>`}).join('')}</div>`
+    +`<div class="seals">${RPS.map(k=>{const c=RPCLS[rpBand(k)];return `<figure><small>${RPN[k].toUpperCase()}</small><div class="rseal ${c}">${ic(RPIC[k],24)}</div><b class="w-${c}">${rpWord(k)}</b>${rpLean(k)?`<small class="lean">leaning ${rpLean(k)}</small>`:''}</figure>`}).join('')}</div>`
     +(rpTitle()?`<div class="rtitle">${rpTitleN()}<small>${RPTK[rpTitle()].t}</small></div>`:'')
     +`<div class="vmar">${maudPic(28,w?'brow':b?'smile':'sigh')}<i>${rpLine()}</i></div>`
     +(top.length?`<h4 class="mh">Remembered for</h4><ul>${top.map(x=>`<li>${x.t} <em>(${x.y})</em></li>`).join('')}</ul>`:`<div class="sub">Nothing much yet. The valley is still watching.</div>`)
@@ -10167,7 +10232,10 @@ let RPTC={g:null,d:-1,t:null};
 // the last three rulers with a name who reigned a year or more; two of one kind make the title (worked out once a day, never saved)
 function rpTitle(){if(!G)return null;if(RPTC.g===G&&RPTC.d===G.day)return RPTC.t;let t=null;
   try{const L=Object.values(G.kin||{}).filter(k=>k.ep&&k.rf!=null&&k.rt!=null&&k.rt-k.rf>=DPY).sort((a,b)=>a.rt-b.rt).slice(-3),c={};
-    for(const k of L)for(const x in RPTK)if(RPTK[x].ep.includes(k.ep)){c[x]=(c[x]||0)+1;if(c[x]>=2)t=x}}catch(e){RPERR=RPERR||e}
+    // a ruler fifteen years or more in the seat counts too, twice, by the name they would get if they died today (his playthrough, 2026-11-20:
+    // twenty-two years and the whole valley taken, and no title because nobody had died); they take the two newest places of the three
+    const g=G.reign,r=g&&ruler(),ly=g&&r&&r.id===g.id?(G.day-g.from)/DPY:0,lep=ly>=15?epithet(g,'died',Math.floor((G.day-r.born)/DPY),ly,r.traits,r.bas):null,LL=lep?L.slice(-1).concat([{ep:lep},{ep:lep}]):L;
+    for(const k of LL)for(const x in RPTK)if(RPTK[x].ep.includes(k.ep)){c[x]=(c[x]||0)+1;if(c[x]>=2)t=x}}catch(e){RPERR=RPERR||e}
   RPTC={g:G,d:G.day,t};return t}
 const rpTouch=k=>!!G&&!(G.tut>=0)&&rpTitle()===k;
 const rpTitleN=()=>{const t=rpTitle();return t?RPTK[t].n:''};
@@ -10813,9 +10881,41 @@ function landGrow(l){const used=lands().map(x=>x.nm).concat((G.rivals||[]).map(x
   const old=l.nm;l.hold=G.day;l.nm=p[0];l.hh=p[1];l.loy=70;l.dfs=0;
   annal(`${old} grows into a daughter hold of House ${G.house}: ${l.nm}.`,'good');log(`${old} has grown into a hold of its own, ${l.nm}, and will send a tithe of food and wood each New Year.`,'good',true);
   postAdd({t:'news',lid:l.id,txt:`We are a hold now, if you please! Folk keep coming up the drove road and staying, so we have called it ${l.nm}, built a wall nobody could climb over except the goat, and will send a tithe each New Year, as is proper. Love, ${l.hn}.`})}
+/* what you can do for your lands (his playthrough, 2026-11-20: "nothing you can do"): a tap on a farmstead or daughter hold on the House tab opens
+   landPanel; each choice once a year (l.ac {k: year}). Send a cart (food and wood; they like you more, gv +1, so a farmstead may grow into a hold
+   up to two years sooner and likelier, and a daughter hold's loyalty settles higher); Ask for help (a farmstead sends food and wood back, gv -1);
+   Call a family home (two of their grown children come to live in the hold, from 4 souls, with beds free). */
+const landYrs=l=>8-Math.min(2,Math.max(0,l.gv||0));
+const LANDCART={food:12,wood:8};
+const landHelp=l=>({food:4+Math.round(l.n*.6),wood:2+Math.round(l.n*.3)});
+const landDone=(l,k)=>(l.ac||{})[k]===Math.floor(G.day/DPY);
+function landPanel(l){
+  const y=Math.floor((G.day-l.d)/DPY),hold=!!l.hold,left=Math.max(0,landYrs(l)-y),beds=housing()-G.settlers.length,hp=landHelp(l);
+  const note=hold?`${l.nm} pays its tithe each New Year. Carts and kind words keep it loyal; neglect makes it restless.`
+    :l.n<4?`Too few souls yet to grow into a hold. Families do come up the drove road, now and then.`
+    :(l.gv||0)<0?`${l.hn} feels a little forgotten. A cart would mend that, and then it may grow into a hold.`
+    :left>0?`It may grow into a hold of its own in about ${left===1?'a year':left+' years'}${(l.gv||0)<2?'. Carts make it sooner':''}.`:`It may grow into a hold of its own any New Year now${(l.gv||0)<2?'. Carts make it likelier':''}.`;
+  const b=(k,t,d,why)=>{const no=landDone(l,k)?'Done this year':why;return `<button class="btn${no?'':' wax'}" data-act="landact" data-id="${l.id}" data-k="${k}"${no?' disabled':''}><span class="t">${t}<small>${no||d}</small></span></button>`};
+  let h=`<div class="parch card lpanel"><div class="sub">${note}</div><div class="btnrow">`;
+  h+=b('cart','Send a cart',`${LANDCART.food} food, ${LANDCART.wood} wood. They will remember it.`,G.food<LANDCART.food||G.wood<LANDCART.wood?`Needs ${LANDCART.food} food and ${LANDCART.wood} wood`:'');
+  if(!hold)h+=b('help','Ask for help',`They send ${hp.food} food and ${hp.wood} wood. They will remember that too.`,'');
+  if(!hold)h+=b('home','Call a family home','Two of their grown children come to live here.',l.n<4?'They are too few to spare anyone':beds<2?'Needs two free beds':'');
+  return h+'</div></div>';
+}
+function landAct(id,k){
+  const l=lands().find(x=>x.id===id);if(!l||l.free||landDone(l,k))return '';const y=Math.floor(G.day/DPY);
+  if(k==='cart'){if(G.food<LANDCART.food||G.wood<LANDCART.wood)return '';G.food-=LANDCART.food;G.wood-=LANDCART.wood;l.gv=(l.gv||0)+1;if(l.hold)l.loy=clamp((l.loy==null?70:l.loy)+8,0,100);
+    (l.ac=l.ac||{}).cart=y;return pick([`A cart rattles off to ${l.nm}. ${l.hn} sends back a thank-you and a very large marrow.`,`The cart reaches ${l.nm} with everything still on it, which the carter counts a triumph.`,`${l.hn} writes back that the cart was most welcome, and the horse is welcome to visit again.`])}
+  if(k==='help'&&!l.hold){const g=landHelp(l);G.food+=g.food;G.wood+=g.wood;l.gv=(l.gv||0)-1;(l.ac=l.ac||{}).help=y;
+    return `${l.nm} sends ${g.food} food and ${g.wood} wood, and a note from ${l.hn}: "Glad to help. Do remember us come harvest."`}
+  if(k==='home'&&!l.hold&&l.n>=4&&housing()-G.settlers.length>=2){const sur=/ /.test(l.hn)?' '+l.hn.split(' ').pop():'',who=[];
+    for(const sex of ['m','f']){const s=mkSettler({sex,age:16+R(6)});s.name=pickName(sex)+sur;addSettler(s,true,`Comes home from ${l.nm}, sent by ${l.hn} with a full pack and a lot of advice.`);who.push(s.name)}
+    l.n-=2;(l.ac=l.ac||{}).home=y;return `${who.join(' and ')} walk in from ${l.nm} with a full pack and a lot of advice from ${l.hn}.`}
+  return '';
+}
 function landSeason(){const L=lands(),ny=G.day%DPY<DPS,y=Math.floor(G.day/DPY);
   for(const l of L){if(!landOn(l))continue;
-    if(!l.hold&&!l.free&&ny&&l.gy!==y&&G.day-l.d>=8*DPY&&l.n>=4&&(l.gv||0)>=0){l.gy=y;if(chance(.35))landGrow(l);continue}
+    if(!l.hold&&!l.free&&ny&&l.gy!==y&&G.day-l.d>=landYrs(l)*DPY&&l.n>=4&&(l.gv||0)>=0){l.gy=y;if(chance(.35+.1*Math.min(2,l.gv||0)))landGrow(l);continue}
     if(!l.hold||l.free)continue;
     if(ny&&l.ty!==y&&G.day-l.hold>=DPS){l.ty=y;const t=landTithe(l);G.food+=t.food;G.wood+=t.wood;log(`${l.nm} sends its tithe: ${t.food} food and ${t.wood} wood, and a turnip on top for luck.`,'good',true)}
     l.loy=clamp((l.loy==null?70:l.loy)+(landAim(l)-(l.loy==null?70:l.loy))*.15+(rnd()*8-4)+rpLoy('l'),0,100);l.dfs=l.loy<25?(l.dfs||0)+1:0;
@@ -11515,17 +11615,18 @@ function assNamed(rv){if(!rv)return '';rv.lass=G.day;rvc(rv,'as');moveAtt(rv,-10
 /* ---------- plots at home (part 4): a ring, not one whisperer ----------
    G.ig.plot = {lead, help [ids], since, inf an informer planted, rip the day you let it ripen, sec a plotter knows a secret of yours}.
    The plot event (EVENTS plot in 06) starts a ring (plotStart); the Spymaster may name it at once; else its card comes after a season (plotSeason). */
-function plotCands(){const r=ruler();return r?homeAd().filter(s=>!s.ruler&&s.ta==null&&((s.traits.includes('ambitious')&&s.mood<65)||getOp(s,r)<-15)):[]}
+// the sitting spymaster never plots (his playthrough, 2026-11-20: the spymaster named a ring they led, and could seize themself)
+function plotCands(){const r=ruler(),sm=smOf();return r?homeAd().filter(s=>!s.ruler&&s!==sm&&s.ta==null&&((s.traits.includes('ambitious')&&s.mood<65)||getOp(s,r)<-15)):[]}
 function plotStart(){const r=ruler();if(!r||ig().plot)return null;const cs=plotCands();if(!cs.length)return null;const p=pick(cs);
-  const hp=homeAd().filter(s=>s!==p&&!s.ruler&&s.ta==null&&s.agt==null&&(getOp(s,r)<0||s.mood<45||getOp(s,p)>=30)).sort((a,b)=>getOp(b,p)-getOp(a,p)).slice(0,1+R(2));
+  const sm0=smOf(),hp=homeAd().filter(s=>s!==p&&s!==sm0&&!s.ruler&&s.ta==null&&s.agt==null&&(getOp(s,r)<0||s.mood<45||getOp(s,p)>=30)).sort((a,b)=>getOp(b,p)-getOp(a,p)).slice(0,1+R(2));
   ig().plot={lead:p.id,help:hp.map(s=>s.id),since:G.day,inf:0,sec:MYSEC().length&&chance(.35)?1:0};
-  const sm=smOf();if(sm&&chance(.45+smBonus()))return evRing();
+  const sm=smOf();if(sm&&!plotFolk().includes(sm)&&chance(.45+smBonus()))return evRing();
   log(pick(['Folk stop talking when you walk into the hall, and start again when you leave.','Somebody has been meeting somebody by the well after dark. Several somebodies.','There is a great deal of whispering in the hold, and none of it is about the weather.']),'bad',true);return null}
 function plotEnd(){delete ig().plot}
 const plotFolk=()=>{const p=ig().plot;if(!p)return [];return [p.lead].concat(p.help||[]).map(byId).filter(s=>s&&G.settlers.includes(s))};
 function plotCoup(){const r=ruler(),p=ig().plot,l=p&&byId(p.lead);if(!r||!l)return 0;const gc=guardCount();
   return clamp(((.2+(l.skills.charm-r.skills.charm)*.03-gc*.04)*dif().coup+.03*(p.help||[]).length)*(p.inf?.35:1),.04,.45*dif().coup)}
-function evRing(){const r=ruler(),p=ig().plot,F=plotFolk(),l=F[0];if(!r||!p||!l||l!==byId(p.lead)){plotEnd();return null}const sm=smOf(),hs=F.slice(1),cost=12+6*G.rank,cp=plotCoup();
+function evRing(){const r=ruler(),p=ig().plot,F=plotFolk(),l=F[0];if(!r||!p||!l||l!==byId(p.lead)){plotEnd();return null}const sm0=smOf(),sm=sm0&&!F.includes(sm0)?sm0:null,hs=F.slice(1),cost=12+6*G.rank,cp=plotCoup();
   const names=hs.length?`${l.name} meets ${andW(hs.map(s=>s.name))} by the well after dark`:`${l.name} meets somebody by the well after dark`;
   return {who:F.slice(0,3),roles:F.slice(0,3).map((s,j)=>j?'helper':'ringleader'),kind:'Intrigue',title:`Whispers about ${l.name}`,stale:()=>!ig().plot||ruler()!==r,
     text:`${sm?`${sm.name} has names. `:''}${names}, and they stop talking when the bucket comes up.${p.inf?' Your informer says they mean to move before the next season is out.':''}${p.sec?' Worse: one of them knows something about you that you would rather they did not.':''}`,
@@ -11534,7 +11635,7 @@ function evRing(){const r=ruler(),p=ig().plot,F=plotFolk(),l=F[0];if(!r||!p||!l|
         let t=`${andW(F.map(s=>s.name))} spend${F.length>1?'':'s'} eight days in the cellar. The whispers stop, and the stares begin.`;if(p.sec&&chance(.5)){const S=MYSEC();if(S.length)t+=' '+mySecOut(S[0])}return t}},
       {t:`Buy off ${l.name}`,d:`${cost} gold. The others lose heart.`,dis:G.gold<cost,why:'Not enough gold',fn(){plotEnd();G.gold-=cost;bump(l,r,35);addBuff(l,'Well paid',8,10);for(const s of hs)bump(s,r,8);return `${l.name} discovers a sudden fondness for you. The others find they were only out for the air.`}},
       {t:'Let it ripen',d:`Catch them in the act next season: more renown. About ${Math.round(cp*100)}% chance it ends badly.${dif().exile>=1?' Losing the seat ends your house.':dif().exile?' Losing the seat may end your house.':''}`,fn(){p.rip=G.day;p.since=G.day;return 'You say nothing, and watch. So, you notice, does everyone else.'}},
-      {t:'Plant an informer',d:sm?`${sm.name} slips one of yours in. You learn their plan, and the odds turn your way.`:'Needs a spymaster.',dis:!sm||!!p.inf,why:p.inf?'One is there already':'No spymaster',fn(){p.inf=1;p.since=G.day;return `${sm.name} finds a cousin of a friend who is very keen to join. By next season you will know everything, including who brings the cake.`}}]}}
+      {t:'Plant an informer',d:sm?`${sm.name} slips one of yours in. You learn their plan, and the odds turn your way.`:sm0?`${sm0.name} is your spymaster, and one of them. Awkward.`:'Needs a spymaster.',dis:!sm||!!p.inf,why:p.inf?'One is there already':sm0?'Your spymaster is in it':'No spymaster',fn(){p.inf=1;p.since=G.day;return `${sm.name} finds a cousin of a friend who is very keen to join. By next season you will know everything, including who brings the cake.`}}]}}
 // a season on: the card comes (or, let ripen, the moment comes: caught in the act, or the plot works)
 function plotSeason(){const p=ig().plot,r=ruler();if(!p)return;const l=byId(p.lead);if(!r||!l||!G.settlers.includes(l)||l.ruler){plotEnd();return}
   if(G.day-p.since<DPS||G.modal)return;
@@ -11561,7 +11662,7 @@ function spyHTML(){const sm=smOf(),r=ruler(),A=rivals().map((rv,i)=>[rv,i,agOf(i
   else h+='<div class="sub">No spymaster sits yet: the council seats one when four grown-ups besides the ruler live here.</div>';
   for(const [rv,i,a] of A){const sc=scOf(i);h+=`<button class="srow" data-act="rvo" data-i="${i}">${shield(rv.house,30)}<span class="sm"><b>House ${rv.house}</b><small>${agLine(a)}</small>${sc?`<span class="sch">${SCG[sc.g].n} ${oddsH(sc.o)} ${scPips(sc)}</span>`:''}</span><span class="chev">›</span></button>${agLetHTML(a,rv)}`}
   {const t=Object.values(ig().their).find(t=>t.hint&&byId(t.sid));if(t)h+=`<div class="warnline">${t.ht||THHINT[0]} ${sm?`${sm.name} is watching the newer faces.`:'Nobody is keeping watch.'}</div>`}
-  if(X.length)h+='<h3 class="mh">Secrets you hold</h3>'+X.map(([x,j])=>`<div class="secr"><span class="seal"></span><div><b>${secName(x)}</b><small>${SECN[x.k]} · found ${yearOf(x.d)}</small></div><button class="btn sm" data-act="secret" data-j="${j}" ${G.modal||G.over?'disabled':''}>Use</button></div>`).join('');
+  if(X.length)h+='<h3 class="mh">Secrets you hold</h3>'+X.map(([x,j])=>`<div class="secr"><span class="sseal"></span><div><b>${secName(x)}</b><small>${SECN[x.k]} · found ${yearOf(x.d)}</small></div><button class="btn sm" data-act="secret" data-j="${j}" ${G.modal||G.over?'disabled':''}>Use</button></div>`).join('');
   return h+'</div>'}
 /* Contents of 10-screen.js: What is on screen: icons, portraits, the tabs, cards, input and the guide.
    - icons & portraits: ICONS, ic, gBody, pNeck (necklaces), pScarf, pScar (scars and eyepatches), portrait
@@ -11837,8 +11938,8 @@ function alerts(){
   if(!G.settlers.some(s=>active(s,'farm')))a.push(['warn','No one is farming.','j:farm']);
   if(G.proj&&!G.settlers.some(s=>active(s,'build')))a.push(['warn','A project is waiting, but no one is set to Build.','j:build']);
   if(!G.proj){const bn=G.settlers.filter(s=>active(s,'build')).length,sh=nextShort();
-    if(G.next&&sh)a.push(['warn',`Next up, the ${nextBName(G.next)} waits for ${sh}.`,'build']);
-    else if(bn&&!G.next)a.push(['info',`${bn>1?'Your builders have':'Your builder has'} nothing to build. Pick something on the Build tab.`,'build'])}
+    if(nq().length&&sh)a.push(['warn',`Next up, the ${nextBName(nq()[0])} waits for ${sh}.`,'build']);
+    else if(bn&&!nq().length)a.push(['info',`${bn>1?'Your builders have':'Your builder has'} nothing to build. Pick something on the Build tab.`,'build'])}
   {const ex=G.settlers.filter(s=>active(s,'farm')).length-wpTotal(),more=G.built.field<BUILD.field.max;
     if(ex>=2)a.push(['warn',`${ex} farmers have no place to work, so they grow only a third as much. ${more?`A field plot costs ${bcost('field').wood} wood.`:'Every place is taken: other work would suit them better.'}`,more?bldFix('field'):'f:farm'])}
   if(pop>=housing()){const nw=bldFix('hut'),up=!nw&&upFix('hut'),l=lv('hut'),full=G.built.hut>=BUILD.hut.max,maxed=full&&l>=2;
@@ -11876,8 +11977,11 @@ function alerts(){
 let confirmStop=false;
 // with nobody building yet, the estimate is for one builder (the best grown-up), so the card matches the building site
 const bDays=w=>{const r=buildRate();if(r>0)return 'about '+nDays(Math.max(1,Math.ceil(w/r)));const r1=adults().reduce((m,s)=>Math.max(m,workMul()*sf(s,'build')*wm(s)),0);return r1>0?'about '+nDays(Math.max(1,Math.ceil(w/r1)))+' with 1 builder':nDays(w)+' of work'};
-function nextLine(){const n=G.next;if(!n)return '';const sh=nextShort();
-  return `<div class="actrow"><div class="sub">Next up: <b>${n.up?UPG[n.t][Math.min(lv(n.t),UPG[n.t].length-1)].n:BUILD[n.t].n}</b>${sh?'. Still needs '+sh+'.':'. It starts as soon as this is done.'}</div><button class="btn sm" data-act="nextclr">Clear</button></div>`}
+// the waiting list under the project: each in turn, what it still needs, and an × to take it off
+const qName=n=>n.up?UPG[n.t][Math.min(lv(n.t),UPG[n.t].length-1)].n:BUILD[n.t].n;
+function nextLine(){const q=nq();if(!q.length)return '';
+  return `<div class="nql"><div class="sub nqh">${q.length>1?`Then, in turn (${q.length} of ${QMAX}):`:'Next up:'}</div>`+q.map((n,i)=>{const sh=nextShort(n);
+    return `<div class="actrow nqr"><div class="sub">${q.length>1?i+1+'. ':''}<b>${qName(n)}</b>${sh?` <span class="nqs">needs ${sh}</span>`:i===0?' <span class="nqs">starts as soon as this is done</span>':''}</div><button class="x" data-act="nextclr" data-i="${i}" aria-label="Take ${qName(n)} off the list">×</button></div>`}).join('')+'</div>'}
 // the next rank in view on the Hold tab once the guide is over (2026-11-11, for the drop between year 1 and year 5): renown and folk against what it asks; a tap says how renown comes
 let GOALO=false;
 function goalCard(){
@@ -11886,7 +11990,7 @@ function goalCard(){
   return `<button class="parch card goal" data-act="goal" aria-expanded="${GOALO}"><span class="grow"><span>Next: <b>${nx.n}</b></span><span class="gn">${fmt(Math.floor(G.renown))} of ${nx.r} renown · ${pp} of ${nx.pop} folk${G.rank===3?' · a Royal Palace':''}</span></span><span class="bar"><i style="width:${Math.round(f*100)}%"></i></span>`
     +(GOALO?`<span class="sub gh">Renown comes with every new year, and faster with a chapel or a great hall. Feasts, finished buildings and brave choices on the cards add more. Folk come with cottages, weddings and the odd wanderer.</span>`:'')+'</button>'}
 function projCard(){
-  const p=G.proj;if(!p)return G.next?`<div class="parch card bcard">${nextLine()}</div>`:'';
+  const p=G.proj;if(!p)return nq().length?`<div class="parch card bcard">${nextLine()}</div>`:'';
   const f=Math.min(100,Math.round(p.done/p.need*100)),n=G.settlers.filter(s=>active(s,'build')).length,r=buildRate(),left=r>0?Math.max(1,Math.ceil((p.need-p.done)/r)):0,all=p.done/p.need<.1;
   // the building's own picture beside the bar, grey and filling with colour from the ground up as the work goes on
   const u=bPic(p.type,p.up||null,72,58),pic=u?`<span class="pjpic" aria-hidden="true"><img class="g" src="${u}" alt=""><img src="${u}" alt="" style="clip-path:inset(${100-f}% 0 0 0)"></span>`:'';
@@ -12030,7 +12134,7 @@ function folkCard(s,common,grp,inPanel){
     h+=`<button class="jchip${JP===s.id?' on':''}${moved?' moved':''}" data-act="jpick" data-id="${s.id}" data-j="${s.job}" aria-expanded="${JP===s.id}">${ic(JOBIC[s.job],18)}<b>${moved?'→ '+jobL(s.job):grp?'Move':jobL(s.job)}</b></button>`}
   h+='</div>';
   if(!inPanel&&TALK&&TALK.id===s.id&&Date.now()-TALK.t<6000)h+=`<div class="ftalk${TALK.glad?' glad':''}" style="animation-delay:-${((Date.now()-TALK.t)/1000).toFixed(2)}s">“${TALK.l}”</div>`;
-  if(JP===s.id&&!open&&!ch&&!busy)h+=jobPick(s);
+  if(JP===s.id&&!ch&&!busy)h+=jobPick(s);
   if(open){
     h+=`<div class="detail"><div class="meta">${s.ruler?titleOf(s)+', ':heir?'Heir, ':wardRow(s)?`Ward of House ${wardRow(s).house}, `:''}${ageW(a)}${sp?', wed to '+sp.name:''}</div>`;
     if(s.traits.length||(s.perks||[]).length)h+=`<div class="tags">${s.traits.map(tagHTML).join('')}${(s.perks||[]).map(p=>perkTag(s,p)).join('')}</div>`;
@@ -12039,9 +12143,13 @@ function folkCard(s,common,grp,inPanel){
     h+=`<div class="mood"><span class="ml">Mood</span><div class="bar"><i style="width:${s.mood}%;background:${moodBg(s.mood)}"></i></div><b style="color:${moodCol(s.mood)}">${fmt(s.mood)}</b></div>`;
     {const mt=moodAim(s),r=Math.round(mt),now=Math.round(s.mood);h+=`<div class="sub maim">${r===now?`Steady at ${r}`:`Heading for ${r}`}: 50 to start, plus the reasons below.</div>`}
     const mm=moodMods(s).filter(m=>m[1]).sort((x,y)=>Math.abs(y[1])-Math.abs(x[1]));
-    h+='<div class="kv"><span class="sh">What moves the mood</span>'+(mm.length?mm.map(m=>`<div><span>${m[0]}</span><span class="${m[1]>0?'up':'dn'}">${m[1]>0?'+':''}${m[1]}</span></div>`+(/ the ruler$/.test(m[0])&&m[1]<0?`<p class="opw">${opReason(s)}</p>`:'')).join(''):'<div><span>Nothing much either way</span><span></span></div>')+'</div>';
+    // the three biggest lifts and the three biggest drags; the rest wait behind a fold (his playthrough, 2026-11-20: the list ran to 24 lines)
+    const mrow=m=>`<div><span>${m[0]}</span><span class="${m[1]>0?'up':'dn'}">${m[1]>0?'+':''}${m[1]}</span></div>`+(/ the ruler$/.test(m[0])&&m[1]<0?`<p class="opw">${opReason(s)}</p>`:'');
+    const top=new Set([...mm.filter(m=>m[1]>0).slice(0,3),...mm.filter(m=>m[1]<0).slice(0,3)]),rest=mm.filter(m=>!top.has(m));
+    h+='<div class="kv"><span class="sh">What moves the mood</span>'+(mm.length?mm.filter(m=>top.has(m)).map(mrow).join(''):'<div><span>Nothing much either way</span><span></span></div>')+'</div>';
+    if(rest.length)h+=fold('mm',`All ${mm.length} reasons`,'<div class="kv">'+mm.map(mrow).join('')+'</div>');
     if(ch)h+=`<div class="note">${childNote(s)}</div>`;
-    else{h+=lvlRow(s);h+=busy?`<div class="note">${sick(s)?'Bedridden with fever.':'Away from the hold.'}</div>`:'<span class="sh">Work</span>'+jobPick(s)}
+    else{h+=lvlRow(s);if(busy)h+=`<div class="note">${sick(s)?'Bedridden with fever.':'Away from the hold.'}</div>`}
     h+=fold('sk','Skills','<div class="skills">'+Object.keys(SKL).map(k=>`<div class="sk"><span>${k==='farm'?foodL(s,2):SKL[k]}<small>${skRank(s.skills[k])}</small></span><span class="bar"><i style="width:${s.skills[k]*10}%"></i></span><b>${s.skills[k]}</b></div>`).join('')+'</div>');
     h+=fold('tr','Traits',s.traits.length?'<div class="kv">'+s.traits.map(t=>`<div class="trl"><b>${TRAITS[t].n}</b> ${TFX[t]||''}</div>`).join('')+'</div>':'');
     const rel=G.settlers.filter(o=>o!==s).map(o=>({o,v:getOp(s,o)}));
@@ -12057,10 +12165,10 @@ function folkCard(s,common,grp,inPanel){
   return h+'</article>';
 }
 // the Farm card's chips (Specialising part 2): one per place in use, the game's own icon, people there and the food they bring in a day
-// "Where they work" (Specialising part 3): from Barony, in the open Farm group, a - and + per food place in use and an Auto switch. Tapping - or + turns Auto off; the targets are kept when it goes back on
+// "Where they work" (Specialising part 3): once there are two kinds of food place (wpOn), in the open Farm group, a - and + per food place in use and an Auto switch. Tapping - or + turns Auto off; the targets are kept when it goes back on
 const WPPL={field:'Fields',fishery:'River',orchard:'Orchard',pasture:'Pasture'};
 function wpPanel(){
-  if(G.rank<2||!FOODP.some(t=>G.built[t]))return '';
+  if(!wpOn())return '';
   const c=foodBy(),man=wpMan(),T=G.wpT||{},auto=!man;
   const rows=FOODP.filter(t=>G.built[t]).map(t=>{const n=man&&T[t]!=null?Math.min(T[t],wpCap(t)):(c[t]||0);
     return `<div class="wprow"><span class="wpn">${ic(t,18)}${WPPL[t]}</span><button class="wpb" data-act="wpd" data-t="${t}" data-d="-1" aria-label="One fewer at ${WPPL[t].toLowerCase()}"${n<=0?' disabled':''}>−</button><b class="wpv">${n}</b><button class="wpb" data-act="wpd" data-t="${t}" data-d="1" aria-label="One more at ${WPPL[t].toLowerCase()}"${n>=wpCap(t)?' disabled':''}>+</button><small>of ${wpCap(t)}</small></div>`}).join('');
@@ -12089,20 +12197,27 @@ const FFIL=[['all','All',()=>true],['unhappy','Unhappy',s=>s.mood<35],['kids','C
 // two views: People (opens first, a portrait wall of everyone) and Work (the job groups). Not saved: People on every visit unless a jump asks for Work
 let FV='people';
 // a face on the wall: portrait with its mood ring, name, mood word (and the reason when unhappy), badges, and the job strip that is the Move button
-function folkTile(s,common){
+// grp: the job group it sits in on the Work view (the button says Move, or where they just went); none on the People view
+function folkTile(s,common,grp){
   const ch=isChild(s),r=ruler(),heir=r&&!s.ruler&&heirOf(r)===s,k=JOBSKILL[s.job],master=!ch&&k&&s.skills[k]>=9,a=age(s);
   const b=(heir?`<span class="fbadge heir" title="Heir">${ic('renown',12)}</span>`:'')+(master?`<span class="fbadge" title="Master">${ic(JOBIC[s.job],12)}</span>`:'');
   const why=sick(s)?'<span class="dn">Down with fever</span>':s.mood<35&&!ch?topWhy(s,common):'';
   const lrn=a>=7&&s.ap&&TRADE[s.ap.j]&&!s.ap.r?s.ap.j:null;
   const strip=ch?`<span class="pjob kid">${ic(lrn?JOBIC[lrn]:'cradle',14)}${lrn?'Learning':'Child'}</span>`:sick(s)||away(s)?`<span class="pjob kid off">${ic(sick(s)?'infirmary':'house',14)}${sick(s)?'Sick':'Away'}</span>`
-    :`<button class="pjob${JP===s.id?' on':''}" data-act="jpick" data-id="${s.id}" aria-expanded="${JP===s.id}">${ic(JOBIC[s.job],14)}${jobL(s.job)}</button>`;
-  return `<div class="parch ptile${selected===s.id||JP===s.id?' sel':''}" data-j="${ch?'kids':s.job}"><button class="pface" data-act="open" data-id="${s.id}" aria-expanded="${expanded===s.id}"><span class="pring${s.mood<25&&!ch?' low':s.mood>=75?' hi':''}" style="--mc:${moodCol(s.mood)}">${portrait(s,58)}${!ch&&s.perkPts>0?'<span class="pbadge">Perk</span>':''}</span><b>${s.name}</b><small>${moodFace(s.mood,14)}${moodW(s.mood)}</small>${why?`<small class="pwhy">${why}</small>`:''}</button>${b?`<span class="pbad">${b}</span>`:''}${strip}</div>`;
+    :`<button class="pjob${JP===s.id?' on':''}" data-act="jpick" data-id="${s.id}" aria-expanded="${JP===s.id}">${ic(JOBIC[s.job],14)}${grp?grp!==s.job?'→ '+jobL(s.job):'Move':jobL(s.job)}</button>`;
+  return `<div class="parch ptile${grp&&grp!==s.job?' moved':''}${selected===s.id||JP===s.id?' sel':''}" data-j="${ch?'kids':s.job}"><button class="pface" data-act="open" data-id="${s.id}" aria-expanded="${expanded===s.id}"><span class="pring${s.mood<25&&!ch?' low':s.mood>=75?' hi':''}" style="--mc:${moodCol(s.mood)}">${portrait(s,grp?40:58)}${!ch&&s.perkPts>0?'<span class="pbadge">Perk</span>':''}</span><b>${s.name}</b>${grp?'':`<small>${moodFace(s.mood,14)}${moodW(s.mood)}</small>`}${why?`<small class="pwhy">${why}</small>`:''}</button>${b?`<span class="pbad">${b}</span>`:''}${strip}</div>`;
 }
 // a section of the wall, three faces a row; the open card or job picker sits full width just below its row, so no face moves
 function wallSec(key,title,list,common,extra){
   if(!list.length)return '';
-  let h=`<div class="dcat pwhead" data-s="${key}">${title}${extra||''}</div><div class="pwall">`;
-  for(let i=0;i<list.length;i+=3){const row=list.slice(i,i+3);h+=row.map(s=>folkTile(s,common)).join('');
+  return `<div class="dcat pwhead" data-s="${key}">${title}${extra||''}</div>`+tileGrid(list,common);
+}
+// the faces three a row (People view, and inside each job group on the Work view since 2026-11-20: a row each was a lot of scrolling for one job)
+function tileGrid(list,common,grpOf){
+  let h='<div class="pwall">';
+  const per=grpOf?4:3;// the Work view's smaller faces go four a row
+  if(grpOf)h='<div class="pwall mini">';
+  for(let i=0;i<list.length;i+=per){const row=list.slice(i,i+per);h+=row.map(s=>folkTile(s,common,grpOf&&grpOf(s))).join('');
     const t=TALK&&Date.now()-TALK.t<6000&&row.find(s=>s.id===TALK.id);// what someone just said about their new job, under their row
     if(t)h+=`<div class="ftalk ptalk${TALK.glad?' glad':''}" style="animation-delay:-${((Date.now()-TALK.t)/1000).toFixed(2)}s"><b>${t.name}:</b> “${TALK.l}”</div>`;
     const e=row.find(s=>s.id===expanded),p=!e&&row.find(s=>s.id===JP);
@@ -12123,12 +12238,11 @@ function workHTML(common,goTo){
   const grpOf=s=>isChild(s)?'kids':FSNAP.g.get(s.id),inG=k=>G.settlers.filter(s=>s!==r&&grpOf(s)===k).sort((a,b)=>FSNAP.o.get(a.id)-FSNAP.o.get(b.id));
   const has=l=>l.some(s=>s.id===expanded||s.id===selected||s.id===JP);
   const isOpen=(k,l)=>has(l)||baseOpen(k);
-  const card=s=>folkCard(s,common,grpOf(s));
   let h='';
   if(r)h+=`<div class="dcat">Your ${titleOf(r).toLowerCase()}</div>`+folkCard(r,common,isChild(r)?null:r.job);
   h+=JOBS.map(([j,l])=>{const list=inG(j),n=G.settlers.filter(s=>!isChild(s)&&s.job===j).length,open=isOpen(j,list);
-    return `<div class="fgrp" data-g="${j}">`+groupHead(j,l,n,jobStat(j,n),list,open,jobState(j,n))+(FIXJOB&&FIXJOB.j===j?fixStrip(j):'')+(open&&j==='farm'?wpPanel():'')+(open?list.length?list.map(card).join(''):(r&&r.job===j&&!isChild(r)?`<div class="gnone">Just ${r.name}, your ruler, for now.</div>`:'<div class="gnone">Nobody here yet. Tap Move on someone to bring them over.</div>'):'')+'</div>'}).join('');
-  {const list=inG('kids');if(list.length){const open=isOpen('kids',list);h+='<div class="fgrp" data-g="kids">'+groupHead('kids','Children',list.length,`${list.filter(s=>age(s)>=7&&s.ap&&!s.ap.r).length} learning a trade`,list,open,'')+(open?list.map(card).join(''):'')+'</div>'}}
+    return `<div class="fgrp" data-g="${j}">`+groupHead(j,l,n,jobStat(j,n),list,open,jobState(j,n))+(FIXJOB&&FIXJOB.j===j?fixStrip(j):'')+(open&&j==='farm'?wpPanel():'')+(open?list.length?tileGrid(list,common,grpOf):(r&&r.job===j&&!isChild(r)?`<div class="gnone">Just ${r.name}, your ruler, for now.</div>`:'<div class="gnone">Nobody here yet. Tap Move on someone to bring them over.</div>'):'')+'</div>'}).join('');
+  {const list=inG('kids');if(list.length){const open=isOpen('kids',list);h+='<div class="fgrp" data-g="kids">'+groupHead('kids','Children',list.length,`${list.filter(s=>age(s)>=7&&s.ap&&!s.ap.r).length} learning a trade`,list,open,'')+(open?tileGrid(list,common):'')+'</div>'}}
   return h;
 }
 function renderFolk(){
@@ -12145,7 +12259,7 @@ function renderFolk(){
   else if(UI.f==='kids'){goTo='kids';FV='people';uiSet('f','all')}
   else if(UI.f==='unhappy'||UI.f==='hint')FV='people';
   if(FIXJOB)FV='work';
-  let h=chips('fview',[['people','People'],['work','Work']],FV)+`<div class="sub">${G.settlers.length} souls, ${housing()} beds. ${FV==='people'?'Tap a face to see more, or the job beneath it to change it.':'Tap Move to change someone\'s job, or a name to see more.'}</div>`;
+  let h=chips('fview',[['people','People'],['work','Work']],FV)+`<div class="sub">${G.settlers.length} souls, ${housing()} beds. ${FV==='people'?'Tap a face to see more, or the job beneath it to change it.':'Tap Move to change someone\'s job, or a face to see more.'}</div>`;
   // asked for the unhappy or the mutterers (a Hold warning, the crown card): them first, with a way to cheer the hold up
   if(FV==='people'&&(UI.f==='unhappy'||UI.f==='hint')){const f=FFIL.find(x=>x[0]===UI.f)[2],l=G.settlers.filter(f);
     h+=`<div class="parch card asked"><button class="x" data-act="ffil" data-k="all" aria-label="Close">×</button><h3 class="sh">${UI.f==='unhappy'?'Unhappy':'Muttering about the seat'} (${l.length})</h3>${l.length?l.map(s=>`<button class="cgo" data-act="whoat" data-id="${s.id}">${s.name} ›</button>`).join(''):'<div class="sub">No one, for now.</div>'}${UI.f==='unhappy'?`<div class="moodacts">${ACTMOOD.map(actBtn).join('')}<button class="btn" data-act="gofix" data-k="law:work">Or ease the laws</button></div>`:''}</div>`}
@@ -12157,7 +12271,7 @@ function upgHTML(t){
   const u=UPG[t];if(!u||!G.built[t])return '';const l=lv(t),pips=`<span class="upips">${ULV.map((n,i)=>`<i class="${i<=l?'on':''}">${n}</i>`).join('')}</span>`;
   if(l>=u.length)return `<div class="upg">${pips}<div class="sub">Fully upgraded.</div></div>`;
   const n=u[l],w=upWhy(t);
-  return `<div class="upg">${pips}<div class="sub"><b>${n.n}.</b> ${n.fx} ${cap1(bDays(n.work))}.</div><div class="cost">${Object.entries(ucost(t)).map(([k,v])=>`<span class="cchip${(G[k]||0)<v?' no':''}">${ic(k,15)}${v}</span>`).join('')}</div>${w&&G.proj&&queueOk(t,1)?qBtn(t,1).replace('btn sm','btn'):`<button class="btn${w?'':' wax'}" data-act="upg" data-b="${t}" ${w?'disabled':''}>${w||'Upgrade to '+ULV[l+1].toLowerCase()}</button>`}</div>`;
+  return `<div class="upg">${pips}<div class="sub"><b>${n.n}.</b> ${n.fx} ${cap1(bDays(n.work))}.</div><div class="cost">${Object.entries(ucost(t)).map(([k,v])=>`<span class="cchip${(G[k]||0)<v?' no':''}">${ic(k,15)}${v}</span>`).join('')}</div>${w&&qShow(t,1)?qBtn(t,1).replace('btn sm','btn'):`<button class="btn${w?'':' wax'}" data-act="upg" data-b="${t}" ${w?'disabled':''}>${w||'Upgrade to '+ULV[l+1].toLowerCase()}</button>`}</div>`;
 }
 let BMORE=false;const BFIRST=['field','hut','granary'];
 const bFolded=t=>G.day<DPY&&!G.rank&&!BMORE&&!BFIRST.includes(t)&&bState(t)==='open';
@@ -12215,14 +12329,16 @@ function picWall(c,l){const sk=l?stoneSeg:stake,gp=l?stoneGate:gatePost;for(cons
 const picImg=(t,L,w,h,cl)=>{const u=bPic(t,L,w,h);return u?`<img class="${cl}" src="${u}" alt="" width="${w}" height="${h}">`:`<span class="${cl} noimg">${ic(t,30)}</span>`};
 // a tile: picture, name, what it does, how many, cost and the Build button
 function bTile(t){const b=BUILD[t],c=canBuild(t);
-  return `<div class="parch card btile" data-k="${t}">${picImg(t,null,132,62,'bpic')}<h3>${b.n}</h3><div class="bfx">${b.fx}</div><div class="bcount">${G.built[t]} of ${b.max} built${lvTag(t)} · ${bDays(b.work)}</div><div class="cost">${chipsOf(bcost(t))}</div>${!c.ok&&G.proj&&queueOk(t)?qBtn(t,0):`<button class="btn sm${c.ok?' wax':''}" data-act="build" data-b="${t}" ${c.ok?'':'disabled'}>${c.ok?'Build':c.why}</button>`}</div>`}
+  return `<div class="parch card btile" data-k="${t}">${picImg(t,null,132,62,'bpic')}<h3>${b.n}</h3><div class="bfx">${b.fx}</div><div class="bcount">${G.built[t]} of ${b.max} built${lvTag(t)} · ${bDays(b.work)}</div><div class="cost">${chipsOf(bcost(t))}</div>${!c.ok&&qShow(t)?qBtn(t,0):`<button class="btn sm${c.ok?' wax':''}" data-act="build" data-b="${t}" ${c.ok?'':'disabled'}>${c.ok?'Build':c.why}</button>`}</div>`}
 // an upgrade card: small now -> after pictures beside the text, cost and button on one row
 function uCard(t){const n=UPG[t][lv(t)],l=lv(t),w=upWhy(t);
-  return `<div class="parch card ucard${w?' short':''}" data-k="${t}"><div class="uhead"><div class="upics">${picImg(t,l,52,44,'upic')}<span class="uarr">➜</span>${picImg(t,l+1,52,44,'upic')}</div><div><h3>${BUILD[t].n} <small>${ULV[l]} → ${ULV[l+1]} · ${bDays(n.work)}</small></h3><div class="ufx"><b>${n.n}.</b> ${n.fx}</div></div></div><div class="actrow"><div class="cost">${chipsOf(ucost(t))}</div>${w&&G.proj&&queueOk(t,1)?qBtn(t,1):`<button class="btn sm${w?'':' wax'}" data-act="upg" data-b="${t}" ${w?'disabled':''}>${w||'Upgrade'}</button>`}</div></div>`}
+  return `<div class="parch card ucard${w?' short':''}" data-k="${t}"><div class="uhead"><div class="upics">${picImg(t,l,52,44,'upic')}<span class="uarr">➜</span>${picImg(t,l+1,52,44,'upic')}</div><div><h3>${BUILD[t].n} <small>${ULV[l]} → ${ULV[l+1]} · ${bDays(n.work)}</small></h3><div class="ufx"><b>${n.n}.</b> ${n.fx}</div></div></div><div class="actrow"><div class="cost">${chipsOf(ucost(t))}</div>${w&&qShow(t,1)?qBtn(t,1):`<button class="btn sm${w?'':' wax'}" data-act="upg" data-b="${t}" ${w?'disabled':''}>${w||'Upgrade'}</button>`}</div></div>`}
 function bRow(t,st){const b=BUILD[t],info=typeof b.reqT==='function'?b.reqT():b.reqT;
   return `<div class="parch brow lock"><span class="medal">${ic(t,18)}</span><span class="t"><b>${b.n}</b><small>${info}</small></span></div>`}
 // while a project runs: pick this to start next (tap again to take it off)
-const qBtn=(t,u)=>{const on=G.next&&G.next.t===t&&!!G.next.up===!!u;return `<button class="btn sm${on?' wax':''}" data-act="nextb" data-b="${t}"${u?' data-u="1"':''}>${on?'Next up':'Do next'}</button>`},cap1=x=>x[0].toUpperCase()+x.slice(1);
+// on the list: its place in line (tap to take it off); off it: Do next, or Add to list once something waits
+const qShow=(t,u)=>inQ(t,u)>=0||queueOk(t,u);
+const qBtn=(t,u)=>{const i=inQ(t,u),on=i>=0;return `<button class="btn sm${on?' wax':''}" data-act="nextb" data-b="${t}"${u?' data-u="1"':''}>${on?(i===0?'Next up':`${i+1}${['st','nd','rd'][i]||'th'} in line`):nq().length?'Add to list':'Do next'}</button>`},cap1=x=>x[0].toUpperCase()+x.slice(1);
 const chipsOf=co=>Object.entries(co).map(([k,v])=>`<span class="cchip${(G[k]||0)<v?' no':''}">${ic(k,15)}${v}</span>`).join('');
 // a red wax seal pressed onto the tile that was just started
 function sealFx(btn){const card=btn&&btn.closest&&btn.closest('.card,.folk');SND.seal();if(!card)return;const r=card.getBoundingClientRect(),e=document.createElement('div');e.className='sealfx';e.innerHTML=shield(G.sig,26);
@@ -12410,7 +12526,7 @@ function renderHouse(){
   }
   $('#v-house').innerHTML=h;
 }
-function annalsHTML(list){let h='',yr=null;for(const e of list.slice().reverse()){const y=yearOf(e.d);if(y!==yr){yr=y;h+=`<li class="yr">${y}</li>`}h+=`<li class="${e.k}"><span class="dt">${stamp(e.d)}</span><span>${e.t}</span></li>`}return h}
+function annalsHTML(list){let h='',yr=null;for(const e of list.slice().reverse()){const y=yearOf(e.d);if(y!==yr){yr=y;h+=`<li class="yr">${y}</li>`}h+=`<li class="${e.k}"><span class="dt">${stamp(e.d)}</span><span>${e.t.replace(/(House [^,]+) first, \1 first\./,'$1 first.')}</span></li>`}return h}
 function annalsCard(){
   const a=annals(),n=10,more=a.length>n;
   return `<h2 class="hh">The Annals</h2><div class="parch card"><div class="sub">The great moments of House ${G.house}, newest first.</div><ol class="annals">${annalsHTML(annalsAll||!more?a:a.slice(-n))}</ol>${more?`<button class="btn" data-act="annals" style="margin-top:10px">${annalsAll?'Show fewer':'Read all '+a.length+' entries'}</button>`:''}</div>`;
@@ -12730,7 +12846,9 @@ function refresh(){
 let menuSpeed=0;// speed to go back to when returning to the map from a menu tab (0 = nothing to restore)
 function setView(v){
   if(v!=='hold')tally1('tab-'+v);
-  const from=view;view=v;confirmStop=false;if(v!=='folk')FIXJOB=null;if(v==='folk'&&from!=='folk'){FSNAP=null;FV='people';JP=null}if(from==='folk'&&v!=='folk'&&(UI.f==='unhappy'||UI.f==='hint'))uiSet('f','all');
+  const from=view;view=v;confirmStop=false;if(v!=='folk')FIXJOB=null;
+  // leaving the Folk tab folds it all back up: the open card, the job picker, the groups and the card's own folds
+  if(from==='folk'&&v!=='folk'){expanded=null;JP=null;for(const k in FO)delete FO[k]}if(v==='folk'&&from!=='folk'){FSNAP=null;FV='people';JP=null}if(from==='folk'&&v!=='folk'&&(UI.f==='unhappy'||UI.f==='hint'))uiSet('f','all');
   if(G&&!G.over&&UI.mp!==false){
     if(from==='hold'&&v!=='hold'&&speed>0&&!wide()){menuSpeed=speed;setSpeed(0)}// on a computer the map stays in view, so time keeps moving
     else if(v==='hold'&&menuSpeed){if(speed===0&&!BI&&!nameCur)setSpeed(menuSpeed);menuSpeed=0}
@@ -12903,11 +13021,13 @@ document.addEventListener('click',e=>{
   else if(a==='chold'){CHO=!CHO;renderHold()}
   else if(a==='speed'){menuSpeed=0;setSpeed(+t.dataset.v)}
   else if(a==='job'){const s=byId(+t.dataset.id);if(s){const o=s.job;s.job=t.dataset.job;JP=null;if(o!==s.job)sealFx(t);jobReact(s,o);retarget();refresh()}}
-  else if(a==='jpick'){const id=+t.dataset.id;JP=JP===id?null:id;if(FV==='people'&&JP)expanded=null;renderFolk();renderTip()}
+  else if(a==='jpick'){const id=+t.dataset.id;JP=JP===id?null:id;if(JP)expanded=null;renderFolk();renderTip()}
   else if(a==='fview'){FV=t.dataset.k;JP=null;FIXJOB=null;if(UI.f!=='all')uiSet('f','all');renderFolk();$('#main').scrollTop=0;renderTip()}
   else if(a==='wpd'){const y0=t.getBoundingClientRect().top,k=`[data-act="wpd"][data-t="${t.dataset.t}"][data-d="${t.dataset.d}"]`;wpSet(t.dataset.t,+t.dataset.d);renderFolk();const n=document.querySelector(k);if(n)$('#main').scrollTop+=n.getBoundingClientRect().top-y0}// the Farm card above grows chips on the first tap: keep the button under the finger
   else if(a==='wpa'){wpAuto(!(G.wpAuto!==false));renderFolk()}
-  else if(a==='ffo'){const k=t.dataset.k,o=t.getAttribute('aria-expanded')==='true';FO[k]=!o;if(o&&k.startsWith('g:')){const g=t.closest('.fgrp'),ids=g?[...g.querySelectorAll('[data-act="open"]')].map(e=>+e.dataset.id):[];if(ids.includes(expanded))expanded=null;if(ids.includes(selected))selected=null;if(ids.includes(JP))JP=null}renderFolk()}
+  else if(a==='ffo'){const k=t.dataset.k,o=t.getAttribute('aria-expanded')==='true';FO[k]=!o;
+    // one job group open at a time: opening one folds the others and closes any open card
+    if(!o&&k.startsWith('g:')){for(const [j] of JOBS.concat([['kids']]))if('g:'+j!==k)FO['g:'+j]=false;expanded=selected=JP=null}if(o&&k.startsWith('g:')){const g=t.closest('.fgrp'),ids=g?[...g.querySelectorAll('[data-act="open"]')].map(e=>+e.dataset.id):[];if(ids.includes(expanded))expanded=null;if(ids.includes(selected))selected=null;if(ids.includes(JP))JP=null}renderFolk()}
   else if(a==='open'){const id=+t.dataset.id;expanded=expanded===id?null:id;selected=id;JP=null;refresh()}
   else if(a==='build'){const ok=canBuild(t.dataset.b).ok;if(ok)sealFx(t);startBuild(t.dataset.b);refresh()}
   else if(a==='bfold'){uiSet('bl',!UI.bl);renderBuild()}
@@ -12916,8 +13036,10 @@ document.addEventListener('click',e=>{
   else if(a==='htab'){if(t.dataset.k==='set')UI.h='set';else uiSet('h',t.dataset.k);confirmRestart=false;confirmGold=false;renderHouse();$('#main').scrollTop=0}
   else if(a==='ffil'){uiSet('f',t.dataset.k);renderFolk();$('#main').scrollTop=0}
   else if(a==='upg'){if(!upWhy(t.dataset.b)&&!BI)sealFx(t);startUpgrade(t.dataset.b);refresh();if(BI)$('#binfo').innerHTML=binfoHTML()}
-  else if(a==='nextb'){setNext(t.dataset.b,!!t.dataset.u);if(G.next)toast(`Next up: ${G.next.up?UPG[G.next.t][lv(G.next.t)].n:BUILD[G.next.t].n}. It starts when this work is done.`);refresh();if(BI)$('#binfo').innerHTML=binfoHTML()}
-  else if(a==='nextclr'){G.next=null;refresh()}
+  else if(a==='nextb'){const u=!!t.dataset.u,was=inQ(t.dataset.b,u)>=0;setNext(t.dataset.b,u);const i=inQ(t.dataset.b,u),n=nq()[i];if(!was&&n)toast(i===0?`Next up: ${qName(n)}. It starts when this work is done.`:`${qName(n)} is ${i+1}${['st','nd','rd'][i]||'th'} in line.`);refresh();if(BI)$('#binfo').innerHTML=binfoHTML()}
+  else if(a==='lando'){const id=+t.dataset.id;LANDO=LANDO===id?null:id;refresh()}
+  else if(a==='landact'){const r=landAct(+t.dataset.id,t.dataset.k);if(r){log(r,'good');toast(r);SND.seal()}refresh()}
+  else if(a==='nextclr'){if(t.dataset.i!=null)nq().splice(+t.dataset.i,1);else G.nq=[];refresh()}
   else if(a==='goal'){GOALO=!GOALO;if(GOALO)tally1('goal-tap');refresh()}
   else if(a==='stopproj'){if(confirmStop){confirmStop=false;stopProj()}else confirmStop=true;refresh()}
   else if(a==='grave'){auPlay('tap');graveNote(+t.dataset.i)}
@@ -12993,6 +13115,7 @@ document.addEventListener('click',e=>{
   else if(a==='shared')loadShared();
   else if(a==='xferclose')closeXfer();
   else if(a==='annals'){annalsAll=!annalsAll;renderHouse()}
+  else if(a==='crusroll'){auPlay('tap');openBinfo({crus:1})}
   else if(a==='perks'){auPlay('tap');openBinfo({perks:1})}
   else if(a==='learn'){const s=byId(+t.dataset.id);learnPerk(s,t.dataset.k);if(G.settlers.some(o=>o.perkPts>0))$('#binfo').innerHTML=binfoHTML();else closeBinfo()}
   else if(a==='perktag'){const s=byId(+t.dataset.id),P=PERKS[t.dataset.t];auPlay('tap');if(s&&P)toast(P.n+': '+P.d+(P.job&&s.job!==P.job?` Sleeps while ${s.name} is not ${PJOB[P.job].toLowerCase()}.`:''))}
@@ -13064,7 +13187,7 @@ function mapTap(cx,cy){
 
 /* ---------- tap a building: what it does, its upgrade, who works and lives there ---------- */
 let BI=null,biSpeed=0;
-// the field a farm worker works at: field workers (s.wp field) share the fields in turn; null for fishers, pickers and shepherds
+// the field a farm worker works at: field workers (s.wp field) share the fields in turn; null for fishermen, pickers and shepherds
 function farmField(s){const f=G.bld.filter(b=>b.type==='field');if(!f.length||wpOf(s)!=='field')return null;const fm=G.settlers.filter(x=>!isChild(x)&&x.job==='farm'&&wpOf(x)==='field').sort((a,b)=>a.id-b.id);return f[Math.max(0,fm.indexOf(s))%f.length]}
 // the building a farm worker works at (any food place), or null
 function wpBld(s){const t=wpOf(s);if(t==='field')return farmField(s);const f=G.bld.filter(b=>b.type===t);if(!f.length)return null;const fm=G.settlers.filter(x=>!isChild(x)&&x.job==='farm'&&wpOf(x)===t).sort((a,b)=>a.id-b.id);return f[Math.floor(Math.max(0,fm.indexOf(s))/WPN)%f.length]}
@@ -13089,13 +13212,18 @@ function residentsAt(o){
   return G.settlers.filter(s=>{const h=homeOf(s);return Math.abs(h[0]-o.x)<.01&&Math.abs(h[1]-(o.y+.1))<.01});
 }
 const JOBN={farm:'Farmer',wood:'Woodcutter',stone:'Miner',build:'Builder',guard:'Guard',rest:'Resting'};
-const jobTitle=s=>s.job==='farm'?foodL(s,0):JOBN[s.job]||'';// Farmer, Fisher, Apple picker or Shepherd by where they work
+const jobTitle=s=>s.job==='farm'?foodL(s,0):JOBN[s.job]||'';// Farmer, Fisherman, Apple picker or Shepherd by where they work
 function pchips(list){return `<div class="pchips">${list.map(s=>`<button class="pchip" data-act="whoat" data-id="${s.id}">${portrait(s,46)}<b>${s.name}</b><small>${isChild(s)?'Child':s.ruler?titleOf(s):jobTitle(s)}</small></button>`).join('')}</div>`}
+// the chapel's reliquary: the holy relics brought home from crusades, kept here for all to see, and what they do (relicN in 02)
+function relicHTML(){const n=G.relics||0;
+  if(!n)return `<h3 class="sh">The reliquary</h3><div class="sub">An empty niche by the altar, waiting. Relics come home from a crusade won.</div>`;
+  const k=relicN();return `<h3 class="sh">The reliquary</h3><div class="relics">${'<span class="relic" aria-hidden="true">✝</span>'.repeat(Math.min(n,7))}</div><div class="sub">${n===1?'One holy relic':capW(n)+' holy relics'} kept by the altar. Everyone gets +${k} mood, the pious +${Math.min(6,2*n)} more, and pilgrims leave ${k===1?"half a gold piece":k*.5+" gold"} a day.${n>3?' The first three do the most; the rest are for showing off.':''}</div>`}
 function binfoHTML(){
   if(BI.res)return sheetHTML(BI.res);
   if(BI.perks)return perkSheetHTML();
   if(BI.past)return pastHTML(BI.past);
   if(BI.nb!=null)return nbPageHTML(BI.nb);
+  if(BI.crus)return crusRollHTML();
   const o=BI,t=o.t,p=G.proj,site=p&&!p.up&&p.x===o.x&&p.y===o.y&&p.type===t&&!(G.built[t]>0&&BUILD[t].max===1);
   let n,fx;
   if(t==='hall'&&!G.built.hall){n='Longhouse';fx='The first home of your house. A Great Hall can replace it once the hold has 8 people.'}
@@ -13111,16 +13239,24 @@ function binfoHTML(){
   if(w)h+=`<h3 class="sh">${site?'Building it':'Works here'}</h3>`+(w.length?pchips(w):`<div class="sub">${site?'Nobody is set to Build. Set someone to Build in the Folk tab.':'Nobody works here yet. Give someone the right job in the Folk tab.'}</div>`);
   else if(!site)h+=`<div class="sub">Nobody needs to work here. It serves the whole hold.</div>`;
   if(r)h+=`<h3 class="sh">Lives here</h3>`+(r.length?pchips(r):'<div class="sub">Empty for now.</div>');
+  if(t==='chapel'&&!site&&G.built.chapel)h+=relicHTML();
   {const ac=ACTBLD[t];if(ac&&!site&&(G.built[t]||t==='hall'))h+='<h3 class="sh">What you can do here</h3>'+ac.map(actBtn).join('')}
   return h+`<button class="btn wax" data-act="biclose">Close</button></div></div>`;
 }
 // the sheet behind a top-bar number: what it is doing, the law that touches it, and the acts that help
 const RESJOB={food:'farm',wood:'wood',stone:'stone',iron:'stone'};
-const RESTIP={food:'Farmers grow it, fishers and orchards add some. Everyone eats every day.',wood:'Woodcutters bring it in. Builds use it, and winter fires burn it.',stone:'Miners cut it. Builds and upgrades need it.',iron:'Miners dig it once there is a mine. A smithy turns it into tools.',wool:'Pastures grow it. Winter cloaks use some.',gold:'Markets, taverns, the hall and taxes bring it in. Wages and arms cost it.',renown:'Your name abroad. Great buildings, feasts and deeds raise it, and rank follows.'};
+const RESTIP={food:'Fields, the river, orchards and pastures feed the hold, and bakers, brewers and hunters add a little. Everyone eats every day.',wood:'Woodcutters bring it in. Builds use it, and winter fires burn it.',stone:'Miners cut it. Builds and upgrades need it.',iron:'Miners dig it once there is a mine. A smithy turns it into tools.',wool:'Pastures grow it. Winter cloaks use some.',gold:'Markets, taverns, the hall and taxes bring it in. Wages and arms cost it.',renown:'Your name abroad. Great buildings, feasts and deeds raise it, and rank follows.'};
+// the food sheet: what kind of food it is, from the year's count by source (G.fsrc; last year's, G.fsrcL, in the first fortnight of a year)
+const FOODK={field:['Grain and greens','field'],fishery:['Fish','fishery'],orchard:['Apples','orchard'],pasture:['Mutton','pasture']};
+function foodSrcHTML(){const dy=doy(),early=dy<12&&G.fsrcL,f=(early?G.fsrcL:G.fsrc)||{},days=early?DPY:Math.max(1,dy),tot=FOODP.reduce((a,t)=>a+(f[t]||0),0);
+  if(tot<1)return '';const rows=FOODP.filter(t=>(f[t]||0)>=.5).sort((a,b)=>f[b]-f[a]),d1=v=>v<10?v.toFixed(1):Math.round(v);
+  // the stores are one pile; split by the shares the hold has been bringing in, so it reads like a larder list (his pick over separate stocks, 2026-11-20)
+  return `<h3 class="sh">In the stores <small>roughly, by what comes in</small></h3><div class="larder">`+rows.map(t=>`<div class="lrow"><span class="li">${ic(FOODK[t][1],18)}</span><span class="ln">${FOODK[t][0]}</span><b class="lc">${fmt(G.food*f[t]/tot)}</b><small class="ld">+${d1(f[t]/days)} a day</small></div>`).join('')+`</div><div class="sub">${early?"From last year’s harvest.":'From this year so far.'} It is all one store: everyone eats from the lot.</div>`}
 function sheetHTML(k){
   const [l,,icn]=RESI.find(x=>x[1]===k),d=G.dl[k]||0,lk=RESLAW[k];
   let h=`<div class="scroll"><div class="sheet parch" style="gap:12px"><div class="shead"><div><div class="kind">Stores</div><h2>${l}: ${fmt(G[k])}</h2></div><div class="waxseal">${ic(icn,24)}</div></div>`
     +`<div class="sub">${RESTIP[k]} Yesterday: ${Math.abs(d)<.05?'no change':(d>0?'+':'')+d.toFixed(1)}${k==='food'?`. The stores hold ${foodCap()}${G.food>=foodCap()?'. Full: extra food is lost. A granary or a feast helps':''}`:''}.</div>`;
+  if(k==='food')h+=foodSrcHTML();
   if(lk){const L=LAWS[lk];h+=`<h3 class="sh">${ic(L.ic,18)}Law: ${L.n}, ${lawOpt(lk).n.toLowerCase()}</h3><div class="sub">${lawOpt(lk).d}</div><button class="btn" data-act="gofix" data-k="law:${lk}">Change the laws</button>`}
   const ac=ACTRES[k]||[];if(ac.length)h+='<h3 class="sh">What you can do</h3>'+ac.map(actBtn).join('');
   if(RESJOB[k])h+=`<button class="btn" data-act="jobgo" data-k="${RESJOB[k]}">See who works it</button>`;
@@ -13178,7 +13314,7 @@ function tutBuilder(){const p=tutAdult();if(!p||!G.proj)return;const o=p.job;p.j
 // one-tap job moves on the idle-builder and low-food tips and the rescue card: who could go to the farms without leaving a job empty
 // (resting first, then a builder with nothing to build, then anyone whose job has others in it; never the only woodcutter, builder or guard)
 function farmHand(){const ad=adults().filter(s=>!sick(s)&&!away(s)&&s.job!=='farm'),n=j=>G.settlers.filter(x=>active(x,j)).length;
-  return ad.find(s=>s.job==='rest')||ad.find(s=>s.job==='build'&&!G.proj&&!G.next)||ad.find(s=>s.job!=='build'&&n(s.job)>1)||null}
+  return ad.find(s=>s.job==='rest')||ad.find(s=>s.job==='build'&&!G.proj&&!nq().length)||ad.find(s=>s.job!=='build'&&n(s.job)>1)||null}
 function moveTo(p,j){if(!p||!G.settlers.includes(p)||p.job===j)return;const o=p.job;p.job=j;jobReact(p,o);retarget();refresh()}
 const mvLabel=m=>m[1]==='farm'?(m[0].job==='build'?`Send ${m[0].name} to the fields`:`Put ${m[0].name} on the farms`):`Send ${m[0].name} to the woods`;
 function tutNext(){if(!G||!(G.tut>=0))return;tutStep();renderTip()}
@@ -13195,7 +13331,7 @@ let tutSeen='',MAUDSTEP='';// MAUDSTEP: the hold and guide step her bust last le
 let IDLE0=0;// when the cottage-is-up tip first became due: it waits about 2 s so the finished toast is read first
 const LSGAP=90000;let LSMS=45000;// ms of running time until the next pop-up may show (not saved: a reload waits 45s again)
 const LESSONS=[
-  {id:"idle",urg:1,mv:()=>{const b=G.settlers.find(s=>active(s,"build"));return b?[b,G.settlers.some(s=>active(s,"wood"))&&G.food<foodCap()?"farm":"wood"]:null},ok:()=>{if(!(G.built.hut&&!G.proj&&!G.next&&G.settlers.some(s=>active(s,"build")))){IDLE0=0;return false}if(!IDLE0){IDLE0=Date.now();setTimeout(()=>{try{renderTip()}catch(e){}},2100)}return Date.now()-IDLE0>=2000},k:()=>G.settlers.some(s=>active(s,"wood"))&&G.food<foodCap()?"j:farm":"j:wood",t:()=>{const b=G.settlers.find(s=>active(s,"build")),w=!G.settlers.some(s=>active(s,"wood"))||G.food>=foodCap();return gx(`The cottage is up, and ${b?b.name:"your builder"} has nothing to build. Put them to work in ${w?"the woods":"the fields"}, or pick a new building.`,b)}},
+  {id:"idle",urg:1,mv:()=>{const b=G.settlers.find(s=>active(s,"build"));return b?[b,G.settlers.some(s=>active(s,"wood"))&&G.food<foodCap()?"farm":"wood"]:null},ok:()=>{if(!(G.built.hut&&!G.proj&&!nq().length&&G.settlers.some(s=>active(s,"build")))){IDLE0=0;return false}if(!IDLE0){IDLE0=Date.now();setTimeout(()=>{try{renderTip()}catch(e){}},2100)}return Date.now()-IDLE0>=2000},k:()=>G.settlers.some(s=>active(s,"wood"))&&G.food<foodCap()?"j:farm":"j:wood",t:()=>{const b=G.settlers.find(s=>active(s,"build")),w=!G.settlers.some(s=>active(s,"wood"))||G.food>=foodCap();return gx(`The cottage is up, and ${b?b.name:"your builder"} has nothing to build. Put them to work in ${w?"the woods":"the fields"}, or pick a new building.`,b)}},
   {id:"food",urg:1,mv:()=>{const p=farmHand();return p?[p,"farm"]:null},ok:()=>{const d=G.dl.food||0;return G.starve>0||(d<-.05&&G.food/-d<15)},k:"j:farm",t:()=>"<b>Food is running low.</b> "+((G.built.fishery||G.built.orchard||G.built.pasture)?"Farm hands bring it in from the fields, the fish, the apples and the sheep":"Farmers grow it")+", and everyone eats every day: if it runs out, people starve. About half your grown-ups should farm."},
   {id:"winter",urg:1,now:1,ok:()=>G.day>=2*DPS&&G.day<3*DPS,k:"j:wood",t:"<b>Winter comes after this season.</b> Fields barely grow in the cold and fires burn wood, so stock up on <b>food</b> and <b>wood</b> now."},
   {id:"bubble",ok:()=>G.day>=DPS,t:"Now and then someone has <b>a thought bubble</b> over their head. Tap them on the map to hear what is on their mind."},
