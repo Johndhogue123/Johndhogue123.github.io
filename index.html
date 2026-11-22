@@ -985,6 +985,15 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 .ihead>svg.hp,.ihead>svg{display:block;width:100%;height:auto}
 /* a short window (the itch.io box is 940x620): the page picture drawn smaller, so the words start in view (hunt 13); same shape and frame */
 @media (max-height:700px){.ihead{width:min(100%,240px)}}
+/* THE PAGE TEMPLATE ON THE BIG SCREENS (visual pass, 2026-11-21): the family tree, the Chronicle, achievements, Share your hold
+   and the save code wear the template's drop-letter title on the divider (class illum + a bhead title); the tree's "The story of"
+   is a red-gem heading; a card's hold picture (rank-up, Golden Age) sits in the map's frame with vine corners (evpic). */
+.tree-sheet.illum .bhead h3{font-size:27px;line-height:1.1}
+#achv .start-in{max-width:min(680px,100%)}
+.xfsheet{gap:10px}
+#modal .evpic{margin:-4px 0 0}#modal .evpic .hpic{margin:0;border:0;box-shadow:none;border-radius:2px}
+/* over the end screen the achievement banner comes up from the foot, so it never covers the house's name */
+.achpop.low{top:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px))}.achpop.low:not(.show){transform:translate(-50%,140%)}
 </style>
 
 <div id="app">
@@ -1976,7 +1985,7 @@ function chronicle(){
   return {head,parts:out};
 }
 function chronText(){const c=chronicle();return c?c.head+'\nKept by '+MAUDT+'\n\n'+c.parts.map(x=>x.h+(x.sub?' ('+x.sub+')':'')+'\n'+x.p.map(t=>strk(t,'text')).join('\n')).join('\n\n')+(warLogLines().length?'\n\nThe wars of the valley\n'+warLogLines().join('\n'):''):''}
-function chronHTML(){const c=chronicle();return `<div class="start-in"><div class="roller"></div><div class="unroll fresh"><div class="sheet parch tree-sheet chron"><div class="hsig">${shield(G.house,52)}</div><h2>${c.head}</h2><div class="maudby">${maudPic(52,G.over?'wince':'sigh',1)}<p>Kept by ${MAUDT}</p></div>${c.parts.map(x=>`<h3>${x.h}${x.sub?` <small>${x.sub}</small>`:''}</h3>${x.p.map(t=>`<p>${strk(t,'html')}</p>`).join('')}`).join('')}${warLogLines().length?`<h3>The wars of the valley <small>Maud's war log</small></h3><ul class="wlog">${warLogLines().map(t=>`<li>${t}</li>`).join('')}</ul>`:''}<div class="btnrow"><button class="btn" data-act="chroncopy"><span class="t">Copy as text<small>To share or keep</small></span></button><button class="btn wax" data-act="chronclose">Close</button></div></div></div><div class="roller"></div></div>`}
+function chronHTML(){const c=chronicle();return `<div class="start-in"><div class="roller"></div><div class="unroll fresh"><div class="sheet parch tree-sheet chron illum"><div class="hsig">${shield(G.house,52)}</div><div class="bhead"><h3>${c.head}</h3></div><div class="maudby">${maudPic(52,G.over?'wince':'sigh',1)}<p>Kept by ${MAUDT}</p></div>${c.parts.map(x=>`<h3>${x.h}${x.sub?` <small>${x.sub}</small>`:''}</h3>${x.p.map(t=>`<p>${strk(t,'html')}</p>`).join('')}`).join('')}${warLogLines().length?`<h3>The wars of the valley <small>Maud's war log</small></h3><ul class="wlog">${warLogLines().map(t=>`<li>${t}</li>`).join('')}</ul>`:''}<div class="btnrow"><button class="btn" data-act="chroncopy"><span class="t">Copy as text<small>To share or keep</small></span></button><button class="btn wax" data-act="chronclose">Close</button></div></div></div><div class="roller"></div></div>`}
 // Sister Maud writes in the news log (log kind 'scribe', italic with a quill): once when the first cottage is up, then at most once a year from year 2,
 // on a day picked from the seed and the year so a reload keeps it. G.mc = the cottage note is written, G.my = the last year she wrote, G.mu = lines used (no repeats)
 const MDCOT=['the first cottage is up. The roof is a little crooked. I have written that it is straight.','a roof at last! Everyone is very proud. I shall not mention the leak.','the first cottage stands. I watched it go up, and only winced twice.'];
@@ -2107,6 +2116,7 @@ async function copyChron(b){const t=chronText();let ok=false;try{await navigator
 function exileRec(s,str){{const kr=G.kin&&G.kin[s.id];if(kr)kr.ex=1}return {life:s.life,sid:s.id,name:s.name,sex:s.sex,born:s.born,lk:s.lk,traits:s.traits.slice(),skills:Object.assign({},s.skills),parents:s.parents.slice(),children:(s.children||[]).slice(),ttl:titleOf(s),since:G.day,str:str||0,n:0}}
 function marry(a,b){a.wed=b.wed=G?G.day:0;{const w=a.sex==='f'?a:b.sex==='f'?b:null;if(w&&G&&!w.wb)w.wb=1+R(5)}// a bride's wedding beads, worn for life (garb); the founders' too
   if(a.of&&a.of.i===b.id)delete a.of;if(b.of&&b.of.i===a.id)delete b.of;if(G&&G.day>0){const j=pick(['','',' Everyone cries, some from the onions.',' The dancing goes on far too long.',' Nobody objects, though one goose tries.']);life(a,`Weds ${b.name}.${j}`);life(b,`Weds ${a.name}.${j}`)}if(G&&G.day>0){auPlay('wedding');annal(`${a.name} weds ${b.name}.`,'good');try{if(weddingScene(a,b))GATHER=0}catch(e){}}a.spouse=b.id;b.spouse=a.id;addBuff(a,'Newly wed',12,10);addBuff(b,'Newly wed',12,10);bump2(a,b,15)}
+let overAt=0;// when the end screen opened: the achievement banner waits until it has rolled out (achBusy)
 function gameOver(){
   try{const L=legacy(),b=+localStorage.getItem('emberholt.best')||0;G.best=Math.max(L,b);G.nb=L>b?1:0;if(L>b)localStorage.setItem('emberholt.best',String(L))}catch(e){}
   const gold=G.endWhy==='golden'||G.endWhy==='valley';if(!gold)gainAch('fallen');
@@ -2115,6 +2125,7 @@ function gameOver(){
   try{localStorage.removeItem('emberholt.save.v1')}catch(e){}
   $('#over').hidden=false;
   $('#over').innerHTML=gameOverHTML();
+  overAt=Date.now();setTimeout(()=>achKick(),1600);
 }
 
 /* ---------- map ---------- */
@@ -9855,8 +9866,8 @@ function treeHTML(){
     const ch=group(all.filter(c=>!c.inlaw&&c.parents.includes(k.id)).sort((a,b)=>a.born-b.born),d+1);
     return `<li data-id="${k.id}">${row(k)}${ch?`<ul>${ch}</ul>`:''}</li>`};
   const roots=all.filter(k=>!k.inlaw&&!k.parents.some(p=>K[p]&&!K[p].inlaw)).sort((a,b)=>a.born-b.born),tree=group(roots,1);
-  const o=treeOpen!=null&&K[treeOpen],st=o&&o.life&&o.life.length?`<div class="tstory"><p class="eyebrow">The story of</p><h3>${o.name}${o.ep?' '+o.ep:''}</h3>${lifeHTML(o.life)}</div>`:'';
-  return `<div class="start-in"><div class="roller"></div><div class="unroll fresh"><div class="sheet parch tree-sheet"><div class="hsig">${shield(G.house,52)}</div><p class="eyebrow">The line of House ${G.house}</p><h2>Family tree</h2><p class="ftally">${treeTally(K,gens)}</p><div class="sub">Children sit below their parents, husbands and wives beside them. A crown marks those who ruled, and the gold vine follows the high seat.<span class="fthint"> Swipe sideways to see them all.</span></div><button class="btn sm ftzoom" data-act="treezoom">${treeZ?'Close up':'Whole tree'}</button><div class="ftbox${treeZ?' ftz':''}"${treeZ?' data-act="treein"':''}><ul class="ft">${tree}</ul></div>${st}<button class="btn wax" data-act="treeclose">Close</button></div></div><div class="roller"></div></div>`;
+  const o=treeOpen!=null&&K[treeOpen],st=o&&o.life&&o.life.length?`<div class="tstory">${illumH('The story of '+o.name+(o.ep?' '+o.ep:''))}${lifeHTML(o.life)}</div>`:'';
+  return `<div class="start-in"><div class="roller"></div><div class="unroll fresh"><div class="sheet parch tree-sheet illum"><div class="hsig">${shield(G.house,52)}</div><p class="eyebrow">The line of House ${G.house}</p><div class="bhead"><h3>Family tree</h3></div><p class="ftally">${treeTally(K,gens)}</p><div class="sub">Children sit below their parents, husbands and wives beside them. A crown marks those who ruled, and the gold vine follows the high seat.<span class="fthint"> Swipe sideways to see them all.</span></div><button class="btn sm ftzoom" data-act="treezoom">${treeZ?'Close up':'Whole tree'}</button><div class="ftbox${treeZ?' ftz':''}"${treeZ?' data-act="treein"':''}><ul class="ft">${tree}</ul></div>${st}<button class="btn wax" data-act="treeclose">Close</button></div></div><div class="roller"></div></div>`;
 }
 let treeSpeed=0,treeOpen=null,treeZ=0;
 // the vines: one curve from under each parent to the top of each child's face, measured after layout (offsets within .ft, so they shrink
@@ -10011,14 +10022,14 @@ function grantAch(d){
   achQ.push(d);if(!achT)setTimeout(achKick,0);// after the day tick, so a card drawn the same day is seen first
 }
 // the banner waits while a card, a waiting card or another sheet is open (it used to land on top of the rank-up or raid card); daily() tries again
-const achBusy=()=>!!G&&!G.over&&(!!G.modal||!!(G.queue&&G.queue.length)||["#namer","#tree","#binfo","#saga","#share","#xfer"].some(s=>{const e=$(s);return !!e&&e.hidden===false}));
+const achBusy=()=>!!G&&(G.over?Date.now()-overAt<1500:!!G.modal||!!(G.queue&&G.queue.length)||["#namer","#tree","#binfo","#saga","#share","#xfer","#achv"].some(s=>{const e=$(s);return !!e&&e.hidden===false}));
 function achKick(){if(!achT&&achQ.length&&!achBusy())achNext()}
 function achNext(){
   const el=$('#achpop'),d=achQ.shift();
   if(!d){el.className='achpop';achT=0;return}
   const ts=ACH.filter(x=>achG(x)===achG(d)),ti=ts.indexOf(d);
-  auPlay('ach');el.innerHTML=`${ic('renown',26)}<span><small>Achievement${ts.length>1?' &middot; Tier '+ROMAN[ti]:''}</small><b>${d.n}</b></span>`;el.className='achpop show';
-  achT=setTimeout(()=>{el.className="achpop";achT=setTimeout(()=>{achT=0;achKick()},350)},3200);
+  auPlay('ach');el.innerHTML=`${ic('renown',26)}<span><small>Achievement${ts.length>1?' &middot; Tier '+ROMAN[ti]:''}</small><b>${d.n}</b></span>`;el.className='achpop show'+(G&&G.over?' low':'');
+  achT=setTimeout(()=>{el.classList.remove("show");achT=setTimeout(()=>{achT=0;achKick()},350)},3200);
 }
 function checkAch(){if(!G||G.over)return;const a=achs();for(const d of ACH)if(d.ok&&!a[d.id]){let ok=false;try{ok=d.ok()}catch(e){}if(ok)grantAch(d)}}
 function achHTML(){
@@ -10030,7 +10041,7 @@ function achHTML(){
     const pips=ts.length>1?`<i class="pips">${ts.map(d=>`<i class="${a[d.id]?'on':''}"></i>`).join('')}</i>`:'';
     const txt=top?(nx?`Next: ${nx.d}${so}`:`${top.d} Won by House ${a[top.id].h} in ${a[top.id].y}.`):ts[0].d;
     return `<li class="${top?'got':''}">${ic(top?'renown':'lock',22)}<span><b>${(top||ts[0]).n}${pips}</b><small>${txt}</small></span></li>`}).join('');
-  return `<div class="start-in"><div class="roller"></div><div class="unroll fresh"><div class="sheet parch tree-sheet"><p class="eyebrow">Deeds of every house</p><h2>Achievements</h2><div class="sub">${n} of ${ACH.length} won. They stay with you from one hold to the next.</div><div class="bar"><i style="width:${n/ACH.length*100}%;background:linear-gradient(180deg,#e0b84a,#a8791c)"></i></div><ol class="achl">${rows}</ol><button class="btn wax" data-act="achclose">Close</button></div></div><div class="roller"></div></div>`;
+  return `<div class="start-in"><div class="roller"></div><div class="unroll fresh"><div class="sheet parch tree-sheet illum achsheet"><p class="eyebrow">Deeds of every house</p><div class="bhead"><h3>Achievements</h3></div><div class="sub">${n} of ${ACH.length} won. They stay with you from one hold to the next.</div><div class="bar"><i style="width:${n/ACH.length*100}%;background:linear-gradient(180deg,#e0b84a,#a8791c)"></i></div><ol class="achl">${rows}</ol><button class="btn wax" data-act="achclose">Close</button></div></div><div class="roller"></div></div>`;
 }
 let achSpeed=0;
 function openAch(){achSpeed=speed;if(G)setSpeed(0);$('#achv').innerHTML=achHTML();$('#achv').hidden=false;$('#achv').scrollTop=0}
@@ -11246,7 +11257,7 @@ let xferSpeed=0;
 function openXfer(out){
   xferSpeed=G&&!G.over?speed:0;setSpeed(0);
   const w=$('#xfer');w.hidden=false;
-  w.innerHTML=`<div class="scroll"><div class="sheet parch" style="gap:10px"><h2>${out?'Your save code':'Load a save code'}</h2>`
+  w.innerHTML=`<div class="scroll illumf"><div class="sheet parch illum xfsheet"><div class="bhead"><h3>${out?'Your save code':'Load a save code'}</h3></div>`
     +`<p>${out?'Copy all of this text and paste it into Emberholt on the other device (House tab or the start screen). Text messages can cut long codes short, so saving it as a file and sending that is safer.':'Paste a save code, or load one sent as a file.'+(G?' <b>This replaces the hold you are playing now.</b>':'')}</p>`
     +`<textarea id="xferText" class="xfer" ${out?'readonly':'placeholder="Paste the code here"'} spellcheck="false" autocomplete="off"></textarea><div id="xferMsg" class="xmsg"></div>`
     +`<div class="btnrow">${out?'<button class="btn wax" data-act="xfercopy">Copy</button><button class="btn" data-act="xferfile">Save as a file</button>':'<button class="btn wax" data-act="xferload">Load this hold</button><label class="btn">Load from a file<input id="xferFile" type="file" accept=".txt,text/plain" hidden></label>'}</div><button class="btn" data-act="xferclose">Close</button></div></div>`;
@@ -12555,7 +12566,7 @@ const shareName=()=>`Emberholt - House ${G.house}.png`;
 let SHB=null,SHU='',shareSpeed=0;
 async function openShare(){
   if(!G)return;shareSpeed=speed;if(!G.over)setSpeed(0);const el=$('#share'),code=G.hc!=null?holdCode(G.hc):'';
-  el.innerHTML=`<div class="start-in"><div class="roller"></div><div class="unroll fresh"><div class="sheet parch tree-sheet shsheet"><p class="eyebrow">For the comments, or a friend</p><h2>Share your hold</h2><div class="shpic" id="shPic"><p class="shnote">Sister Maud is painting it…</p></div>
+  el.innerHTML=`<div class="start-in"><div class="roller"></div><div class="unroll fresh"><div class="sheet parch tree-sheet shsheet illum"><p class="eyebrow">For the comments, or a friend</p><div class="bhead"><h3>Share your hold</h3></div><div class="shpic" id="shPic"><p class="shnote">Sister Maud is painting it…</p></div>
     <p class="shnote" id="shMsg">${code?`Anyone who types the code <b>${code}</b> on the title page (Have a hold code?) starts your hold: same map, same first settlers, same neighbours. Then see who does better.`:'This hold was founded before hold codes, so its picture has none. New holds get one.'}</p>
     <div class="btnrow"><button class="btn wax" data-act="sharego" id="shGo" hidden><span class="t">Share<small>Pick where it goes</small></span></button><button class="btn" data-act="sharesave" id="shSave" disabled><span class="t">Save the picture<small>Or press and hold it</small></span></button></div>
     <div class="btnrow"><button class="btn" data-act="sharecode"><span class="t">Copy the words<small>${code?'With the hold code':'To paste with the picture'}</small></span></button><button class="btn" data-act="shareclose">Close</button></div></div></div><div class="roller"></div></div>`;
@@ -12696,7 +12707,7 @@ function renderModal(){
   if(ev.oid!=null){const h=ruler();ev.heir=h&&h.id!==ev.oid&&!G.over?h:null}
   // a rank-up's ruler already stands in the picture, so their face is left out to keep Continue on a phone screen
   const who=ev.pic&&ev.kind==='A new rank'?[]:(ev.heir?(ev.who||[]).concat(ev.heir):ev.who||[]).slice(0,3);
-  let h=`<div class="scroll"><div class="roller"></div><div class="unroll${fresh?' fresh':''}"><div class="sheet parch${ev.war?' war':''}">${ev.pic?`<div class="hpic">${holdPic(ev.pic)}</div>`:''}<div class="shead"><div><div class="kind">${ev.kind}</div><h2>${ev.title}</h2></div>${ev.seal?'<div class="wseal">'+ev.seal+'</div>':`<div class="waxseal">${ic(KINDIC[ev.kind]||'renown',24)}</div>`}</div>`;
+  let h=`<div class="scroll"><div class="roller"></div><div class="unroll${fresh?' fresh':''}"><div class="sheet parch${ev.war?' war':''}">${ev.pic?`<div class="bookb ihead evpic"><div class="hpic">${holdPic(ev.pic)}</div>${VNS}</div>`:''}<div class="shead"><div><div class="kind">${ev.kind}</div><h2>${ev.title}</h2></div>${ev.seal?'<div class="wseal">'+ev.seal+'</div>':`<div class="waxseal">${ic(KINDIC[ev.kind]||'renown',24)}</div>`}</div>`;
   if(who.length)h+=`<div class="whorow">${fresh&&!ev.res&&ev.kind==='Courtship'?loveHearts(ev.tempt):''}${who.map((s,wi)=>`<figure${G.settlers.includes(s)&&!(ev.dead&&s===ev.who[0])?` class="tapme mr${s.mood>=75?' hi':s.mood<25&&!isChild(s)?' low':''}" style="--mc:${moodCol(s.mood)}" data-act="whonote" data-id="${s.id}" role="button" tabindex="0"`:''}>${ev.dead&&s===ev.who[0]?portrait(s,66,1).replace('class="pt"','class="pt dead"')+SKULL:portrait(s,66)}<figcaption>${s.name}${ev.roles&&ev.roles[wi]?`<small class="role">${ev.roles[wi]}</small>`:''}</figcaption></figure>`).join('')}</div><div class="whonote" hidden></div>`;
   if(ev.res)h+=`<p class="out">${ev.res.text}${ev.heir?`<span class="rl"><b>${ev.heir.name} takes the high seat${age(ev.heir)<16?(age(ev.heir)<1?', still in the cradle':' at '+age(ev.heir)):''}.</b></span>`:''}</p>${resChips(ev.res.dl)}${ev.kind==='End of a reign'?rpReignNote(ev):''}<button class="choice go" data-act="cont"><b>${ev.heir?'Continue as '+ev.heir.name:'Continue'}</b></button>${ev.oid!=null?'<button class="cgo ftcard" data-act="tree">See the family tree ›</button>':''}`;
   else{h+=`<p class="ev-text">${ev.text}</p>${ev.post||''}`;ev.choices.forEach((c,i)=>{h+=`<button class="choice" data-act="choice" data-i="${i}" ${c.dis?'disabled':''}><b>${c.t}</b><span>${c.dis&&c.why?c.why:(c.d||'')+rpFsChoice(ev,c)}</span></button>`})}
