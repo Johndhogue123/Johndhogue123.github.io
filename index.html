@@ -426,7 +426,7 @@ canvas#map{display:block;width:100%;height:auto;aspect-ratio:15/11;max-width:100
 .tipbtn.one{grid-template-columns:1fr}
 .tutp{position:relative;z-index:2;outline:3px solid var(--gold2);outline-offset:2px;animation:tutp 1.2s ease-in-out infinite}
 @keyframes tutp{0%,100%{box-shadow:0 0 0 0 rgba(224,185,84,0)}50%{box-shadow:0 0 0 6px rgba(224,185,84,.75)}}
-.tipbtn{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tipbtn .btn{padding:7px 10px;font-size:15px}
+.tipbtn{display:grid;grid-template-columns:1fr 1fr;gap:8px}#tip .tskip{display:block;margin:2px auto 0;padding:4px 10px;background:none;border:0;box-shadow:none;font:italic 14px var(--f-body);color:var(--ink2);text-decoration:underline;cursor:pointer}.tipbtn .btn{padding:7px 10px;font-size:15px}
 body.tipon .toast{bottom:calc(94px + var(--tiph,112px) + env(safe-area-inset-bottom,0px))}
 body.tipon #main{padding-bottom:150px}
 #tabs button.nudge .seal{animation:nudge 1.2s ease-in-out infinite}
@@ -10854,7 +10854,7 @@ function councilFill(){
   for(const k in COUNCIL){if(!councillor(k))delete c[k]}
   if(pool.length<4)return;
   for(const k in COUNCIL){if(councillor(k))continue;const used=Object.keys(COUNCIL).map(x=>c[x]),s=pool.filter(x=>!used.includes(x.id)).sort((a,b)=>COUNCIL[k].sc(b)-COUNCIL[k].sc(a))[0];
-    if(s){c[k]=s.id;if(G.day>0)log(`${s.name} takes a seat on the council as ${COUNCIL[k].n.toLowerCase()}.`);if(k==='spymaster'&&!G.smT&&G.day>0){G.smT=1;try{toast(`${s.name} is your spymaster now: see House > Court.`)}catch(e){}}}}
+    if(s){c[k]=s.id;if(G.day>=DPY)log(`${s.name} takes a seat on the council as ${COUNCIL[k].n.toLowerCase()}.`);if(k==='spymaster'&&!G.smT&&G.day>0){G.smT=1;if(G.day>=DPY)try{toast(`${s.name} is your spymaster now: see House > Court.`)}catch(e){}}}}
 }
 // what an adviser wants changed, and why ([law, setting, reason]); only laws that can change now
 function councilWish(k,s){
@@ -12065,6 +12065,7 @@ function alerts(){
   else if(!G.settlers.some(s=>active(s,'wood'))){const need=Math.ceil(pop*winterWood()*DPS);if(si<3&&G.wood<need)a.push([si===2||G.wood<5?'warn':'info',`Nobody is chopping wood. Winter fires will need about ${need}, and you have ${fmt(G.wood)}.`,'j:wood']);else if(G.wood<5)a.push(['info','Nobody is chopping wood, and building needs it.','j:wood'])}
   {const rl=ruler();if(rl&&G.day>=DPY&&!bloodHeir(rl))a.push(['bad',`${rl.name} has no heir of the blood. If ${rl.sex==='m'?'he':'she'} dies, the house ends.`,!rl.spouse&&matchable().includes(rl)?'match':'heir'])}
   if(!G.settlers.some(s=>active(s,'farm')))a.push(['warn','No one is farming.','j:farm']);
+  if(G.day<DPY&&!(G.tut>=0)&&!G.built.hut&&!(G.proj&&G.proj.type==='hut')&&!nq().some(q=>(q.type||q)==='hut'))a.push(['info','Newcomers need beds: build a cottage.','b:hut',1]);// the first thing to do, for a player who skipped the guide (first spring, 2026-11-21)
   {const n=rpNrOpen(),r=ruler();if(n&&r)a.push(['info',`${r.name} may choose how to carry the house's name. Maud has it on the Repute card.`,'rp',1])}// a new reign (09-repute.js)
   if(G.proj&&!G.settlers.some(s=>active(s,'build')))a.push(['warn','A project is waiting, but no one is set to Build.','j:build']);
   if(!G.proj){const bn=G.settlers.filter(s=>active(s,'build')).length,sh=nextShort();
@@ -12412,7 +12413,7 @@ function renderBuild(){
   // one list, no tabs: upgrades on top, new buildings as picture tiles two across, the built as a row of icons, the locked folded away
   const ts=Object.keys(BUILD),ups=ts.filter(upOpen).sort((a,b)=>!upWhy(b)-!upWhy(a)),grp={open:[],done:[],lock:[]};ts.forEach(t=>grp[bState(t)].push(t));
   const more=upLater();
-  if(ups.length||more)h+='<div class="dcat">Upgrade</div>'+(more?`<div class="sub upmore">${more}</div>`:'')+ups.map(uCard).join('');
+  if(ups.length||more&&G.rank>=1)h+='<div class="dcat">Upgrade</div>'+(more?`<div class="sub upmore">${more}</div>`:'')+ups.map(uCard).join('');
   // year 1 at Hamlet: the three a new hold needs first up front, the rest behind More buildings (BMORE; a fix pointing at one opens it)
   const first=G.day<DPY&&!G.rank?grp.open.filter(t=>BFIRST.includes(t)):null,rest=first&&first.length?grp.open.filter(t=>!BFIRST.includes(t)):null;
   const cats=l=>BCATS.map(cat=>{const c=l.filter(t=>BCAT[t]===cat);return c.length?`<div class="bkind">${cat}</div><div class="btiles">${c.map(bTile).join('')}</div>`:''}).join('');
@@ -13193,6 +13194,7 @@ document.addEventListener('click',e=>{
   else if(a==='lesgo'||a==='lesok'||a==='lesmv'){auPlay('tap');lessonGot(a==='lesgo',t.dataset.id,a==='lesmv')}
   else if(a==='noteok'){auPlay('tap');noteGot(t.dataset.id)}
   else if(a==='tipskip')tutEnd(true);
+  else if(a==='tutshow'){auPlay('tap');const s=G&&G.tut>=0&&TUT[G.tut];if(s&&s.tab)setView(s.tab);renderTip()}// the guide's Show me: to the step's tab, where the ring points
   else if(a==='tutbld'){auPlay('tap');tutBuilder()}
   else if(a==='tutreplay')tutReplay();
   else if(a==='fs')fsToggle();
@@ -13515,13 +13517,13 @@ const LESSONS=[
   {id:"council",at:"rule",ok:()=>Object.keys(COUNCIL).some(councillor),t:"Your hold is big enough for <b>a council</b>. Four advisers now sit, and now and then one asks for a law to change. Heed them, or not. The fourth, your spymaster, keeps an ear on the neighbours (House, Court)."},
   {id:"rivals",at:"court",ok:()=>G.day>=DPY/2||G.log.some(l=>l.ev&&l.ev.k==="Neighbour"),t:"Three <b>neighbouring houses</b> watch you. Gifts warm them, spies learn their strength, and tribute is a gamble. Tap one to see more."},
   {id:"hall",at:"court",ok:()=>!!G.built.hall,t:"The Great Hall opens <b>the Lord&#39;s Hall</b>: banners, peacocks and fountains to spend spare gold on. Each adds to your Legacy."}];
-const lsGate=()=>G&&G.gd&&G.diff!==2&&!(G.tut>=0)&&!G.over;
+const lsGate=()=>G&&G.diff!==2&&!(G.tut>=0)&&!G.over;// G.gd (the guide ran, not skipped) gates the gentle tips and the House notes only: the urgent ones still come after a skip (first spring, 2026-11-21)
 let LSHOLD=null;// an urgent pop-up stays up at least 25 s even when its cause eases (the low-food tip was gone in about 7 s)
 const lessonOn=()=>{if(!lsGate())return null;const h=LSHOLD&&Date.now()<LSHOLD.u&&!(UI.ls||{})[LSHOLD.id]?LESSONS.find(l=>l.id===LSHOLD.id):null;return h||lessonOn0()};
-const lessonOn0=()=>LESSONS.find(l=>!l.at&&(l.now||G.day-(G.lsD||0)>=12)&&!(UI.ls||{})[l.id]&&(l.urg||LSMS<=0&&!(G.day<DPY&&Y1Q>0))&&l.ok());
+const lessonOn0=()=>LESSONS.find(l=>!l.at&&(G.gd||l.urg)&&(l.now||G.day-(G.lsD||0)>=12)&&!(UI.ls||{})[l.id]&&(l.urg||LSMS<=0&&!(G.day<DPY&&Y1Q>0))&&l.ok());
 function lessonGot(go,id,mv){const l=lessonOn();if(!l||id&&l.id!==id)return;const m=mv&&l.mv&&l.mv();uiSet("ls",Object.assign({},UI.ls,{[l.id]:1}));G.lsD=G.day;LSMS=LSGAP;Y1Q=Y1GAP;if(m){moveTo(m[0],m[1]);go=0}if(go&&l.k){const k=typeof l.k==="function"?l.k():l.k;if(k==="tree")openTree();else goFix(k);if(view!=='hold'&&!wide())toast('Time waits while you look.')}renderTip()}
 // the House note waiting now (the first ready one in LESSONS order), and its card, drawn above what it explains
-const noteOn=()=>lsGate()&&LESSONS.find(l=>l.at&&!(UI.ls||{})[l.id]&&l.ok())||null;
+const noteOn=()=>lsGate()&&G.gd&&LESSONS.find(l=>l.at&&!(UI.ls||{})[l.id]&&l.ok())||null;
 function houseNote(id){const l=noteOn();if(!l||l.id!==id)return "";const tx=typeof l.t==="function"?l.t():l.t;
   return `<div class="parch card hnote"><div class="tiptx"><small>Something new</small>${tx}</div><button class="btn wax" data-act="noteok" data-id="${id}">Got it</button></div>`}
 function noteGot(id){const l=noteOn();if(!l||l.id!==id)return;uiSet("ls",Object.assign({},UI.ls,{[id]:1}));tally1("note-"+id);NOTEK="";if(view==="house")renderHouse();renderTip()}
@@ -13545,7 +13547,9 @@ function renderTip(){
   const last=G.tut===TUT.length-1,tx=typeof s.t==='function'?s.t():s.t,bt=s.btn&&G.proj?s.btn():'';
   if(s.ls&&ls&&ls.urg&&(!LSHOLD||LSHOLD.id!==ls.id||Date.now()>LSHOLD.u))LSHOLD={id:ls.id,u:Date.now()+25000};
   if(s.ls){el.hidden=false;el.innerHTML=`<div class="tiptx"><small>Something new</small>${tx}</div><div class="tipbtn${s.k||s.mv?'':' one'}">${s.mv?'<button class="btn wax" data-act="lesmv" data-id="'+s.id+'">'+mvLabel(s.mv)+'</button><button class="btn" data-act="lesok" data-id="'+s.id+'">Got it</button>':s.k?'<button class="btn wax" data-act="lesgo" data-id="'+s.id+'">Show me</button><button class="btn" data-act="lesok" data-id="'+s.id+'">Got it</button>':'<button class="btn wax" data-act="lesok" data-id="'+s.id+'">Got it</button>'}</div>`;tutSeen='';return}
-  el.hidden=false;el.innerHTML=`<span class="maudmed">${maudPic(46,last?'smile':'sigh')}</span><div class="tiptx"><small>Step ${G.tut+1} of ${TUT.length} · ${MAUD}</small>${tx}</div><div class="tipbtn${(s.got||bt)&&!last?'':' one'}">${s.got?`<button class="btn wax" data-act="tipnext">${last?'Done':'Got it'}</button>`:''}${bt?`<button class="btn wax" data-act="tutbld">${bt}</button>`:''}${last?'':'<button class="btn" data-act="tipskip">Skip the guide</button>'}</div>`;
+  // the big button does the step (Got it, the builder, or Show me on the step's tab); Skip is a small link under it (first spring, 2026-11-21: Skip was the only big button on step 1, and 30 of 31 skips came there)
+  const sm=!s.got&&!bt&&s.tab&&view!==s.tab&&!(s.tab==='hold'&&wide()),bs=[s.got?`<button class="btn wax" data-act="tipnext">${last?'Done':'Got it'}</button>`:'',bt?`<button class="btn wax" data-act="tutbld">${bt}</button>`:'',sm?`<button class="btn wax" data-act="tutshow">Show me</button>`:''].filter(Boolean);
+  el.hidden=false;el.innerHTML=`<span class="maudmed">${maudPic(46,last?'smile':'sigh')}</span><div class="tiptx"><small>Step ${G.tut+1} of ${TUT.length} · ${MAUD}</small>${tx}</div>${bs.length?`<div class="tipbtn${bs.length>1?'':' one'}">${bs.join('')}</div>`:''}${last?'':'<button class="tskip" data-act="tipskip">Skip the guide</button>'}`;
   // point at the exact button once the player is on the right tab; scroll it into view when the step first shows there
   const sel=s.ptr&&(!s.tab||view===s.tab)?s.ptr():null,tg=sel&&document.querySelector(sel),key=G.tut+view;
   if(tg&&tg.classList){tg.classList.add('tutp');if(tutSeen!==key&&$('#main').contains(tg)&&tg.scrollIntoView)tg.scrollIntoView({block:'center',behavior:'smooth'})}
