@@ -148,7 +148,7 @@ canvas#map{display:block;width:100%;height:auto;aspect-ratio:15/11;max-width:100
 .kv{display:grid;gap:3px;font-size:16px}.kv .opw{margin:-2px 0 3px;font-size:14px;font-style:italic;line-height:1.3;color:var(--ink2)}
 .kv div{display:flex;gap:10px;justify-content:space-between;align-items:baseline}
 .kv div span:first-child{color:var(--ink2)}
-.kv div span:last-child{text-align:right}
+.kv div span:last-child{text-align:right}.agkv div span:first-child{flex:none}
 .up{color:#3f6a1c}.dn{color:var(--rubric2)}
 
 /* build */
@@ -994,6 +994,17 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 #modal .evpic{margin:-4px 0 0}#modal .evpic .hpic{margin:0;border:0;box-shadow:none;border-radius:2px}
 /* over the end screen the achievement banner comes up from the foot, so it never covers the house's name */
 .achpop.low{top:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px))}.achpop.low:not(.show){transform:translate(-50%,140%)}
+
+/* Maud sees to the work (part 2, mock-up A): the slim strip at the top of the Work view with its round switch; the pin on a face the player moved by hand; the note in the job picker */
+.mzA{display:flex;align-items:center;gap:10px;margin:4px 0 10px;padding:6px 10px 6px 8px;border:1px solid var(--edge);border-left:4px solid var(--plum);border-radius:6px;background:var(--paper),var(--vellum);color:var(--ink);box-shadow:0 2px 5px rgba(0,0,0,.35)}
+.mzA.off{border-left-color:var(--edge)}.mzA.off .maudpic{filter:grayscale(.5);opacity:.85}
+.mzA .tx{flex:1;min-width:0;line-height:1.2}.mzA b{display:block;font-family:var(--f-display);font-weight:400;font-size:15.5px}.mzA i{display:block;font-size:13.5px;color:var(--ink2);overflow-wrap:anywhere}
+.tog{flex:none;position:relative;width:58px;height:30px;border-radius:15px;background:#8a7a5e;box-shadow:inset 0 1px 3px rgba(0,0,0,.45);color:#f4e9c8;font-family:var(--f-display);font-size:12px;text-align:right;padding:0 8px;transition:background .2s}
+.tog::after{content:'';position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f0e2bc,#a89770);box-shadow:0 1px 2px rgba(0,0,0,.5);transition:left .2s}
+.tog.on{background:var(--moss);text-align:left}.tog.on::after{left:31px;background:radial-gradient(circle at 35% 30%,#e8c76a,#9c7020)}
+.pinb{position:absolute;top:4px;left:4px;z-index:2;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f0cf6e,#c4952f);color:#3a2606;box-shadow:0 1px 3px rgba(0,0,0,.45)}
+.pinnote{display:flex;align-items:center;gap:6px;margin:0 0 6px;font-size:13.5px;font-style:italic;color:var(--ink2)}.pinnote .ic{color:#9c7020;flex:none}.pinnote span{flex:1;min-width:0}
+.pinnote button{flex:none;padding:4px 10px;border-radius:12px;border:1px solid var(--edge);background:var(--vellum2);font-family:var(--f-display);font-size:13px;font-style:normal;color:var(--ink)}
 </style>
 
 <div id="app">
@@ -1400,7 +1411,7 @@ function addSettler(s,fromEdge,how){
   if(fromEdge){s.x=0;s.y=HY+R(3)-1}
   // some grown newcomers come of a family in one trade already (a second generation, if they keep at it)
   if(!s.tl&&!s.parents.length&&!isChild(s)&&chance(.3))s.tl={j:jobFor(bestSkill(s)),n:2,o:1};
-  G.settlers.push(s);G.peak=Math.max(G.peak,G.settlers.length);
+  G.settlers.push(s);G.peak=Math.max(G.peak,G.settlers.length);if(G.maud&&!isChild(s)&&!s.ruler)s.mnew=1;// Maud places them tomorrow, after any card has set their job (06-day.js maudNew)
   for(const o of G.settlers){if(o!==s){o.op[s.id]=(o.op[s.id]||0)+R(7)-2;s.op[o.id]=(s.op[o.id]||0)+R(7)-2}}
 }
 // a ruler who leaves by any road other than kill() (which handles it) still passes the seat on
@@ -5933,6 +5944,7 @@ function frame(now){
 /* Contents of 06-day.js: The day: building, work, food, births; the events engine; levels, perks and monsters.
    - construction: bcost, canBuild, startBuild, startUpgrade, mendOld, finishBuild, Great Works' opening day and names (GWNOUN, GWFOLK, GWLINE, founderK, evNameWork)
    - food workers (Specialising part 1, above `yWood`): FOODP, WPN, WPSH, wpCap, wpTotal, wpOf, pickDay, yPlace, wpAnnual, foodWork, wpCheck, fillWP (the Farm job's work places, auto fill, the autumn apple picking in `work`); part 3 (the Barony setting): wpMan, wpFw, wpSeed, wpSet, wpAuto (targets G.wpT, G.wpO, G.wpAuto; fillWP's manual branch), BOUNTY (the bounty card by food); part 2: FOODL, foodL, aN (Farmer/Fisherman/Apple picker/Shepherd words), foodBy, foodLead, MASTF (masters by place), wpRoom, wpMove, wpBack ("move the workers"), KNOWN, knownYear, knownSeason (known for, text only; G.fsrc, G.known)
+   - Maud sees to the work (part 1, just above `yWood`): MJ, MSK, maudCan, maudUp, maudTeach, maudWho, maudWorst, maudFarmers, maudWant, maudTarget, maudMove, maudSplit, maudBuild, maudNew, maudHungry, maudTick, maudOn, maudPin, MSAYJ, maudSay, maudLog (G.maud: Sister Maud sets the jobs, food first)
    - the day: tick, work, eat, relations, births, riseRank, goldenAge (its life lines GOLDLF), tourney, pedlars, headDay
    - family trades: tradeSeason, teach, grownTrade
    - events: queueEvent (a gentle third card on one day waits: LATER, nextCard, laterCard), DIFF, dif, drawEvent, choose, EVENTS, everyday events
@@ -6069,14 +6081,14 @@ function tick(){
     if(isChild(s)&&s.traits.includes('drunkard')){s.traits=s.traits.filter(t=>t!=='drunkard');s.dk=1}// children from older games
     if((G.day-s.born)%DPY===0&&age(s)===14){
       if(s.dk){delete s.dk;if(!s.traits.includes('pious')&&s.traits.length<3){s.traits.push('drunkard');log(`${s.name} turns fourteen and discovers ale. Rather too well. Drunkard.`,'story')}}
-      const gl=grownTrade(s);
+      const gl=grownTrade(s);if(G.maud&&!(s.tl&&s.tl.j===s.job))s.mnew=1;// Maud places a grown child with no family trade (Q15)
       const par=parsOf(s).map(byId).filter(Boolean);
       if(par.some(p=>p.ruler)&&(!s.bas||s.ad)){log(`${s.name} comes of age.`,'story',true);queueEvent(evComeOfAge(s))}
       else log(gl,'story');
     }
   }
   if(!G.settlers.length||G.over)return;
-  wpCheck();work(si);
+  maudTick();wpCheck();work(si);
   if(!G.proj&&nq().length)startNext();
   eat(si);
   if(G.over)return;
@@ -6238,6 +6250,132 @@ function fillWP(fw,move){
   for(const s of fw.slice().sort((a,b)=>a.id-b.id)){if(T.includes(s.wp)&&free[s.wp]>0){free[s.wp]--;kept.push(s)}else un.push(s)}
   for(const s of un.sort((a,b)=>b.skills.farm-a.skills.farm||a.id-b.id)){const o=T.filter(t=>free[t]>0).sort(byV)[0];if(o){free[o]--;s.wp=o}else s.wp=T.slice().sort(byV)[0]}
   if(move)for(const s of kept){const o=T.filter(t=>free[t]>0&&v[t]>v[s.wp]*1.2).sort(byV)[0];if(o){free[s.wp]++;free[o]--;s.wp=o}}}
+// MAUD SEES TO THE WORK (part 1, 2026-11-21; plan in .work/steward/PLAN.md): a hold setting, G.maud (on for a new Easy game, a plain switch after that), where Sister Maud sets folk's jobs,
+// food first. She moves only maudWho folk: grown, at home, well, not the ruler, not an agent (s.agt, s.ta) or a ward, not pinned (s.pin: moved by the player's own hand while she is on;
+// pins run out at each new year), not a family-trade holder (s.tl on the trade) or a master teaching a child; those still count toward the numbers (maudWant), so she fills only the gap.
+// She moves at a season start (Farm on any shortfall, other jobs only when off by 2 or more), when a building starts or ends (a builder), when food runs low (once a season),
+// and places newcomers and grown children with no trade (s.mnew) the day after they come. Nothing while the guide runs (G.tut>=0). No random numbers here, so a hold with her off plays as before.
+const MJ=['farm','build','guard','wood','stone'],MSK={farm:'farm',wood:'wood',stone:'mine',build:'build',guard:'fight'};
+const maudCan=()=>!!G.maud&&!(G.tut>=0);
+const maudUp=()=>adults().filter(s=>!sick(s)&&!away(s)&&s.agt==null);// grown folk at work today, fixed or not
+function maudTeach(){const t=new Set();for(const c of G.settlers){const a=age(c);if(a>=7&&a<14&&c.ap&&!c.ap.r&&c.ap.id!=null)t.add(c.ap.id)}return t}
+function maudWho(tch){tch=tch||maudTeach();return maudUp().filter(s=>!s.ruler&&!s.pin&&s.ta==null&&s.ward==null&&!(s.tl&&s.tl.j===s.job)&&!(tch.has(s.id)&&isMaster(s)))}
+const maudWorst=s=>{const v=MJ.map(j=>s.skills[MSK[j]]),lo=Math.min(...v);return v.filter(x=>x===lo).length===1?MJ[v.indexOf(lo)]:null};
+// farmers needed to bring in `want` food a day this season: the best places first (a place past its room gives a third), plus what the buildings land unworked
+function maudFarmers(want,si){const tl=workTl(),sl=[];
+  for(const t of FOODP){const c=wpCap(t);for(let i=0;i<c;i++)sl.push(yPlace(null,t,si,tl,i))}
+  sl.sort((a,b)=>b-a);const over=yPlace(null,G.built.field?'field':(FOODP.find(t=>G.built[t])||'field'),si,tl,99);
+  let free=(G.built.fishery||0)*(si===3?.5:1)*1.5**lv('fishery')+(G.built.harbour?(si===3?1:2):0)+(.5+up('orchard',.25,0))*(G.built.orchard||0)+.4*(G.built.pasture||0)*1.5**lv('pasture');
+  if(G.built.orchard&&si===2)free+=(20+up('orchard',10,10))*G.built.orchard*(G.frost?.5:1)/DPS;
+  let got=free,n=0;while(got<want&&n<60){got+=n<sl.length?sl[n]:Math.max(.05,over);n++}return n}
+// the wanted headcount per job for the whole hold, in priority order: Farm, a Wood floor for winter, Build once Farm is met, Guard; the rest Wood and Stone
+function maudWant(){
+  const ad=maudUp(),n=ad.length;if(!n)return null;
+  const si=seasonIdx(),need=foodNeed(),stock=need*5,winter=need*DPS*.9;
+  let want=need*1.4+Math.max(0,stock-G.food)/DPS;// a generous margin: she plays safe with food, and so is a little less sharp than a careful player (his Q2: Normal must still reward taking charge)
+  if(si===2&&G.food<Math.min(foodCap(),winter+20))want+=(Math.min(foodCap(),winter+20)-G.food)/DPS;
+  let f=maudFarmers(want,si);
+  if(si===3)f=G.food>=winter*1.1?Math.min(f,1):Math.min(f,Math.ceil(n/2));
+  f=Math.min(f,n);let left=n-f;
+  const wn=Math.ceil(G.settlers.length*winterWood()*DPS*(lv('hut')>=2?.8:1)*1.2)+10;
+  const wf=Math.min(left,n<3?0:si<3&&G.wood<wn?(si>=1?2:1):1);left-=wf;
+  const b=G.proj&&left>0?1:0;left-=b;
+  const g=n>=6&&left>0?1:0;left-=g;
+  const st=Math.floor(left*(G.wood<40||G.wood<wn?1:1.5)/3);
+  return {farm:f,build:b,guard:g,wood:wf+left-st,stone:st}}
+// the movers' share of the wants: fixed folk (ruler, pinned, trades, agents at home...) are taken off first
+function maudTarget(W,mv){const set=new Set(mv),T={},fx={};MJ.forEach(j=>{fx[j]=0});
+  for(const s of maudUp())if(!set.has(s)&&fx[s.job]!=null)fx[s.job]++;
+  let room=mv.length;for(const j of MJ){T[j]=Math.min(room,Math.max(0,W[j]-fx[j]));room-=T[j]}
+  if(room>0){T.wood+=Math.ceil(room/2);T.stone+=Math.floor(room/2)}return T}
+// moves the fewest people to the targets; by skill, never onto the job a person is worst at when anyone else will do. Returns [[person, from, to]]
+function maudMove(mv,T){
+  const c={};MJ.forEach(j=>{c[j]=mv.filter(s=>s.job===j)});
+  const lv0=mv.filter(s=>!MJ.includes(s.job));// on Rest: always moved
+  for(const j of MJ)if(c[j].length>T[j])lv0.push(...c[j].slice().sort((a,b)=>a.skills[MSK[j]]-b.skills[MSK[j]]||b.id-a.id).slice(0,c[j].length-T[j]));
+  const out=[];
+  for(const j of MJ){let k=T[j]-c[j].length;while(k>0&&lv0.length){
+      const p=lv0.slice().sort((a,b)=>(maudWorst(a)===j)-(maudWorst(b)===j)||b.skills[MSK[j]]-a.skills[MSK[j]]||a.id-b.id)[0];
+      lv0.splice(lv0.indexOf(p),1);if(p.job!==j){out.push([p,p.job,j]);p.job=j}k--}}
+  for(const p of lv0){const j=p.job==='rest'||!MJ.includes(p.job)?'wood':p.job;if(p.job!==j){out.push([p,p.job,j]);p.job=j}}
+  if(out.length)mMoved(out);return out}
+// after her moves: the walkers retarget, and the Work view's held rows (FSNAP, 10) follow her moves at once (the hold-still is for the player's own taps)
+function mMoved(out){try{retarget()}catch(e){}if(typeof FSNAP!=='undefined'&&FSNAP)for(const [p,,j] of out)FSNAP.g.set(p.id,j)}
+// a full split: at a season start, when food runs low, when she is switched on or the guide ends. why: 'season','food','on'
+function maudSplit(why){
+  if(!maudCan())return [];const W=maudWant();if(!W)return [];
+  const mv=maudWho(),T=maudTarget(W,mv),c={};MJ.forEach(j=>{c[j]=mv.filter(s=>s.job===j).length});
+  const off=why!=='season'||c.farm<T.farm||c.farm-T.farm>=2||mv.some(s=>!MJ.includes(s.job))||MJ.some(j=>j!=='farm'&&Math.abs(c[j]-T[j])>=2);
+  if(!off)return [];
+  if(why==='food'){// low food: only onto the fields, from Rest first, then the jobs most over their share, the best farmers first
+    const k=T.farm-c.farm;if(k<=0)return [];const over=s=>(c[s.job]||0)-(T[s.job]||0);
+    const out=mv.filter(s=>s.job!=='farm').sort((a,b)=>(MJ.includes(a.job)-MJ.includes(b.job))||over(b)-over(a)||b.skills.farm-a.skills.farm||a.id-b.id).slice(0,k).map(p=>{const o=p.job;p.job='farm';return [p,o,'farm']});
+    if(out.length){mMoved(out);maudSay(why,out)}return out}
+  const out=maudMove(mv,T);if(why==='season'&&out.length<2&&!out.some(([,a,b])=>a==='farm'||b==='farm'))return out;
+  if(out.length||why==='on')maudSay(why,out);return out}
+// the builder: one on Build while a project is under way, none after (checked daily, so a building queued mid-season gets its builder at once)
+function maudBuild(){
+  const up=maudUp(),bs=up.filter(s=>s.job==='build'),mv=maudWho(),W=maudWant();if(!W)return;
+  if(G.proj&&!bs.length){const T=maudTarget(W,mv),c={};MJ.forEach(j=>{c[j]=mv.filter(s=>s.job===j).length});
+    const from=mv.filter(s=>s.job!=='farm'||c.farm>T.farm).sort((a,b)=>(a.job==='farm')-(b.job==='farm')||b.skills.build-a.skills.build||a.id-b.id)[0];
+    if(from){const o=from.job;from.job='build';mMoved([[from,o,'build']]);maudSay('build',[[from,o,'build']])}}
+  else if(!G.proj){const idle=mv.filter(s=>s.job==='build');if(!idle.length)return;const T=maudTarget(W,mv),c={};MJ.forEach(j=>{c[j]=mv.filter(s=>s.job===j).length});
+    const out=[];for(const s of idle){const j=['farm','wood','stone','guard'].sort((a,b)=>(T[b]-c[b])-(T[a]-c[a]))[0]||'wood';c[j]++;out.push([s,'build',j]);s.job=j}
+    mMoved(out);maudSay('freed',out)}}
+// newcomers and grown children with no trade, flagged s.mnew, placed the next day where the hold is shortest
+function maudNew(){
+  const fl=G.settlers.filter(s=>s.mnew);if(!fl.length)return;
+  if(!maudCan()){if(!G.maud)fl.forEach(s=>{delete s.mnew});return}
+  const W=maudWant();if(!W)return;const mv=maudWho(),out=[];let idle=1;
+  for(const s of fl){if(s.mnew!==2)idle=0;delete s.mnew;if(!mv.includes(s))continue;const T=maudTarget(W,mv),c={};MJ.forEach(j=>{c[j]=mv.filter(x=>x!==s&&x.job===j).length});
+    const j=MJ.slice().sort((a,b)=>(T[b]-c[b])-(T[a]-c[a])||MJ.indexOf(a)-MJ.indexOf(b))[0];if(s.job!==j){out.push([s,s.job,j]);s.job=j}}
+  if(out.length){mMoved(out);maudSay(idle?'idle':'new',out)}}
+// low food: from the same smoothed trend as the Hold tab's warning (G.dlf), else store against need minus the farms; at most once a season
+function maudHungry(){const need=foodNeed();if(G.starve>0)return true;
+  if(G.dlf!=null)return G.dlf<-.05&&G.food/-G.dlf<5;
+  const net=need-jobYield('farm');return net>0&&G.food/net<5}
+// once a day, before the work places are filled (wpCheck)
+function maudTick(){
+  if(!G.maud)return;
+  if(G.pin1&&doy()===0&&G.settlers.some(s=>s.pin)){const p=G.settlers.filter(s=>s.pin);p.forEach(s=>{delete s.pin});maudLog(`A new year: Maud takes back ${p.length>3?p.length+' folk you had pinned':mAnd(p.map(s=>s.name))}. "Pin them again if you must," she writes.`)}
+  if(!maudCan())return;
+  if(!G.maudGo){G.maudGo=1;maudSplit('on');return}
+  if(doy()%DPS)for(const s of maudWho())if(s.job==='rest'&&!s.mnew&&!s.buffs.some(b=>b.l==='Rested at last'))s.mnew=2;// well again, or off a card: back to work the next day (a card's rest is kept)
+  maudNew();
+  if(doy()%DPS===0){maudSplit('season');return}
+  const sn=Math.floor(G.day/DPS);if((G.maudF!==sn||G.starve>0&&G.maudF2!==sn)&&maudHungry()){if(G.maudF===sn)G.maudF2=sn;G.maudF=sn;maudSplit('food')}
+  maudBuild()}
+// the switch: on sorts everyone at once (and turns the Farm's Auto on once there are two kinds of food place); off moves nobody
+function maudOn(on){
+  if(on){G.maud=1;if(wpOn()&&G.wpAuto===false)wpAuto(true);if(maudCan()){G.maudGo=1;maudSplit('on')}}
+  else{G.maud=0;G.settlers.forEach(s=>{delete s.pin;if(s.mnew===2)delete s.mnew});maudLog('Maud hands you the tally sticks. She seems relieved.')}}
+// a person moved by the player's own hand while Maud is on (not during the guide, never the ruler); the first pin of a game gets a line
+function maudPin(s){if(!s||!G.maud||G.tut>=0||s.ruler||isChild(s))return;s.pin=1;if(!G.pin1){G.pin1=1;maudLog(gx(`Maud leaves ${s.name} where you put them. "Mine no more," she writes. "Tap the pin to hand them back."`,s))}}
+// her lines (part 2, her voice): at most one a season (and the switch-off line); the latest in G.maudLn for the Work view's strip. Picked by the season count, never by chance,
+// so a hold with her off plays exactly as before. In the news log with her quill (kind 'scribe'), third person like her other notes.
+const MSAYJ={farm:'the fields',wood:'the woods',stone:'the quarry',build:'the building',guard:'the gate'};
+const MSAYS=[["Spring mud, she notes, is nobody's friend.","She has counted the seed twice.","The birds are back, she writes, and they want the seed too.","She has opened the shutters and her ledger both."],["The days are long, and so is her list.","She reminds the hold that hay does not make itself.","She would like it known that sunburn is not an excuse.","The flies, she writes, are not on the tally."],["Winter is coming, and she would like it fed.","She is filling the granary in her head already.","Every turnip counts, she says, even the ugly ones.","She has started counting the days to the first frost."],["Her ink froze twice this morning, she notes.","She writes this in mittens.","The rest keep the fires going, she says, and keep warm doing it.","Few can farm in the frost, so she has found them other things to do."]];
+const MBUILD=['"The pointed end goes in the wood," she adds.','"Measure twice," she adds. "Then once more, for me."','She lends them her best hammer and her worst advice.','"Mind your thumbs," she adds. "We have few to spare."'];
+const MNUM=['','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve'];
+const mAnd=l=>l.length<2?l.join(''):l.slice(0,-1).join(', ')+' and '+l[l.length-1];
+const mList=out=>{const by={};for(const [,,j] of out)by[j]=(by[j]||0)+1;return mAnd(MJ.filter(j=>by[j]).map(j=>`${MNUM[by[j]]||by[j]} to ${MSAYJ[j]}`))};
+const mNames=out=>mAnd(out.map(([p])=>p.name));
+function maudSay(why,out){
+  const sn=Math.floor(G.day/DPS);if(G.maudLs===sn&&!(why==='on'&&!G.maudSeen))return;G.maudLs=sn;
+  const L=mList(out),si=seasonIdx(),yi=Math.floor(sn/4)%4,q=MSAYS[si][si===3&&out.some(([,,j])=>j==='farm')?yi%2:yi];// by the year, so a line comes back once in four years; winter's last two say nobody farms
+  const full=why==='food'&&FOODP.some(t=>G.built[t])&&G.settlers.filter(s=>s.job==='farm'&&!isChild(s)).length>=wpTotal();
+  const pinned=why==='food'&&!full&&G.settlers.some(s=>s.pin&&s.job!=='farm');
+  let t;
+  if(why==='on'){t=!G.maudSeen&&G.maudIntro?`Maud sets to the work${L?': '+L:', and finds it in order already'}.`:!G.maudSeen?`Maud will see to the work from now on${L?': '+L:', and finds it in order already'}. She keeps her tally on Folk, Work.`:L?`Maud takes the work back: ${L}.`:'Maud takes the work back and finds it, for once, in order.';G.maudSeen=1}
+  else if(why==='food')t=`The bowls are emptying. Maud sends ${L||'what hands she can'}.`;
+  else if(why==='build'){t=`Maud puts ${mNames(out)} on the building. ${MBUILD[(G.maudBq||0)%4]}`;G.maudBq=(G.maudBq||0)+1}
+  else if(why==='freed')t=`The building is done, so Maud sends ${mNames(out)} off to ${mAnd([...new Set(out.map(([,,j])=>MSAYJ[j]))])}.`;
+  else if(why==='idle'){const s1=`Maud finds ${mNames(out)} idle and sends them to ${mAnd([...new Set(out.map(([,,j])=>MSAYJ[j]))])}.`;t=out.length>1?s1:gx(s1,out[0][0])}
+  else if(why==='new')t=`Maud sets ${mNames(out)}, new to the work, to ${mAnd([...new Set(out.map(([,,j])=>MSAYJ[j]))])}. She does not ask twice.`;
+  else t=`Maud sends ${L}. ${q}`;
+  if(full)t+=' Every field is full of hands: another field would help.';else if(pinned)t+=' She notes that pinned folk keep her from the fields.';
+  maudLog(t)}
+function maudLog(t){G.maudLn={d:G.day,t};log(t,'scribe')}
 const yWood=(s,tl)=>tl*(1+.4*(G.built.sawmill||0))*(1+up('sawmill',.2,.25))*2*sf(s,'wood')*wm(s);
 const yStone=(s,tl)=>tl*(G.built.mine?1.25:1)*(1+up('mine',0,.25))*1.4*sf(s,'mine')*wm(s);
 function jobYield(j){const si=seasonIdx(),tl=workTl(),w=G.settlers.filter(s=>active(s,j));
@@ -11306,7 +11444,7 @@ let RNDB=0;
 function newGame(house,diff,f,sig,hc){
   const n=hc!=null&&hc>=0&&hc<HCN?hc:Math.floor(Math.random()*HCN);
   RNDB=n;RNDS=rng((Math.imul(n,2654435761)^0x5bd1e995)>>>0);try{makeHold(house,diff,f,sig)}finally{RNDS=null}
-  G.hc=n;
+  G.hc=n;G.maud=G.diff===0?1:0;if(G.maud){const e=G.log.find(x=>/^Give everyone a job/.test(x.t));if(e){e.t="Maud will see to everyone's jobs (Folk tab, Work). Raise cottages and fields in the Build tab.";G.maudIntro=1}}// Maud sees to the work: on for a new Easy game; a plain switch after that (06-day.js maudOn)
 }
 function makeHold(house,diff,f,sig){
   uid=1;
@@ -11719,7 +11857,7 @@ function evBought(i){const rv=rivals()[i],a=agOf(i);if(!rv||!a||a.own||!a.bot)re
   return {kind:'Intrigue',seal:shield(rv.house,34),title:`${a.st.nm} has been bought`,stale:()=>agOf(rivals().indexOf(rv))!==a,
     text:`${smOf()?smOf().name+' has compared':'You compare'} ${a.st.nm}'s letters with what the pedlars say. They do not match. House ${rv.house} has been paying ${a.st.nm} too, and better, and the letters home have been mostly fiction.`,
     choices:[{t:'Dismiss them',d:'No more letters, true or false.',fn(){delete ig().ag[rv.id];return `${a.st.nm} is told not to come back. ${a.st.sex==='m'?'He':'She'} seems relieved: two masters was a lot of writing.`}},
-      {t:'Pay them double',d:`${p2} gold now. They are yours again, they say.`,dis:G.gold<p2,why:'Not enough gold',fn(){G.gold-=p2;delete a.bot;return `${a.st.nm} takes the gold, swears on several saints, and the next letter is true. Probably.`}}]}}
+      {t:'Pay them double',d:`${p2} gold now. They are yours again, they say.`,get dis(){return G.gold<p2},why:'Not enough gold',fn(){if(G.gold<p2)return `The strongbox is lighter than it was when you said it. ${a.st.nm} shrugs and goes on writing for House ${rv.house} too.`;G.gold-=p2;delete a.bot;return `${a.st.nm} takes the gold, swears on several saints, and the next letter is true. Probably.`}}]}}
 /* ---------- the dark side (part 4): removing a lord, its blame, the assassin from a named house ----------
    The goal 'kill' (SCG): one of yours only, two seasons, a long shot, once a house every five years (G.ig.tried). Landed: the lord dies gently (rivalDies 'scheme'),
    the heir keeps the house's feeling, any war goes on. Traced (a third when it works, most of the time when it fails): rmTraced. Untraced, it is a secret of yours (G.ig.rm). */
@@ -11774,12 +11912,12 @@ function plotSeason(){const p=ig().plot,r=ruler();if(!p)return;const l=byId(p.le
   queueEvent(evRing())}
 /* ---------- on screen ---------- */
 const agWhere=s=>{const rv=s&&s.agt!=null&&rivals().find(x=>x.id==s.agt);return rv?`Abroad, at House ${rv.house}`:''};
-const agSince=a=>{const n=Math.floor((G.day-a.since)/DPS);return n<1?'since this season':n===1?'1 season':n+' seasons'};
-const agLine=a=>a.own?`${agName(a)} is there, as ${a.cv} · ${agSince(a)}`:`${agName(a)}, a hired ${a.cv.replace(/^an? /,'')} · ${a.pay} gold a season`;
+const agSince=a=>{const n=Math.floor((G.day-a.since)/DPS);return n<1?'since this season':n===1?'1 season':n+' seasons'};// a hard space keeps the number with its word on a narrow page
+const agLine=a=>a.own?`${agName(a)} is there, as ${a.cv} · ${agSince(a)}`:`${agName(a)}, a hired ${a.cv.replace(/^an? /,'')} · ${a.pay} gold a season`;
 const agLetHTML=(a,rv)=>a.lt?`<span class="vlet agl"><span class="vfrom">${portrait(agFace(a,rv),34)}<span><b>${agName(a)}</b>, at House ${rv.house}, ${yearOf(a.lt.d)}</span></span>"${a.lt.t}"</span>`:'';
 // a house's page: who is there for you, their latest letter, and Plant an agent or Call home (costs shown before you tap)
 function agPageHTML(i){const rv=rivals()[i];if(!rv||rv.held||rv.burnt||G.over)return '';const a=agOf(i),md=!!G.modal;
-  if(a){const sc=scOf(i),w=scWhy(i);return `<div class="kv"><div><span>Your agent</span><span>${agLine(a)}</span></div>${sc?`<div><span>Scheme</span><span>${SCG[sc.g].n} ${oddsH(sc.o)} ${scPips(sc)}</span></div>`:''}</div>${agLetHTML(a,rv)}<div class="btnrow2"><button class="btn" data-act="rival" data-i="${i}" data-m="home" ${md?'disabled':''}><span class="t">${a.own?'Call '+agName(a)+' home':'Pay off '+agName(a)}<small>${a.own?'Back in 6 days':'No more gold each season'}</small></span></button>`
+  if(a){const sc=scOf(i),w=scWhy(i);return `<div class="kv agkv"><div><span>Your agent</span><span>${agLine(a)}</span></div>${sc?`<div><span>Scheme</span><span>${SCG[sc.g].n} ${oddsH(sc.o)} ${scPips(sc)}</span></div>`:''}</div>${agLetHTML(a,rv)}<div class="btnrow2"><button class="btn" data-act="rival" data-i="${i}" data-m="home" ${md?'disabled':''}><span class="t">${a.own?'Call '+agName(a)+' home':'Pay off '+agName(a)}<small>${a.own?'Back in 6 days':'No more gold each season'}</small></span></button>`
     +`<button class="btn" data-act="rival" data-i="${i}" data-m="scheme" ${md||w?'disabled':''}><span class="t">Scheme<small>${w||'From '+Math.min(...scGoals(i).map(scCost))+' gold'}</small></span></button></div>`}
   const w=plantWhy(i);return `<div class="kv"><div><span>Your agent</span><span>No one there</span></div></div><button class="btn" data-act="rival" data-i="${i}" data-m="plant" ${md||w?'disabled':''}><span class="t">Plant an agent<small>${w||`One of yours, or a stranger at ${stPay()} gold a season`}</small></span></button>`}
 // House > Court: the Spymaster card (mock-up 1A), under the neighbours: the Spymaster and the season's rumour, then a row per house with an agent and their latest letter (12A).
@@ -11795,7 +11933,7 @@ function spyHTML(){const sm=smOf(),r=ruler(),A=rivals().map((rv,i)=>[rv,i,agOf(i
   return h+'</div>'}
 /* Contents of 10-screen.js: What is on screen: icons, portraits, the tabs, cards, input and the guide.
    - icons & portraits: ICONS, ic, gBody, pNeck (necklaces), pScarf, pScar (scars and eyepatches), portrait
-   - rendering: renderTop (with the ruler medallion, medal), alerts, the Hold tab (jobTiles, alertsHTML, projCard, renderHold), the Folk tab (People: folkTile, wallSec, peopleHTML; Work: groupHead, fixStrip, wpPanel (Where they work, from Barony), workHTML; folkCard, jobPick, renderFolk), renderBuild, renderHouse, renderModal (your own war: the battle scene before its card, BSMS, bsOk, battleHTML; ev.seal, ev.post, ev.war; love cards: loveHearts), refresh, setView, begin, showStart
+   - rendering: renderTop (with the ruler medallion, medal), alerts, the Hold tab (jobTiles, alertsHTML, projCard, renderHold), the Folk tab (People: folkTile, wallSec, peopleHTML; Work: maudStrip (Maud sees to the work, the switch and her line), groupHead, fixStrip, wpPanel (Where they work, from Barony), workHTML; folkCard, jobPick, renderFolk), renderBuild, renderHouse, renderModal (your own war: the battle scene before its card, BSMS, bsOk, battleHTML; ev.seal, ev.post, ev.war; love cards: loveHearts), refresh, setView, begin, showStart
    - the hold from the front: the neighbours' pictures (HPROW, hpCot in the house style, the land: hpCrag, hpWood, hpRiver; hpWorks; life: hpWar, hpSnow; nbLook, nbLookAt, nbLookG and nbSty for newcomers (rv.gen), nbFolk, nbSnap; a burned seat hpAsh), holdPic (dusk with p.dk, style p.st, land p.ld, life p.lf, war p.war), holdSnap; nbPageHTML with Declare war (pwPageHTML); nbCrop (the round picture on a neighbour row) and a neighbour's page (ATTL, NBHX, NBCI, openNb, nbSide their side of it, nbPageHTML; the bond on it: loyBar, nbBondHTML; a burned seat's page ashPageHTML; Declare independence on your overlord's page)
    - the share card (after legacy): shareSVG, shareBlob, openShare (the picture with the hold code, for itch.io comments)
    - the start screen: the title page (renderStartPic, stCardHTML, stIconsHTML, stWarnHTML: a browser that will not keep the hold, the houses that were: pastAdd, stPastHTML), the sigil maker, the founder page, startPage, renderDiffs, showStart
@@ -11864,6 +12002,7 @@ const ICONS={
   axe:'<path d="M6 21L15.5 6.5"/><path d="M12.5 5c3-1.6 6.5-.6 8 2-1.6 2.6-5 3.6-8 2.4z"/>',
   pick:'<path d="M3.5 9.5c5-4.5 12-4.5 17 0M12 5.5V21"/>',
   spear:'<path d="M4 20L16.5 7.5M15 4.5l5.5-1.5L19 8.5zM12.5 8l3.5 3.5"/>',
+  pin:'<path d="M9 3.5h6l-1.2 6 3.2 3H7l3.2-3z"/><path d="M12 12.5v8"/>',
   bed:'<path d="M3 18.5V7M3 14h18v4.5M21 14v-1.5a3 3 0 0 0-3-3h-7.5V14"/><circle cx="6.8" cy="11.3" r="1.6"/>',
   music:'<path d="M9 18V6l10-2v12M9 18a2.5 2.5 0 1 1-2.5-2.5A2.5 2.5 0 0 1 9 18zM19 16a2.5 2.5 0 1 1-2.5-2.5A2.5 2.5 0 0 1 19 16z"/>'
 };
@@ -12054,23 +12193,24 @@ function pileUp(){if(ACTS.sell.need()||(G.cd.sell||0)>G.day)return '';const ir=(
 let FBAND=-1;function foodBand(n){const raw=n<=1.5?0:n<=4?1:n<10?2:-1,up=[2.5,5.5,13];if(FBAND<0||raw>=0&&raw<FBAND)FBAND=raw;else if(FBAND>=0&&n>up[FBAND])FBAND=raw;return FBAND}
 function alerts(){
   const a=[],pop=G.settlers.length,si=seasonIdx();
-  if(G.starve>0)a.push(['bad','The hold is starving. Put more people on farms.','j:farm']);
-  else{const d=G.dlf==null?G.dl.food||0:G.dlf,n=d<-.05?G.food/-d:99,b=foodBand(n);if(b>=0)a.push(['warn',`Food runs out ${['by tomorrow','in a few days','in about a week'][b]} at this rate.`,'j:farm'])}// in steps over a few days' average (dlf, 06), so the strip does not change every day
+  const md=maudCan();// Maud sees to the work: the job warnings she handles say so, and point at the Work view, not at a Move that would pin
+  if(G.starve>0)a.push(['bad',md?'The hold is starving. Maud is sending every hand she can to the fields.':'The hold is starving. Put more people on farms.',md?(G.settlers.filter(s=>s.job==='farm'&&!isChild(s)).length>=wpTotal()?bldFix('field')||'f:farm':'f:farm'):'j:farm']);
+  else{const d=G.dlf==null?G.dl.food||0:G.dlf,n=d<-.05?G.food/-d:99,b=foodBand(n);if(b>=0)a.push(['warn',`Food runs out ${['by tomorrow','in a few days','in about a week'][b]} at this rate.${md?' Maud is on it.':''}`,md?'f:farm':'j:farm'])}// in steps over a few days' average (dlf, 06), so the strip does not change every day
   {const gs=G.food>foodCap()/2&&granShort();if(gs){const nw=bldFix('granary'),up=!nw&&upFix('granary');a.push(['warn',`Your granaries hold ${gs[0]} food; winter will need about ${gs[1]}. `+(nw?(G.built.granary?'Another granary':'A granary')+' would help.':up?'Bigger granaries would help.':'Farm hard and hunt.'),nw||up||'j:farm'])}
   else if(si===2&&doy()%DPS>=4)a.push(['info','Winter is coming. Stock food and firewood.'])}
   if(si===3)a.push(['info',`Winter: fields barely grow and fires burn ${(pop*winterWood()).toFixed(1)} wood a day.`]);
   if(G.unpaid>G.day)a.push(['bad',`The treasury cannot pay wages (${wages().toFixed(1)} gold a day). People are angry.`,'law:tax']);
   if(G.freeze)a.push(['bad','No firewood. People are freezing.','j:wood']);
   // nobody chopping: say so before the winter fires go out, not after (a new player's woodcutter often becomes the first builder)
-  else if(!G.settlers.some(s=>active(s,'wood'))){const need=Math.ceil(pop*winterWood()*DPS);if(si<3&&G.wood<need)a.push([si===2||G.wood<5?'warn':'info',`Nobody is chopping wood. Winter fires will need about ${need}, and you have ${fmt(G.wood)}.`,'j:wood']);else if(G.wood<5)a.push(['info','Nobody is chopping wood, and building needs it.','j:wood'])}
+  else if(!md&&!G.settlers.some(s=>active(s,'wood'))){const need=Math.ceil(pop*winterWood()*DPS);if(si<3&&G.wood<need)a.push([si===2||G.wood<5?'warn':'info',`Nobody is chopping wood. Winter fires will need about ${need}, and you have ${fmt(G.wood)}.`,'j:wood']);else if(G.wood<5)a.push(['info','Nobody is chopping wood, and building needs it.','j:wood'])}
   {const rl=ruler();if(rl&&G.day>=DPY&&!bloodHeir(rl))a.push(['bad',`${rl.name} has no heir of the blood. If ${rl.sex==='m'?'he':'she'} dies, the house ends.`,!rl.spouse&&matchable().includes(rl)?'match':'heir'])}
-  if(!G.settlers.some(s=>active(s,'farm')))a.push(['warn','No one is farming.','j:farm']);
+  if(!md&&!G.settlers.some(s=>active(s,'farm')))a.push(['warn','No one is farming.','j:farm']);
   if(G.day<DPY&&!(G.tut>=0)&&!G.built.hut&&!(G.proj&&G.proj.type==='hut')&&!nq().some(q=>(q.type||q)==='hut'))a.push(['info','Newcomers need beds: build a cottage.','b:hut',1]);// the first thing to do, for a player who skipped the guide (first spring, 2026-11-21)
   {const n=rpNrOpen(),r=ruler();if(n&&r)a.push(['info',`${r.name} may choose how to carry the house's name. Maud has it on the Repute card.`,'rp',1])}// a new reign (09-repute.js)
-  if(G.proj&&!G.settlers.some(s=>active(s,'build')))a.push(['warn','A project is waiting, but no one is set to Build.','j:build']);
+  if(!md&&G.proj&&!G.settlers.some(s=>active(s,'build')))a.push(['warn','A project is waiting, but no one is set to Build.','j:build']);
   if(!G.proj){const bn=G.settlers.filter(s=>active(s,'build')).length,sh=nextShort();
     if(nq().length&&sh)a.push(['warn',`Next up, the ${nextBName(nq()[0])} waits for ${sh}.`,'build']);
-    else if(bn&&!nq().length)a.push(['info',`${bn>1?'Your builders have':'Your builder has'} nothing to build. Pick something on the Build tab.`,'build'])}
+    else if(bn&&!md&&!nq().length)a.push(['info',`${bn>1?'Your builders have':'Your builder has'} nothing to build. Pick something on the Build tab.`,'build'])}
   {const ex=G.settlers.filter(s=>active(s,'farm')).length-wpTotal(),more=G.built.field<BUILD.field.max;
     if(ex>=2)a.push(['warn',`${ex} farmers have no place to work, so they grow only a third as much. ${more?`A field plot costs ${bcost('field').wood} wood.`:'Every place is taken: other work would suit them better.'}`,more?bldFix('field'):'f:farm'])}
   if(pop>=housing()){const nw=bldFix('hut'),up=!nw&&upFix('hut'),l=lv('hut'),full=G.built.hut>=BUILD.hut.max,maxed=full&&l>=2;
@@ -12221,7 +12361,7 @@ function jobState(j,n){
   if(j==='farm')return !n||n>wpTotal()||jobYield('farm')<foodNeed()?'bad':'good';
   if(j==='wood'){const b=woodBurn();return b?(jobYield('wood')<b?'bad':'good'):!n&&(seasonIdx()===2||G.wood<5)?'bad':n?'good':''}
   if(j==='build')return G.proj?(n&&buildRate()?'good':'bad'):n?'bad':'';
-  if(j==='guard')return n?'good':G.day>=20?'bad':'';
+  if(j==='guard')return n?'good':G.day>=20&&!(G.maud&&adults().length<6)?'bad':'';// Maud keeps a guard only from 6 grown folk
   if(j==='rest')return n>=2?'bad':'';
   return n?'good':'';
 }
@@ -12242,7 +12382,8 @@ function jobLine(j,n){
 // the six jobs as big buttons in their own colours, with how good this person is at each and their best marked
 function jobPick(s){
   const bk=JOBS.reduce((b,j)=>JOBSKILL[j[0]]&&(!b||s.skills[JOBSKILL[j[0]]]>s.skills[JOBSKILL[b]])?j[0]:b,null);
-  return `<div class="jpick">${JOBS.map(([j,l])=>{const k=JOBSKILL[j],v=k?s.skills[k]:0,on=s.job===j;
+  const mn=G.maud&&!s.ruler&&!(G.tut>=0)?`<div class="pinnote">${ic('pin',14)}${s.pin?`<span>${gx(`Pinned: Maud leaves ${s.name} where you put them.`,s)}</span><button data-act="unpin" data-id="${s.id}">Hand back</button>`:`<span>Maud sets the jobs. A job you pick here pins ${s.name} till the new year.</span>`}</div>`:'';
+  return mn+`<div class="jpick">${JOBS.map(([j,l])=>{const k=JOBSKILL[j],v=k?s.skills[k]:0,on=s.job===j;
     return `<button data-act="job" data-id="${s.id}" data-job="${j}" data-j="${j}" class="${on?'on':''}${j===bk?' best':''}">${ic(JOBIC[j],20)}<b>${l}</b><small>${k?(j===bk?'★ Best at':skRank(v))+' · '+v:'Time off'}</small></button>`}).join('')}</div>`;
 }
 const FO={};// which folds are open: an opened card's sk, tr, fam, life, and each group g:<job> / g:kids (unset: open below BIGHOLD souls); memory only
@@ -12317,7 +12458,7 @@ function fixStrip(j){
   // who to offer: resting folk first, farmers last (pulling them is how a young hold starves), then the most skilled
   const tier=s=>s.job==='rest'?0:s.job==='farm'?2:1;
   const c=adults().filter(s=>s.job!==j&&!sick(s)&&!away(s)).sort((a,b)=>tier(a)-tier(b)||(sk?b.skills[sk]-a.skills[sk]:a.mood-b.mood)).slice(0,3);
-  return `<div class="parch card fixnote"><button class="x" data-act="fixoff" aria-label="Close">×</button>${n>F.n0?`<b>Done.</b> <span class="sub">${n} on ${jobL(j)} now. Tap another name to add more, or × to close.</span>`:`<b>${t}.</b> <span class="sub">${why}</span>`}${c.length?`<div class="fixc">${c.map(s=>`<button class="fixq" data-act="job" data-id="${s.id}" data-job="${j}">${s.name}<small>${sk?skRank(s.skills[sk])+' · '+s.skills[sk]+', ':''}now ${jobL(s.job)}</small></button>`).join('')}</div>`:''}</div>`;
+  return `<div class="parch card fixnote"><button class="x" data-act="fixoff" aria-label="Close">×</button>${n>F.n0?`<b>Done.</b> <span class="sub">${n} on ${jobL(j)} now. Tap another name to add more, or × to close.</span>`:`<b>${t}.</b> <span class="sub">${why}${G.maud&&!(G.tut>=0)?' Whoever you move here is pinned till the new year.':''}</span>`}${c.length?`<div class="fixc">${c.map(s=>`<button class="fixq" data-act="job" data-id="${s.id}" data-job="${j}">${s.name}<small>${sk?skRank(s.skills[sk])+' · '+s.skills[sk]+', ':''}now ${jobL(s.job)}</small></button>`).join('')}</div>`:''}</div>`;
 }
 // which part of each tab is showing; a per-viewer convenience kept in localStorage, never in the save
 const UI0={h:'rule',f:'all'};
@@ -12336,7 +12477,7 @@ function folkTile(s,common,grp){
   const lrn=a>=7&&s.ap&&TRADE[s.ap.j]&&!s.ap.r?s.ap.j:null;
   const strip=ch?`<span class="pjob kid">${ic(lrn?JOBIC[lrn]:'cradle',14)}${lrn?'Learning':'Child'}</span>`:sick(s)||away(s)?`<span class="pjob kid off">${ic(sick(s)?'infirmary':'house',14)}${sick(s)?'Sick':'Away'}</span>`
     :`<button class="pjob${JP===s.id?' on':''}" data-act="jpick" data-id="${s.id}" aria-expanded="${JP===s.id}">${ic(JOBIC[s.job],14)}${grp?grp!==s.job?'→ '+jobL(s.job):'Move':jobL(s.job)}</button>`;
-  return `<div class="parch ptile${grp&&grp!==s.job?' moved':''}${selected===s.id||JP===s.id?' sel':''}" data-j="${ch?'kids':s.job}"><button class="pface" data-act="open" data-id="${s.id}" aria-expanded="${expanded===s.id}"><span class="pring${s.mood<25&&!ch?' low':s.mood>=75?' hi':''}" style="--mc:${moodCol(s.mood)}">${portrait(s,grp?40:58)}${!ch&&s.perkPts>0?'<span class="pbadge">Perk</span>':''}</span><b>${s.name}</b>${grp?'':`<small>${moodFace(s.mood,14)}${moodW(s.mood)}</small>`}${why?`<small class="pwhy">${why}</small>`:''}</button>${b?`<span class="pbad">${b}</span>`:''}${strip}</div>`;
+  return `<div class="parch ptile${grp&&grp!==s.job?' moved':''}${selected===s.id||JP===s.id?' sel':''}" data-j="${ch?'kids':s.job}">${!ch&&s.pin&&G.maud?`<button class="pinb" data-act="unpin" data-id="${s.id}" title="Pinned by you" aria-label="${s.name} is pinned: tap to hand back to Maud">${ic('pin',13)}</button>`:''}<button class="pface" data-act="open" data-id="${s.id}" aria-expanded="${expanded===s.id}"><span class="pring${s.mood<25&&!ch?' low':s.mood>=75?' hi':''}" style="--mc:${moodCol(s.mood)}">${portrait(s,grp?40:58)}${!ch&&s.perkPts>0?'<span class="pbadge">Perk</span>':''}</span><b>${s.name}</b>${grp?'':`<small>${moodFace(s.mood,14)}${moodW(s.mood)}</small>`}${why?`<small class="pwhy">${why}</small>`:''}</button>${b?`<span class="pbad">${b}</span>`:''}${strip}</div>`;
 }
 // a section of the wall, three faces a row; the open card or job picker sits full width just below its row, so no face moves
 function wallSec(key,title,list,common,extra){
@@ -12361,6 +12502,10 @@ function peopleHTML(common){
   const others=G.settlers.filter(s=>!fam.includes(s)),grown=others.filter(s=>!isChild(s)).sort(ord),kids=others.filter(isChild).sort((a,b)=>age(b)-age(a));
   return wallSec('house',`House ${G.house}`,fam,common,G.kin&&r&&G.kin[r.id]?' <button class="cgo" data-act="tree">Family tree ›</button>':'')+wallSec('folk','Your folk',grown,common)+wallSec('kids','Their children',kids,common);
 }
+// Maud sees to the work (part 2, mock-up A): a slim strip at the top of the Work view, her face, her latest line and the On/Off switch (maudOn, 06-day.js)
+function maudStrip(){const on=!!G.maud,ln=G.maudLn&&G.maudLn.t;
+  const sub=on?(G.tut>=0?'She starts once the guide is done.':ln&&G.day-G.maudLn.d<DPS*2?ln:'She sorts the jobs at the turn of each season.'):'Tap On and Maud sets the jobs for you.';
+  return `<div class="mzA${on?'':' off'}">${maudPic(40,'sigh')}<div class="tx"><b>${on?'Maud sees to the work':'Let Maud see to the work'}</b><i>${sub}</i></div><button class="tog${on?' on':''}" data-act="maudtog" role="switch" aria-checked="${on}" aria-label="Let Maud see to the work">${on?'On':'Off'}</button></div>`}
 function workHTML(common,goTo){
   const big=G.settlers.length>=BIGHOLD,r=ruler();
   // someone moved out of a folded group has nothing under your finger to keep still: they go straight to their new group
@@ -12369,7 +12514,7 @@ function workHTML(common,goTo){
   const grpOf=s=>isChild(s)?'kids':FSNAP.g.get(s.id),inG=k=>G.settlers.filter(s=>s!==r&&grpOf(s)===k).sort((a,b)=>FSNAP.o.get(a.id)-FSNAP.o.get(b.id));
   const has=l=>l.some(s=>s.id===expanded||s.id===selected||s.id===JP);
   const isOpen=(k,l)=>has(l)||baseOpen(k);
-  let h='';
+  let h=maudStrip();
   if(r)h+=`<div class="dcat">Your ${titleOf(r).toLowerCase()}</div>`+folkCard(r,common,isChild(r)?null:r.job);
   h+=JOBS.map(([j,l])=>{const list=inG(j),n=G.settlers.filter(s=>!isChild(s)&&s.job===j).length,open=isOpen(j,list);
     return `<div class="fgrp" data-g="${j}">`+groupHead(j,l,n,jobStat(j,n),list,open,jobState(j,n))+(FIXJOB&&FIXJOB.j===j?fixStrip(j):'')+(open&&j==='farm'?wpPanel():'')+(open?list.length?tileGrid(list,common,grpOf):(r&&r.job===j&&!isChild(r)?`<div class="gnone">Just ${r.name}, your ruler, for now.</div>`:'<div class="gnone">Nobody here yet. Tap Move on someone to bring them over.</div>'):'')+'</div>'}).join('');
@@ -13021,7 +13166,7 @@ function begin(fresh){
   PREVRES={};PREVRANK=null;CHTOP=null;
   resetNamer();$('#start').hidden=true;$('#over').hidden=true;
   menuSpeed=0;setView('hold');renderModal();setSpeed(1);
-  tally(fresh?'start-'+(['easy','normal','hard'][G.diff]||'normal'):'continue');
+  tally(fresh?'start-'+(['easy','normal','hard'][G.diff]||'normal'):'continue');if(fresh&&G.maud)tally('maud-on-start');// Maud sees to the work: read first-starve counts with and without her
 }
 function sanitize(v){return String(v||'').replace(/[^A-Za-z' \-]/g,'').trim().slice(0,18)}
 /* the title page (#startA): the hold at dusk in a book border (renderStartPic), the saved hold's card (stCardHTML), the difficulty folded (#dfold), a row of round buttons (stIconsHTML) and the houses that were (stPastHTML) */
@@ -13165,7 +13310,9 @@ document.addEventListener('click',e=>{
   else if(a==='alfold'){ALO=!ALO;renderHold()}
   else if(a==='chold'){CHO=!CHO;renderHold()}
   else if(a==='speed'){menuSpeed=0;setSpeed(+t.dataset.v)}
-  else if(a==='job'){const s=byId(+t.dataset.id);if(s){const o=s.job;s.job=t.dataset.job;JP=null;if(o!==s.job)sealFx(t);jobReact(s,o);retarget();refresh()}}
+  else if(a==='job'){const s=byId(+t.dataset.id);if(s){const o=s.job;s.job=t.dataset.job;JP=null;if(o!==s.job){sealFx(t);maudPin(s)}jobReact(s,o);retarget();refresh()}}
+  else if(a==='maudtog'){auPlay('tap');maudOn(!G.maud);refresh()}
+  else if(a==='unpin'){const s=byId(+t.dataset.id);if(s){delete s.pin;auPlay('tap');refresh()}}
   else if(a==='jpick'){const id=+t.dataset.id;JP=JP===id?null:id;if(JP)expanded=null;renderFolk();renderTip()}
   else if(a==='fview'){FV=t.dataset.k;JP=null;FIXJOB=null;if(UI.f!=='all')uiSet('f','all');renderFolk();$('#main').scrollTop=0;renderTip()}
   else if(a==='wpd'){const y0=t.getBoundingClientRect().top,k=`[data-act="wpd"][data-t="${t.dataset.t}"][data-d="${t.dataset.d}"]`;wpSet(t.dataset.t,+t.dataset.d);renderFolk();const n=document.querySelector(k);if(n)$('#main').scrollTop+=n.getBoundingClientRect().top-y0}// the Farm card above grows chips on the first tap: keep the button under the finger
@@ -13506,8 +13653,8 @@ let tutSeen='',MAUDSTEP='';// MAUDSTEP: the hold and guide step her bust last le
 let IDLE0=0;// when the cottage-is-up tip first became due: it waits about 2 s so the finished toast is read first
 const LSGAP=90000;let LSMS=45000;// ms of running time until the next pop-up may show (not saved: a reload waits 45s again)
 const LESSONS=[
-  {id:"idle",urg:1,mv:()=>{const b=G.settlers.find(s=>active(s,"build"));return b?[b,G.settlers.some(s=>active(s,"wood"))&&G.food<foodCap()?"farm":"wood"]:null},ok:()=>{if(!(G.built.hut&&!G.proj&&!nq().length&&G.settlers.some(s=>active(s,"build")))){IDLE0=0;return false}if(!IDLE0){IDLE0=Date.now();setTimeout(()=>{try{renderTip()}catch(e){}},2100)}return Date.now()-IDLE0>=2000},k:()=>G.settlers.some(s=>active(s,"wood"))&&G.food<foodCap()?"j:farm":"j:wood",t:()=>{const b=G.settlers.find(s=>active(s,"build")),w=!G.settlers.some(s=>active(s,"wood"))||G.food>=foodCap();return gx(`The cottage is up, and ${b?b.name:"your builder"} has nothing to build. Put them to work in ${w?"the woods":"the fields"}, or pick a new building.`,b)}},
-  {id:"food",urg:1,mv:()=>{const p=farmHand();return p?[p,"farm"]:null},ok:()=>{const d=G.dl.food||0;return G.starve>0||(d<-.05&&G.food/-d<15)},k:"j:farm",t:()=>"<b>Food is running low.</b> "+((G.built.fishery||G.built.orchard||G.built.pasture)?"Farm hands bring it in from the fields, the fish, the apples and the sheep":"Farmers grow it")+", and everyone eats every day: if it runs out, people starve. About half your grown-ups should farm."},
+  {id:"idle",urg:1,mv:()=>{if(maudCan())return null;const b=G.settlers.find(s=>active(s,"build"));return b?[b,G.settlers.some(s=>active(s,"wood"))&&G.food<foodCap()?"farm":"wood"]:null},ok:()=>{if(maudCan()||!(G.built.hut&&!G.proj&&!nq().length&&G.settlers.some(s=>active(s,"build")))){IDLE0=0;return false}if(!IDLE0){IDLE0=Date.now();setTimeout(()=>{try{renderTip()}catch(e){}},2100)}return Date.now()-IDLE0>=2000},k:()=>G.settlers.some(s=>active(s,"wood"))&&G.food<foodCap()?"j:farm":"j:wood",t:()=>{const b=G.settlers.find(s=>active(s,"build")),w=!G.settlers.some(s=>active(s,"wood"))||G.food>=foodCap();return gx(`The cottage is up, and ${b?b.name:"your builder"} has nothing to build. Put them to work in ${w?"the woods":"the fields"}, or pick a new building.`,b)}},
+  {id:"food",urg:1,mv:()=>{if(maudCan())return null;const p=farmHand();return p?[p,"farm"]:null},ok:()=>{const d=G.dl.food||0;return G.starve>0||(d<-.05&&G.food/-d<15)},k:"j:farm",t:()=>maudCan()?"<b>Food is running low.</b> "+(G.settlers.filter(s=>s.job==="farm"&&!isChild(s)).length>=wpTotal()?"Maud has every field full of hands. Another field plot would help.":"Maud is putting more hands on the farms. Everyone eats every day: if it runs out, people starve."):"<b>Food is running low.</b> "+((G.built.fishery||G.built.orchard||G.built.pasture)?"Farm hands bring it in from the fields, the fish, the apples and the sheep":"Farmers grow it")+", and everyone eats every day: if it runs out, people starve. About half your grown-ups should farm."},
   {id:"winter",urg:1,now:1,ok:()=>G.day>=2*DPS&&G.day<3*DPS,k:"j:wood",t:"<b>Winter comes after this season.</b> Fields barely grow in the cold and fires burn wood, so stock up on <b>food</b> and <b>wood</b> now."},
   {id:"bubble",ok:()=>G.day>=DPS,t:"Now and then someone has <b>a thought bubble</b> over their head. Tap them on the map to hear what is on their mind."},
   {id:"laws",at:"rule",ok:()=>G.day>=DPS,t:"<b>The laws of the hold</b>: five standing laws set the taxes, rations, work, justice and arms. Each can change once a season. Most holds leave them be for years."},
@@ -13521,7 +13668,7 @@ const lsGate=()=>G&&G.diff!==2&&!(G.tut>=0)&&!G.over;// G.gd (the guide ran, not
 let LSHOLD=null;// an urgent pop-up stays up at least 25 s even when its cause eases (the low-food tip was gone in about 7 s)
 const lessonOn=()=>{if(!lsGate())return null;const h=LSHOLD&&Date.now()<LSHOLD.u&&!(UI.ls||{})[LSHOLD.id]?LESSONS.find(l=>l.id===LSHOLD.id):null;return h||lessonOn0()};
 const lessonOn0=()=>LESSONS.find(l=>!l.at&&(G.gd||l.urg)&&(l.now||G.day-(G.lsD||0)>=12)&&!(UI.ls||{})[l.id]&&(l.urg||LSMS<=0&&!(G.day<DPY&&Y1Q>0))&&l.ok());
-function lessonGot(go,id,mv){const l=lessonOn();if(!l||id&&l.id!==id)return;const m=mv&&l.mv&&l.mv();uiSet("ls",Object.assign({},UI.ls,{[l.id]:1}));G.lsD=G.day;LSMS=LSGAP;Y1Q=Y1GAP;if(m){moveTo(m[0],m[1]);go=0}if(go&&l.k){const k=typeof l.k==="function"?l.k():l.k;if(k==="tree")openTree();else goFix(k);if(view!=='hold'&&!wide())toast('Time waits while you look.')}renderTip()}
+function lessonGot(go,id,mv){const l=lessonOn();if(!l||id&&l.id!==id)return;const m=mv&&l.mv&&l.mv();uiSet("ls",Object.assign({},UI.ls,{[l.id]:1}));G.lsD=G.day;LSMS=LSGAP;Y1Q=Y1GAP;if(m){moveTo(m[0],m[1]);maudPin(m[0]);go=0}if(go&&l.k){const k=typeof l.k==="function"?l.k():l.k;if(k==="tree")openTree();else goFix(k);if(view!=='hold'&&!wide())toast('Time waits while you look.')}renderTip()}
 // the House note waiting now (the first ready one in LESSONS order), and its card, drawn above what it explains
 const noteOn=()=>lsGate()&&G.gd&&LESSONS.find(l=>l.at&&!(UI.ls||{})[l.id]&&l.ok())||null;
 function houseNote(id){const l=noteOn();if(!l||l.id!==id)return "";const tx=typeof l.t==="function"?l.t():l.t;
