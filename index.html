@@ -724,7 +724,6 @@ body:has(#modal:not([hidden])) #top .seg,body:has(#binfo:not([hidden])) #top .se
 .ffold{margin-top:0;border-top:1px dashed var(--edge);padding-top:4px;font-family:var(--f-display);font-size:16px;letter-spacing:.07em;color:var(--rubric);justify-content:space-between}
 .fbody{margin-top:-4px}
 .warn{color:#a8661a}
-.maim{margin-top:-4px;font-size:14.5px;font-style:italic;color:var(--ink2)}
 .mks{margin:2px 0 6px;font-size:14.5px;font-style:italic;color:var(--ink2);line-height:1.3}
 
 /* the painted first letter on the house name: smaller than an event card's, sized in em so it shrinks with a long name */
@@ -1035,6 +1034,9 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 .crep>.sub{margin-bottom:6px}.crep .cfit{display:flex;gap:8px;align-items:center;margin-bottom:6px}.crep .cfit>div{flex:1;min-width:0;line-height:1.2}.crep .cfit b{font-size:16.5px}
 .crep .cfit small{display:block;font-size:13.5px;color:var(--ink2)}.crep .cfit small.dn{color:#9a2a1a}.crep .cfit .btn.sm{max-width:none;padding:6px 12px;font-size:14.5px;min-height:36px}
 .crepw{margin:2px 0 4px;font-style:italic}
+
+/* mood trend arrows under a person's mood number: green up, red down, two when the drift is big */
+.mtr{text-align:right;font-size:11px;line-height:1;letter-spacing:1px;margin:-3px 2px 4px 0}.mtr.up{color:#3d7a2e}.mtr.dn{color:#a8321e}
 </style>
 
 <div id="app">
@@ -1354,6 +1356,16 @@ const byId=id=>G.settlers.find(s=>s.id===id);
 const ruler=()=>byId(G.rulerId);
 const age=s=>Math.floor(((G?G.day:0)-s.born)/DPY);
 const isChild=s=>age(s)<14;
+// childhood is short for the hold's folk: a commoner's child runs CHACC+1 times fast until fourteen (CHYRS years from birth to grown); the ruling blood and a neighbour's ward (s.ward) keep the long childhood
+// (child rulers, regencies and claimants are part of the game). Done by moving the child's born date back a little each day (tick), so age() and isChild stay one plain count.
+const CHYRS=5,CHACC=14/CHYRS-1;
+// who grows up fast, and how many times faster (one rule for tick, the apprentice's learning and the folk card's Grown in)
+const fastKid=s=>isChild(s)&&!bloodOf(s)&&s.ward==null,kidPace=s=>fastKid(s)?CHACC+1:1;
+// an apprentice learns once a season from 7 to 13 (tradeSeason in 06-day): 27 learning seasons in the long childhood, 8 in a fast one (the first season finds a teacher),
+// and over the long one the teacher also grows better. So a fast child's season counts CHLEARN times; 4 was measured to match (sim childhood: long about 5.2 skill, fast with 4 about the same)
+const CHLEARN=4;
+// real years until grown: what is left of the fourteen, at this child's pace
+const yearsToGrown=s=>Math.max(0,(14*DPY-((G?G.day:0)-s.born))/DPY/kidPace(s));
 const sick=s=>s.sick>G.day;
 const hurt=s=>s.hurt>G.day;
 const away=s=>s.away>G.day;
@@ -1395,7 +1407,7 @@ function toast(t,k){const el=$('#toast'),on=/\bshow\b/.test(el.className||'');
 function noteHTML(h){const el=$('#toast');el.innerHTML=h;el.className='toast show tap';el.onclick=e=>{if(e.target.closest('button'))toastNext()};clearTimeout(toastT);toastT=setTimeout(toastNext,5500)}
 
 /* Contents of 02-people.js: People, the reigns they rule and the Chronicle that remembers them; the map layout.
-   - people: mkSettler, looks (lkOf, skinOf, longBeard), addSettler/removeSettler, opinions (getOp, bump), buffs, injure and scars (SCARW, scarCard), moodMods, kill, bloodHeir, succeed, usurp
+   - people: mkSettler, looks (lkOf, skinOf, longBeard), addSettler/removeSettler, opinions (getOp, bump), buffs, injure and scars (SCARW, scarCard), moodMods, kill, bloodHeir, succeed, usurp; the marriage bond (BONDEND, wedLink, endBond) sits just above marry in the Chronicle section
    - why folk dislike the ruler: opWhy, opFade, opReason
    - reigns: reign, rc, epithet, GOODEP (who gets a plaque on the Founder's Statue), endReign, rulersHTML
    - the Chronicle (endings CHOVER, conquered on Hard by your overlord: G.endBy; the valley ending with LOVLET and the book of seats, cqlLines in 07): Sister Maud (MAUD, MAUDT), struck-out words (strk, CHSTRK), folds for rank-ups and kept faith (chRanks, chFaith), two sides to a story (a neighbour chronicler quoted, VSIDE and vSide in 07, the latest by house in CHSIDE), chronicle, chronText, chronHTML; her news-log notes (MDCOT, MDSS, MDANY, MDOLD, MDPAST, MDSCH her old school, maudNote, maudDay); her face (maudHead, maudPic, maudBust; maudMood reads a note's mood from its words; maudLean, the bust on computer screens); the rival chroniclers' faces (chrHead, chrPic, CHMOOD, chrMood)
@@ -1444,8 +1456,8 @@ function addSettler(s,fromEdge,how){
   for(const o of G.settlers){if(o!==s){o.op[s.id]=(o.op[s.id]||0)+R(7)-2;s.op[o.id]=(s.op[o.id]||0)+R(7)-2}}
 }
 // a ruler who leaves by any road other than kill() (which handles it) still passes the seat on
-function removeSettler(s,noSucc){if(G&&s.ward!=null&&!s.wardOut)try{wardLost(s,'harm')}catch(e){}// a ward who leaves any way but home: jailed, banished, run off (07)
-  if(G&&G.mem)memPass(s);if(G)afGone(s);{const kr=G&&G.kin&&G.kin[s.id];if(kr&&kr.died==null&&kr.gone==null)kr.gone=G.day}if(G)kinLife(s);G.settlers=G.settlers.filter(o=>o!==s);if(G&&FAMHOLD!==s.id)famOut(s);if(expanded===s.id)expanded=null;if(selected===s.id)selected=null;
+function removeSettler(s,noSucc,o){if(G&&s.ward!=null&&!s.wardOut)try{wardLost(s,'harm')}catch(e){}// a ward who leaves any way but home: jailed, banished, run off (07)
+  if(G&&G.mem)memPass(s);if(G)afGone(s);{const kr=G&&G.kin&&G.kin[s.id];if(kr&&kr.died==null&&kr.gone==null)kr.gone=G.day}if(G)kinLife(s);endBond(s,o&&o.why,o&&o.wi);G.settlers=G.settlers.filter(o=>o!==s);if(G&&FAMHOLD!==s.id)famOut(s);if(expanded===s.id)expanded=null;if(selected===s.id)selected=null;
   if(!noSucc&&s.ruler&&G.rulerId===s.id&&G.settlers.length){s.ruler=false;endReign(s,'gone');succeed(s)}}
 function isKin(a,b){return a.parents.includes(b.id)||b.parents.includes(a.id)||a.parents.some(p=>b.parents.includes(p))}
 // the parents the hold knows of: a hushed birth (s.hs = the real father's id) keeps him in parents, so isKin still stops matches, but he shows nowhere
@@ -1599,12 +1611,11 @@ function kill(s,cause){
   syncKin();{const kr=kinBook()[s.id];if(kr){kr.died=G.day;kr.cause=cause}}
   const wasRuler=s.ruler,tt=wasRuler?titleOf(s)+' ':'';
   try{lifeDeath(s,cause)}catch(e){}
-  famDead(s,cause);afGone(s,1);removeSettler(s,true);
+  famDead(s,cause);afGone(s,1);removeSettler(s,true,{why:'died'});
   const sp=byId(s.spouse);
-  if(sp){sp.spouse=null;addBuff(sp,'Grieving',-18,14)}
   G.settlers.forEach(o=>{if(o!==sp&&isKin(o,s))addBuff(o,'Mourning',-8,10)});
   G.graves=(G.graves||0)+1;const gr={n:tt+s.name,b:yearOf(s.born),d:yearOf(G.day),dd:G.day,k:wasRuler?'r':cause==='crusade'||s.cv?'c':age(s)<14?'b':'',t:graveLine(s),dl:(s.life||[]).length?s.life[s.life.length-1][1]:''};(G.tomb||(G.tomb=[]))[graveSlot()]=gr;if(G.settlers.length)try{funeral(s)}catch(e){}
-  {const rr=ruler();if(wasRuler||(rr&&(isKin(s,rr)||rr.spouse===s.id)))G.mourn=G.day+7}
+  {const rr=ruler();if(wasRuler||(rr&&(isKin(s,rr)||sp===rr)))G.mourn=G.day+7}// sp: the spouse left behind (endBond has already freed them, so not rr.spouse)
   const T={age:'dies peacefully of old age.',fever:'succumbs to the fever.',starvation:'dies of hunger.',raid:'falls defending the hold.',beast:'is killed by a beast at the edge of the hold.',strife:'is killed in the strife within the hold.',chill:'is taken by the cold of the wraith.',hunt:'is gored on the hunt.',murder:'is murdered in the night.',spy:'is hanged as a spy.',crusade:'falls on crusade, far from home.',war:'falls in battle, under the banner of the house.',childbirth:'dies in childbirth.'};
   if(cause==='starvation'&&age(s)<14)T.starvation='is lost to hunger.';const tx=cause==='age'&&age(s)<55?'dies peacefully, worn out.':T[cause]||'dies.';log(`${s.name} ${tx}`,'bad',true);auPlay('toll');
   annal(`${s.name}${wasRuler?`, ${titleOf(s)} of House ${G.house},`:''} ${tx.replace(/\.$/,'')}, ${age(s)<1?'still in the cradle':'aged '+age(s)}.`,'bad');famOut(s);
@@ -1640,8 +1651,7 @@ function usurp(p){
   const old=ruler();endReign(old,'deposed');
   const h=bloodHeir(old);
   old.ruler=false;
-  const sp=byId(old.spouse);if(sp){sp.spouse=null;addBuff(sp,'Cast out',-10,12)}
-  removeSettler(old,true);
+  removeSettler(old,true,{why:'castout'});
   if(!h){lineEnds(old,'overthrown');return `${p.name}'s followers drive ${old.name} out of the hall. No one of the blood is left to take the seat.`}
   if(dif().exile&&chance(dif().exile)){lineEnds(old,'deposed');return `${p.name}'s followers drive ${old.name} out of the hall, and the whole blood with them. House ${G.house} is ended.`}
   G.exile=exileRec(old,unrest().length);
@@ -2154,8 +2164,13 @@ function closeChron(){$('#saga').hidden=true;$('#saga').innerHTML='';if(G&&!G.ov
 async function copyChron(b){const t=chronText();let ok=false;try{await navigator.clipboard.writeText(t);ok=true}catch(e){try{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();ok=document.execCommand('copy');ta.remove()}catch(e2){}}const s=b&&b.querySelector('small');if(s)s.textContent=ok?'Copied!':'Could not copy here'}
 // a deposed ruler lives on in exile (G.exile, undefined/null = none) and may come back as a pretender (evPretender)
 function exileRec(s,str){{const kr=G.kin&&G.kin[s.id];if(kr)kr.ex=1}return {life:s.life,sid:s.id,name:s.name,sex:s.sex,born:s.born,lk:s.lk,traits:s.traits.slice(),skills:Object.assign({},s.skills),parents:s.parents.slice(),children:(s.children||[]).slice(),ttl:titleOf(s),since:G.day,str:str||0,n:0}}
+// the marriage bond has one owner: wedLink ties two settlers (ids only; marry() adds the wedding), endBond frees the one left behind with the mood for why they part.
+// removeSettler calls endBond as the safety net (why defaults to 'left'), so no leave path can forget a spouse; wi: the folk leaving together, who keep their bond
+const BONDEND={died:{n:'Grieving',v:-18,d:14},castout:{n:'Cast out',v:-10,d:12},left:{n:'Abandoned',v:-15,d:12},banished:{n:'Abandoned',v:-10,d:12},purge:{n:'Abandoned',v:-12,d:10},jailed:{n:'Spouse jailed',v:-12,d:12},heartbroken:{n:'Heartbroken',v:-14,d:12},ward:{n:'Left for home',v:-15,d:12},spy:{n:'Wed a spy',v:-15,d:12}};
+function wedLink(a,b){a.spouse=b.id;b.spouse=a.id}
+function endBond(s,why,wi){const sp=s.spouse!=null&&byId(s.spouse);if(!sp||sp.spouse!==s.id||(wi&&wi.includes(sp)))return null;sp.spouse=null;const b=BONDEND[why]||BONDEND.left;addBuff(sp,b.n,b.v,b.d);return sp}
 function marry(a,b){a.wed=b.wed=G?G.day:0;{const w=a.sex==='f'?a:b.sex==='f'?b:null;if(w&&G&&!w.wb)w.wb=1+R(5)}// a bride's wedding beads, worn for life (garb); the founders' too
-  if(a.of&&a.of.i===b.id)delete a.of;if(b.of&&b.of.i===a.id)delete b.of;if(G&&G.day>0){const j=pick(['','',' Everyone cries, some from the onions.',' The dancing goes on far too long.',' Nobody objects, though one goose tries.']);life(a,`Weds ${b.name}.${j}`);life(b,`Weds ${a.name}.${j}`)}if(G&&G.day>0){auPlay('wedding');annal(`${a.name} weds ${b.name}.`,'good');try{if(weddingScene(a,b))GATHER=0}catch(e){}}a.spouse=b.id;b.spouse=a.id;addBuff(a,'Newly wed',12,10);addBuff(b,'Newly wed',12,10);bump2(a,b,15)}
+  if(a.of&&a.of.i===b.id)delete a.of;if(b.of&&b.of.i===a.id)delete b.of;if(G&&G.day>0){const j=pick(['','',' Everyone cries, some from the onions.',' The dancing goes on far too long.',' Nobody objects, though one goose tries.']);life(a,`Weds ${b.name}.${j}`);life(b,`Weds ${a.name}.${j}`)}if(G&&G.day>0){auPlay('wedding');annal(`${a.name} weds ${b.name}.`,'good');try{if(weddingScene(a,b))GATHER=0}catch(e){}}wedLink(a,b);addBuff(a,'Newly wed',12,10);addBuff(b,'Newly wed',12,10);bump2(a,b,15)}
 let overAt=0;// when the end screen opened: the achievement banner waits until it has rolled out (achBusy)
 function gameOver(){
   try{const L=legacy(),b=+localStorage.getItem('emberholt.best')||0;G.best=Math.max(L,b);G.nb=L>b?1:0;if(L>b)localStorage.setItem('emberholt.best',String(L))}catch(e){}
@@ -6093,6 +6108,7 @@ function tick(){
   if((G.pw&&G.pw.pend||G.rivals&&G.rivals.some(x=>x.pend)||G.lpend!=null||G.lovp)&&cqResume())return;// a war, vassal, daughter-hold or Lord of the Valley card waiting since before a reload (or since a choice set it)
   const prev={food:G.food,wood:G.wood,stone:G.stone,iron:G.iron,wool:G.wool,gold:G.gold,renown:G.renown};
   G.day++;
+  for(const s of G.settlers)if(fastKid(s))s.born=Math.round((s.born-CHACC)*100)/100;// a commoner's childhood runs fast (01-basics CHYRS); a neighbour's ward keeps the long one, so the oath runs its sixteen years
   const d=doy(),si=seasonIdx();
   if(d===0){log(`A new year dawns: ${yearNum()}.`,'info');knownYear();G.renown+=2;const y=G.day/DPY;if([1,5,10,25,50,100].includes(y))tally('year-'+y)}
   if(d%DPS===0){seasonReport();try{seasonBanner()}catch(e){}log(`${SEASONS[si]} arrives.`,'info');rivalsSeason();try{knownSeason()}catch(e){}crusSeason();exileSeason();feudSeason();affairSeason();basSeason();tradeSeason();famSeason();postSeason();lifeHints();save()}
@@ -6570,7 +6586,7 @@ function tradeSeason(){
     teach(s,m);
     if(s.ap.r||m.job!==s.ap.j)continue;
     const k=JOBSKILL[s.ap.j];
-    if(s.skills[k]<8&&chance(.17+(hasTr(s,'diligent')?.06:0)-(hasTr(s,'lazy')?.06:0)+(m.lvl>=5?.03:0)))s.skills[k]++;
+    if(s.skills[k]<8&&chance(Math.min(.9,(.17+(hasTr(s,'diligent')?.06:0)-(hasTr(s,'lazy')?.06:0)+(m.lvl>=5?.03:0))*(fastKid(s)?CHLEARN:1))))s.skills[k]++;// a fast childhood learns as much in its fewer seasons
   }
 }
 // at fourteen: the family trade (unless a rebel, or plainly better at something else), else what they are best at. Returns the news line.
@@ -6619,8 +6635,7 @@ function mentalBreak(s){
   }
   else if(k==='wander'){s.away=G.day+3;log(`${s.name} storms off into the woods.`,'bad')}
   else if(chance(.25)&&!s.ruler&&G.settlers.length>2){
-    const sp=byId(s.spouse);if(sp){sp.spouse=null;addBuff(sp,'Abandoned',-15,12)}
-    addGrudge(s,'left');removeSettler(s);log(`${s.name} has had enough and leaves the hold for good.`,'bad',true);annal(`${s.name} leaves the hold for good.`,'bad');
+    addGrudge(s,'left');removeSettler(s,false,{why:'left'});log(`${s.name} has had enough and leaves the hold for good.`,'bad',true);annal(`${s.name} leaves the hold for good.`,'bad');
   }
   else{s.away=G.day+3;log(`${s.name} storms off into the woods.`,'bad')}
 }
@@ -6812,7 +6827,7 @@ const FAMEND=['one stubborn goat','a cart on three wheels','a grandmother who wa
 function evFamily(){
   const n=2+R(3),fam=[];for(let i=0;i<n;i++)fam.push(mkSettler({age:i<2?20+R(18):3+R(10),sex:i===0?'m':i===1?'f':null}));
   const [pa,ma]=fam,kids=fam.slice(2),fd=n*4,from=pick(['the burned villages to the south','a flooded valley','a manor whose lord died in debt','the hill farms, after a hard winter','a town where the plague came']);
-  const settle=()=>{const end=pick(FAMEND);tradeFamily(fam);for(const f of fam){f.job=isChild(f)?'rest':jobFor(bestSkill(f));addSettler(f,true,`Arrives from ${from}, with the family and ${end}.`)}pa.spouse=ma.id;ma.spouse=pa.id;if(!ma.wb)ma.wb=1+R(5);bump2(pa,ma,15);for(const k of kids){k.parents=[pa.id,ma.id];pa.children.push(k.id);ma.children.push(k.id);famRehome(k)}};
+  const settle=()=>{const end=pick(FAMEND);tradeFamily(fam);for(const f of fam){f.job=isChild(f)?'rest':jobFor(bestSkill(f));addSettler(f,true,`Arrives from ${from}, with the family and ${end}.`)}wedLink(pa,ma);if(!ma.wb)ma.wb=1+R(5);bump2(pa,ma,15);for(const k of kids){k.parents=[pa.id,ma.id];pa.children.push(k.id);ma.children.push(k.id);famRehome(k)}};
   return {who:fam.slice(0,3),kind:'Visitor',newc:1,title:'A family asks to settle',text:`${pa.name} and ${ma.name}${kids.length?', with '+(kids.length>1?kids.length+' children':'a child')+',':''} have come from ${from}. Word of House ${G.house} has reached them, and they ask for a place.`,
     choices:[
       {t:'Welcome them all',d:`${n} new folk. ${fd} food to settle them.${REM}`,dis:G.food<fd,why:'Not enough food',fn(){G.food=Math.max(0,G.food-fd);settle();remember('welcomed',pa,{used:1});remember('welcomed',ma,{used:1});allBuff('Charity',2,6);G.renown+=1;return `The ${pa.name} family is given a corner and a hearty meal. ${ma.name} is already asking where the well is.`}},
@@ -7442,8 +7457,7 @@ const dropGrudge=g=>{G.grudges=grudges().filter(x=>x!==g)};
 function grudgeFace(g){const f=mkSettler({name:g.name,sex:g.sex,traits:g.traits,age:32});f.skills=Object.assign({},g.skills);f.id=g.sid;if(g.lk!=null)f.lk=g.lk;return f}
 function unrest(){const ad=adults().filter(s=>!s.ruler);return ad.filter(s=>s.mood<35)}
 function exile(s,type){
-  const sp=byId(s.spouse);if(sp){sp.spouse=null;addBuff(sp,'Abandoned',-15,12)}
-  addGrudge(s,type);removeSettler(s);
+  addGrudge(s,type);removeSettler(s,false,{why:'left'});
 }
 function evExile(){
   const g=pickGrudge(20);if(!g)return null;
@@ -7525,9 +7539,9 @@ function exileBack(ex){
 // the pretender wins: the ruler is driven out (and goes into exile in turn), the old ruler sits again, and the house falls a rank
 function reclaim(ex){
   const old=ruler();endReign(old,'deposed');const s=exileBack(ex);
-  old.ruler=false;const sp=byId(old.spouse);if(sp){sp.spouse=null;addBuff(sp,'Cast out',-10,12)}
+  old.ruler=false;
   G.exile=age(old)>=14?exileRec(old,2):null;
-  removeSettler(old,true);
+  removeSettler(old,true,{why:'castout'});
   s.ruler=true;G.rulerId=s.id;noteKin(s).ruled=1;G.regent=null;
   const {lg,fall}=seatFalls();allBuff('Upheaval',-4,10);
   const tk=ex.cl?'takes the high seat at last':'takes back the high seat';
@@ -7623,7 +7637,7 @@ function evFeudKill(f){
     choices:[
       {t:gx('Hang them',c),d:gx('-1 renown. Justice the hold will remember, and so will their kin.',c),fn(){G.renown=Math.max(0,G.renown-1);memPush({k:'executed',sid:c.id,name:c.name,sex:c.sex,traits:c.traits.slice(),d:G.day});for(const o of kin)addBuff(o,'Justice done',6,12);if(law('just')!==2)allBuff('Grim justice',-2,6);kill(c,'hanged');return `${c.name} is hanged at dawn. The well gets a new rope too, just to be safe (-1 renown).`}},
       {t:gx('Throw them in the cellar',c),rp:0,d:`${vn}'s kin are satisfied.`,fn(){for(const o of kin)addBuff(o,'Justice done',4,12);jailSettler(c,`Killed ${vn}`);return `${c.name} goes into the cellar. The key goes on a very high hook.`}},
-      {t:gx('Banish them',c),d:gx('Gone for good. Their kin will miss them.',c),fn(){for(const o of kin)addBuff(o,'Justice done',2,8);for(const o of kinOf(c))addBuff(o,'Kin banished',-6,10);const sp=byId(c.spouse);if(sp){sp.spouse=null;addBuff(sp,'Abandoned',-10,12)}life(c,`Banished for killing ${vn}.`);removeSettler(c);return gx(`${c.name} is walked to the edge of the woods and told to keep walking. They do, all the way to somewhere with no ewes.`,c)}},
+      {t:gx('Banish them',c),d:gx('Gone for good. Their kin will miss them.',c),fn(){for(const o of kin)addBuff(o,'Justice done',2,8);for(const o of kinOf(c))addBuff(o,'Kin banished',-6,10);life(c,`Banished for killing ${vn}.`);removeSettler(c,false,{why:'banished'});return gx(`${c.name} is walked to the edge of the woods and told to keep walking. They do, all the way to somewhere with no ewes.`,c)}},
       {t:gx('Pardon them',c),d:`${vn}'s kin will hate you for it, and the hold is uneasy.`,fn(){for(const o of kin){addBuff(o,'Justice denied',-10,24);bump(o,r,-20)}allBuff('A killer walks free',-3,10);bump(c,r,15);return `${c.name} walks free. People give the well a wide berth now.`}}]};
 }
 /* ---------- affairs: a married adult and someone fond of them, quietly (docs/rule.md) ---------- */
@@ -7851,7 +7865,7 @@ function captive(g,why){
   else{const f=mkSettler({age:30});lockUp({sid:f.id,name:f.name,sex:f.sex,traits:f.traits,skills:f.skills,type:'rival'},why)}
 }
 function jailSettler(s,why,cl){
-  const sp=byId(s.spouse);if(sp){sp.spouse=null;addBuff(sp,'Spouse jailed',-12,12)}
+  endBond(s,'jailed');
   life(s,`Thrown in the cellar. ${why}.`);lockUp({sid:s.id,lk:s.lk,name:s.name,sex:s.sex,traits:s.traits.slice(),skills:Object.assign({},s.skills),type:'left',life:s.life,born:s.born,parents:s.parents.slice(),children:(s.children||[]).slice(),cl:cl?1:0},why);removeSettler(s);
 }
 const ransomOf=p=>Math.round((8+(p.skills.fight+p.skills.charm)*1.5)*(p.type==='rival'?1.6:1));
@@ -8537,7 +8551,7 @@ function cqSeat(i,rv,s,rn){const fam=seatFam(s),ch=vChr(rv),old=lordOf(rv),h=rv.
   rv.lord=s.name;rv.sex=s.sex;rv.born=s.born;rv.lk=s.lk!=null?s.lk:R(60);rv.pt=RPT.find(t=>s.traits.includes(t))||'kind';rv.from=G.day;rv.n={};delete rv.hr;
   if(kid)rv.hr={nm:kid.name,sex:kid.sex,lk:kid.lk!=null?kid.lk:R(60),u:[0,.2,.5]};// the heir a spy would name is their own child
   rv.held={by:'p',d:G.day,kin:{id:s.id,name:s.name,lord:1},n:fam.length,b:!!bloodOf(s)};rv.att=80;rv.loy=85;delete rv.ov;rv.intel=G.day+99*DPY;
-  for(const f of fam)removeSettler(f);const nl=nbLoose(i,'yours');cqlAdd('seat',h,G.house);
+  for(const f of fam)removeSettler(f,false,{wi:fam});const nl=nbLoose(i,'yours');cqlAdd('seat',h,G.house);
   annal(`${s.name} of House ${G.house} takes the seat of House ${h}. ${old} flees into exile.`,'good');gainAch('host');
   return `${s.name} rides into the hall of House ${h}${fam.length>1?` with ${andW(fam.slice(1).map(x=>x.name))} and`:' with'} a cart of their own pots, and sits down in the biggest chair (+${rn} renown). ${old} goes out by the back gate into exile, taking ${ch.n} and a great many grudges.${fam.length>1?` ${fam.length} beds stand empty at home.`:''}${nl}`}
 // burn it: one great load of spoils, the row is ashes until newcomers come (rv.nwd, about two years); the old lord flees, and the claim with them
@@ -8753,7 +8767,7 @@ function wardTake(i){const rv=rivals()[i],H=vHeir(rv),a=wardAge(rv),k=wardKin(rv
 function wardHome(rv,s,why){const he=s.sex==='m'?'he':'she';s.wardOut=1;
   life(s,why==='grown'?`Goes home to House ${rv.house} at sixteen, after years as a ward of House ${G.house}.`:why==='lord'?`Rides home to take the seat of House ${rv.house}.`:`Goes home to House ${rv.house}, the oath ended.`);
   for(const o of G.settlers)if(o!==s&&getOp(o,s)>=30)addBuff(o,'A ward gone home',-2,8);
-  removeSettler(s);delete rv.wid;
+  removeSettler(s,false,{why:'ward'});delete rv.wid;
   if(why==='grown'){moveAtt(rv,25);if(rv.ov==='p')rv.loy=clamp((rv.loy||0)+10,0,100);annal(`${s.name}, ward of House ${G.house}, goes home to House ${rv.house}.`,'good');
     const t=`${s.name}, ward of House ${rv.house}, turns sixteen and rides home, taller, louder and full of opinions picked up at your table. House ${rv.house} is fond of you for it.`;log(t,'good',true);return t}
   if(why==='free'){moveAtt(rv,10);const t=`${s.name} goes home to House ${rv.house}: with the oath ended, there is no need of a ward. ${capF(he)} takes the wooden sword.`;log(t,'story',true);return t}
@@ -9965,7 +9979,7 @@ function evSuccession(h,c,k){
     choices:[
       {t:rg?'Arrest the regent':'Crush the claim',d:`Your strength ~${Math.round(fp)}${sg.length?`, without the guards who side with ${himW(c)}`:''}. Walls count for little inside the hold. About ${Math.round(wp(fp)*100)}% to win. Win and ${c.name} goes to the cellar, or flees${sup.length?`, and ${hisW(c)} backers sulk`:''}. Lose and ${heW(c)} takes the seat.`,fn(){
         if(chance(wp(fpow()))){G.renown+=3;guardsXp(6);allBuff('Order restored',2,6);sup.forEach(x=>{addBuff(x,'Claim crushed',-6,10);bump(x,h,-10)});endReg();
-          if(!G.exile&&chance(.5)){const sp=byId(c.spouse);if(sp){sp.spouse=null;addBuff(sp,'Abandoned',-12,12)}claimExile(c,sup.length,'Fled into exile after a failed claim to the high seat.');removeSettler(c,true);
+          if(!G.exile&&chance(.5)){claimExile(c,sup.length,'Fled into exile after a failed claim to the high seat.');removeSettler(c,true);
             annal(`${c.name}'s claim is crushed and ${c.sex==='m'?'he':'she'} flees into exile.`,'bad');return `The guards stand with ${h.name}. In the scuffle ${c.name} slips out through the stables and gallops off into exile, shouting something about next time (+3 renown).`}
           jailSettler(c,rg?'Would not give up the regency':'Claimed the high seat',1);annal(`${c.name}'s claim is crushed and ${c.sex==='m'?'he':'she'} is thrown in the cellar.`,'bad');return `The guards stand with ${h.name}. ${c.name} is dragged to the cellar in chains (+3 renown).`}
         if(rg)G.regent=null;takeSeat(c,rg?' as a regent who would not let go':' by force');allBuff('Civil strife',-6,8);return `The guards waver and ${c.name}'s people seize the hall. ${c.name} now rules House ${G.house}. ${h.name} is out of the high seat, and you play on as ${c.name}.`+mauled(.15,'',1,c)}},
@@ -9973,7 +9987,7 @@ function evSuccession(h,c,k){
       {t:'Grant them lands of their own',d:`They leave with their household${fol.length?' and '+(fol.length===1?'one follower':fol.length+' followers'):''} and a fifth of the gold. No blood spilt, though they may want more one day.`,fn(){
         const g=Math.floor(G.gold*.2);G.gold-=g;const sp=byId(c.spouse),go=[c];if(sp&&!sp.ruler)go.push(sp);c.children.map(byId).filter(k=>k&&isChild(k))?.forEach(k=>go.push(k));
         for(const x of fol)if(!go.includes(x))go.push(x);endReg();{const kr=kinBook()[c.id];if(kr)kr.br=1}claimExile(c,fol.length+1,'Rode off to found a lesser branch of the house, and to brood.');
-        for(const x of go)if(G.settlers.length>1&&!x.ruler){const xs=byId(x.spouse);if(xs&&!go.includes(xs)){xs.spouse=null;addBuff(xs,'Abandoned',-12,10)}removeSettler(x)}
+        {const wi=go.filter(x=>!x.ruler);for(const x of go)if(G.settlers.length>1&&!x.ruler)removeSettler(x,false,{why:'purge',wi})}
         G.renown+=1;annal(`${c.name} leaves to found a lesser branch of House ${G.house}.`);
         return `${c.name} rides out with ${go.length-1?go.length-1===1?'one other':go.length-1+' others':'nobody but a mule'} and ${g?g+' gold':'empty pockets'} to found a lesser branch of the house. The hold is quieter.`}},
       {t:'Put it to the hold',d:`About ${Math.round(pc*100)}% they choose ${h.name}. Otherwise ${c.name} rules. Either way the hold has its say.`,fn(){
@@ -10258,15 +10272,15 @@ function resetNamer(){nameQ=[];nameCur=null;$('#namer').hidden=true;$('#namer').
      FAMN (the name pools), famFree, famDeed (grant a deed or shame name, with the caps and the wash-off)
    - the deed hooks: famGate (held the gate), famCrus (home from crusade), famWar (a won war), famFire (the bucket line),
      famBuild (a Great Work), famRan (one who ran, 1 in 4 on a lost fight)
-   - part B, favour, feeling and power: FAMT, famOn (from Village), famSn, famNm, famRow, FAMK, famMem (from remember), famNote, famStory, famFeel, famPower,
-     famFsN, famGrown, famEarned, famSeatNow, famPw, famFolk (the folk's feeling for the ruler, each season), FAMDIE, famDie (a death the hold had a hand in),
+   - part B, favour, feeling and power: FAMT, famOn (from Village), famSn, famNm, famPl (plural of a surname), famRow, FAMK, famMem (from remember), famNote, famStory, famFeel, famPower,
+     famFsN, famGrown, famInl, famSize, famEarned, famSeatNow, famPw, famFolk (the folk's feeling for the ruler, each season), FAMDIE, famDie (a death the hold had a hand in),
      famHead, FAMRISE, FAMSLIP, famTurn (each season: fading, power, rise and slip lines), famOpen (Village), famMood (moodMods), famPlotW, famTip (plotStart)
    - part B, the acts: famGrantCost, famHonCost, famUnhon, famActWhy, FAMGIFT, famAct (Grant a favour, Honour their dead; the pages are famListHTML, famPageHTML in 10)
-   - part B, family cards: famCardOk, famCardUse (one a season), famLines, famHeadAt, famV, famCard (EVENTS famc, BIGEV.famc) with famAsk, famHelp, famMoan,
+   - part B, family cards: famCardOk, famCardUse (one a season), famLines, famHeadAt, famV, famCard (EVENTS famc, BIGEV.famc) with famLone, famCn, famCN, famAsk, famHelp, famMoan,
      famPair, famRowCard, famWed, famWedCard; big moments famHeadDies (from famDead), famNamed (from famDeed)
    - part C, the council: FAMSEATF, FAMSEATMAX, famRefuse, famSeated, famSack, famKin, famSackW, famFillPick (councilFill), famRepFits, famRepWhy, famFitW, famReplace
      (the card is councilHTML and councilRepHTML in 09-rule.js)
-   - part C, drama: famFeud, famFeudW, famFeudStart (07-threats.js feuds), famPlotKin, famOfW, famSeize (plots, 09-scheme.js), FAMSEC, famSecFill, famSecLive,
+   - part C, drama: famFeud, famFeudW, famFeudStart (07-threats.js feuds), famPlotKin, famOfW, famSuitW, famSeize (plots, 09-scheme.js), FAMSEC, famSecFill, famSecLive,
      famSecSeason, famSecUse (the Spymaster's family secret), famLodge (a neighbour's agent, thSeason)
    - part D, the ladder: famInlaw (Kin to the house), famRaiseGate, famRungSeat, famRungMatch, famRungLand, famFarmNm, famSeatPicks (evPwSeat in 07), FAMUP, famRaised; the page side is famDemHTML, famRaiseHTML in 10
    - part D, demands: FAMDEM, famDemOk, famDemW, famDemT, famDemCard (a family card), famDemDo, famDemSeason (a waiting ask lapses)
@@ -10302,7 +10316,8 @@ function famRehome(s){const L=famL(s.fm);if(!L||L.c>1||L.dead.length||L.sn)retur
 const famOf=s=>famL(s.fm)||famJoin(s);
 // any settler without a line (the founders, an old save): parents first, so children follow them
 function famAll(){for(const s of G.settlers.slice().sort((a,b)=>a.born-b.born||a.id-b.id))if(s.fm==null||!famL(s.fm))famJoin(s)}
-const famName=L=>L.sn?`the ${L.sn}s`:`${L.fn}'s folk`;
+const famPl=n=>/(s|sh|ch|x|z)$/.test(n)?n+'es':n+'s';// Hidebush -> Hidebushes
+const famName=L=>L.sn?`the ${famPl(L.sn)}`:`${L.fn}'s folk`;
 const famLive=id=>G.settlers.filter(o=>o.fm===id);
 /* ---------- the dead and dying out ---------- */
 function famDead(s,cause){const L=famOf(s);famHeadDies(L,s);famDie(L,s,cause);L.dead.push({id:s.id,n:s.name,sx:s.sex,b:s.born,dd:G.day,p:parsOf(s).slice(),lk:s.lk});if(L.dead.length>12)L.dead.shift();FAMHOLD=s.id}
@@ -10357,25 +10372,26 @@ function famFree(k,id){const P=FAMN[k],u=new Set(famS().u.concat(G.settlers.map(
   for(let i=0;i<P.length;i++){const n=P[(id+i)%P.length];if(!u.has(n))return n}return ''}
 const famBlood=id=>famLive(id).some(bloodOf);
 // can s earn a name of kind k for the line now? From year 5; never the blood or a line with the blood in it; once per line;
-// a deed name for a line with no surname (or a shame name to wash off), at most 3 deed-named lines alive (a wash-off is always allowed);
+// a deed name for a line with no surname (or a shame name to wash off), at most FAMDEEDMAX (6) deed-named lines alive (a wash-off is always allowed);
 // a shame name only for a line with no surname that never had one, at most 2 alive
+const FAMDEEDMAX=6;// deed-named lines alive at once (was 3: the median hold sat on the cap, so surnames stopped coming)
 function famCan(s,k){if(!s||!G.settlers.includes(s)||isChild(s)||bloodOf(s)||G.day<5*DPY)return false;const L=famOf(s);if(L.dn||famBlood(L.id))return false;
   const alive=x=>Object.values(famS().L).filter(o=>!o.gone&&o.sk===x).length;
   if(k==='shame')return !L.sn&&!L.sh&&alive('shame')<2;
-  return L.sk==='shame'||!L.sn&&alive('deed')<3}
+  return L.sk==='shame'||!L.sn&&alive('deed')<FAMDEEDMAX}
 // grant the name: the doer and everyone of the line still in the hold with no surname (or the old shame name) carry it, and their children after them.
 // Returns a line for the card or the news ('' when nothing happened). w: the Great Work's name
 function famDeed(s,k,w){if(!famCan(s,k))return '';const L=famOf(s),nm=famFree(k,L.id);if(!nm)return '';
   const old=L.sk==='shame'?L.sn:'',fn=firstName(s);
   for(const o of famLive(L.id))if(!bloodOf(o)&&(!o.sn||o.sn===old)){const f=firstName(o);o.sn=nm;o.name=f+' '+nm}
   L.sn=nm;famS().u.push(nm);
-  if(k==='shame'){L.sk='shame';L.sh=G.day;famNote(L.id,'shame',`The old talk about ${fn} running`,-8,1)}else{L.sk='deed';L.dn=1;L.dd=G.day;famNote(L.id,'deed',`The hold took up the name ${nm}`,10,1)}
+  if(k==='shame'){L.sk='shame';L.sh=G.day;famNote(L.id,'shame',`${fn} was said to have run`,-8,1)}else{L.sk='deed';L.dn=1;L.dd=G.day;famNote(L.id,'deed',`The hold took up the name ${nm}`,10,1)}
   const did=FAMDID[k].replace('{n}',fn).replace('{w}',w||'great work'),ML=old?FAMMAUD.wash:FAMMAUD[k],mt=famFill(ML[L.id%ML.length],s,{N:nm,O:old,o:FAMWASH[old]||'old name'});
-  life(s,k==='shame'?`Is said to have run from the fight. The family are the ${nm}s now, whether they like it or not.`:old?`Earns the family a better name than ${old}: ${nm}.`:`Earns the family a name: ${nm}.`);
-  annal(k==='shame'?`${did}. The family are the ${nm}s now, whether they like it or not.`:old?`${did}. The ${old}s are the ${nm}s from now on.`:`${did}. The family are the ${nm}s from now on.`,k==='shame'?'bad':'good');
+  life(s,k==='shame'?`Is said to have run from the fight. The family are the ${famPl(nm)} now, whether they like it or not.`:old?`Earns the family a better name than ${old}: ${nm}.`:`Earns the family a name: ${nm}.`);
+  annal(k==='shame'?`${did}. The family are the ${famPl(nm)} now, whether they like it or not.`:old?`${did}. The ${famPl(old)} are the ${famPl(nm)} from now on.`:`${did}. The family are the ${famPl(nm)} from now on.`,k==='shame'?'bad':'good');
   log(`Maud, your chronicler, notes: "${mt}"`,'scribe');
-  famStory(L,k==='shame'?`Somebody said ${fn} ran. They have been the ${nm}s since.`:old?`${fn} washed off the old name. ${nm}, now.`:`${fn} earned the family a name: ${nm}.`);famNamed(L,s,nm,k);
-  return k==='shame'?` They say ${fn} ran. The family are the ${nm}s now.`:` The hold starts calling ${fn}'s family the ${nm}s.`}
+  famStory(L,k==='shame'?`Somebody said ${fn} ran. They have been the ${famPl(nm)} since.`:old?`${fn} washed off the old name. ${nm}, now.`:`${fn} earned the family a name: ${nm}.`);famNamed(L,s,nm,k);
+  return k==='shame'?` They say ${fn} ran. The family are the ${famPl(nm)} now.`:` The hold starts calling ${fn}'s family the ${famPl(nm)}.`}
 /* ---------- the deed hooks (each picks its doer by a fixed rule, never by luck) ---------- */
 // best first by score, then the eldest, then the lowest id
 const famBest=(L,sc)=>L.slice().sort((a,b)=>sc(b)-sc(a)||a.born-b.born||a.id-b.id)[0]||null;
@@ -10398,8 +10414,8 @@ function famRan(L,not){if(!famRoll4())return '';return famDeed(famBest(L.filter(
    L.f favour -100..100, fed by what you do to the line's folk (famMem from remember, the acts, the cards, deed and shame names), fading
    toward Quiet each season; L.t up to 4 notes {d, k, x text, v +1/-1}, dropped after 12 years; L.st up to 6 story lines {d, t} for its page.
    Feeling (famFeel): Favour at FAMT or more, Grudge at -FAMT or less, else Quiet ('gather' is part D's). Power (L.pw, worked out each
-   season by famPw): 0, 1 Rising (3+ grown and an earned name, a seat now, or a deed in the last 5 years), 2 Strong (5+ grown, an earned
-   name, a seat now or in the last 10 years); folk away at a farmstead of the line count one a farmstead. The blood's lines have none.
+   season by famPw): 0, 1 Rising (2+ grown, 3 grown or size 3.5, and an earned name, a seat now or a deed in the last 5 years), 2 Strong (3+ grown, size 4, an earned
+   name or a seat held at any time; size counts in-laws and half a point a child); folk away at a farmstead of the line count one a farmstead. The blood's lines have none.
    Everything shows from Village (famOn); before that the ledger runs quietly. Never unrest or revolt by itself. */
 const FAMT=12;
 const famOn=()=>!!G&&G.rank>=1;
@@ -10420,9 +10436,14 @@ const famFsN=L=>(L.fs||[]).filter(id=>lands().some(l=>l.id===id&&!l.free)).lengt
 const famGrown=L=>famLive(L.id).filter(s=>!isChild(s)).length+famFsN(L);
 const famEarned=L=>!!L.sn&&L.sk!=='shame';
 const famSeatNow=L=>Object.keys(COUNCIL).some(k=>{const s=councillor(k);return !!s&&s.fm===L.id});
-function famPw(L){if(!famRow(L))return 0;const n=famGrown(L),now=famSeatNow(L);
-  if(n>=5&&famEarned(L)&&(now||L.seat>0&&G.day-L.seat<=10*DPY))return 2;
-  return n>=3&&(famEarned(L)||now||L.dd&&G.day-L.dd<=5*DPY)?1:0}
+// size (hunt 16, his call: most of a big hold is children, and a wife keeps her own line): grown folk, plus a grown spouse married in from another line
+// (the tree shows them under the family), plus half a point a child. Rising: 2+ grown and (3 grown or size 3.5) and a name, a seat now or a deed in 5 years.
+// Strong: 3+ grown and size 4 (a Strong line holds on to 3.5, so one child's death does not drop it), and a name or a seat held at any time.
+const famInl=L=>famLive(L.id).filter(s=>!isChild(s)&&s.spouse!=null&&byId(s.spouse)&&byId(s.spouse).fm!==L.id&&!bloodOf(byId(s.spouse))&&!isChild(byId(s.spouse))).length;
+const famSize=L=>famGrown(L)+famInl(L)+.5*famLive(L.id).filter(isChild).length;
+function famPw(L){if(!famRow(L))return 0;const g=famGrown(L),gi=g+famInl(L),sz=famSize(L),now=famSeatNow(L);
+  if(gi>=3&&sz>=(L.pw===2?3.5:4)&&(famEarned(L)||now||L.seat>0))return 2;
+  return gi>=2&&(g>=3||sz>=3.5)&&(famEarned(L)||now||L.dd&&G.day-L.dd<=5*DPY)?1:0}
 // how the line's grown folk at home feel about the ruler, each season (it outlives them, fading): fond (25+) +3, very fond (55+) +5, sour (-20) -3, bitter (-45) -5
 function famFolk(L){const r=ruler(),l=r?famLive(L.id).filter(s=>!isChild(s)&&!away(s)&&!s.ruler&&!bloodOf(s)):[];if(!l.length)return;const o=l.reduce((a,s)=>a+getOp(s,r),0)/l.length;
   const d=o>=55?5:o>=25?3:o<=-45?-5:o<=-20?-3:0;if(d)L.f=clamp(L.f+d,-100,100)}
@@ -10493,34 +10514,42 @@ function famCard(){const ls=famLines().map(L=>[L,famHeadAt(L)]).filter(x=>x[1]);
   if(!K.length)return null;const k=pick(K),ev=k==='ask'?famAsk(ls):k==='help'?famHelp(ls):k==='moan'?famMoan(ls):k==='row'?famRowCard(ls):k==='dem'?famDemCard(ls):famWedCard();
   if(ev){ev.kind='Family';famCardUse()}return ev}
 const famPickL=(ls,f)=>{const c=ls.filter(([L])=>f(famFeel(L.id)));return c.length?pick(c):null};
-function famAsk(ls){const [L,h]=famPickL(ls,f=>f!=='grudge'),g=6+3*G.rank,nm=famName(L),Nm=famNm(L);
-  const tx=famV(L,[`${h.name} comes to the hall cap in hand. ${Nm} need ${g} gold for a new roof before the rain finds the holes in the old one. ${famHe(h)} promises the family will not forget it.`,
-    `${Nm} have a sick cow, a sour field and a cousin to see wed, all in one season. ${h.name} asks for ${g} gold, and looks at the floor while asking.`]);
+// a line of one soul is not "X's folk": the cards name the person (famCn, famCN) and use the singular
+const famLone=L=>famLive(L.id).length<2&&!famFsN(L);
+const famCn=L=>famLone(L)?firstName(famHead(L)):famName(L);
+const famCN=L=>{const n=famCn(L);return n[0].toUpperCase()+n.slice(1)};
+function famAsk(ls){const [L,h]=famPickL(ls,f=>f!=='grudge'),g=6+3*G.rank,nm=famCn(L),Nm=famCN(L),lo=famLone(L);
+  const tx=famV(L,[`${h.name} comes to the hall cap in hand. ${lo?`${famHe(h)} needs`:`${Nm} need`} ${g} gold for a new roof before the rain finds the holes in the old one. ${famHe(h)} promises ${lo?'not to':'the family will not'} forget it.`,
+    `${lo?`${Nm} has`:`${Nm} have`} a sick cow, a sour field and a cousin to see wed, all in one season. ${h.name} asks for ${g} gold, and looks at the floor while asking.`]);
   return {who:[h],roles:['for '+nm],title:`${h.name} asks a favour`,text:tx,choices:[
     {t:`Give ${nm} the gold`,d:`${g} gold. ${Nm} will remember it.`,dis:G.gold<g,why:'Not enough gold',fn(){G.gold-=g;famNote(L.id,'ask','You helped them in a lean season',8);return `${h.name} counts it twice, bows once, and goes home whistling.`}},
     {t:'Not this time',d:`Free. ${Nm} will remember that too.`,fn(){famNote(L.id,'ask','You turned them away at the hall door',-4);return `${h.name} nods, says nothing, and says it very loudly.`}}]}}
-function famHelp(ls){const [L,h]=famPickL(ls,f=>f==='fav'),Nm=famNm(L),food=G.food<foodNeed()*DPS,amt=food?10+4*G.rank:8+3*G.rank;
-  const tx=`${Nm} are doing well, and want you to know they know whom to thank. ${h.name} has come up to the hall with ${food?'a cart of turnips and a side of bacon':'a purse the family has been saving'}.`;
-  return {who:[h],roles:['for '+famName(L)],title:`${Nm} bring a gift`,text:tx,choices:[
+function famHelp(ls){const [L,h]=famPickL(ls,f=>f==='fav'),Nm=famCN(L),lo=famLone(L),food=G.food<foodNeed()*DPS,amt=food?10+4*G.rank:8+3*G.rank;
+  const tx=`${lo?`${Nm} is doing well, and wants you to know ${famHe(h).toLowerCase()} knows`:`${Nm} are doing well, and want you to know they know`} whom to thank. ${h.name} has come up to the hall with ${food?'a cart of turnips and a side of bacon':lo?'a purse saved for a rainy day':'a purse the family has been saving'}.`;
+  return {who:[h],roles:['for '+famCn(L)],title:`${Nm} ${lo?'brings':'bring'} a gift`,text:tx,choices:[
     {t:'Accept, with thanks',d:`+${amt} ${food?'food':'gold'}. They are glad you took it.`,fn(){if(food)G.food+=amt;else G.gold+=amt;famNote(L.id,'help',0,2);return `${h.name} beams. The ${food?'turnips are counted into the stores':'purse goes into the chest'}, with ceremony.`}},
     {t:'Thank them, and decline',d:'Free. They think the better of you for it.',fn(){famNote(L.id,'help','You would not take from them',5);return `${h.name} takes the gift home again, rather pleased, and tells everyone on the way.`}}]}}
-function famMoan(ls){const [L,h]=famPickL(ls,f=>f==='grudge'),g=8+4*G.rank,Nm=famNm(L),bad=(L.t||[]).filter(n=>n.v<0).pop(),why=bad?bad.x[0].toLowerCase()+bad.x.slice(1):'you have never once asked after them';
-  return {who:[h],roles:['for '+famName(L)],title:`${Nm} have a grievance`,text:`${h.name} has come to say out loud what ${famName(L)} have been saying behind their hands: they have not forgotten that ${why}.`,choices:[
+function famMoan(ls){const [L,h]=famPickL(ls,f=>f==='grudge'),g=8+4*G.rank,Nm=famCN(L),lo=famLone(L),bad=(L.t||[]).filter(n=>n.v<0).pop(),
+    why=bad?(/^You /.test(bad.x)?bad.x[0].toLowerCase()+bad.x.slice(1):bad.x):'you have never once asked after them';// only "You ..." is lowercased: a note that starts with a name keeps it
+  const he=famHe(h).toLowerCase();
+  return {who:[h],roles:['for '+famCn(L)],title:`${Nm} ${lo?'has':'have'} a grievance`,text:lo?`${h.name} has come to say out loud what ${he} has been muttering into the ale: ${he} has not forgotten that ${why}.`:`${h.name} has come to say out loud what ${famName(L)} have been saying behind their hands: they have not forgotten that ${why}.`,choices:[
     {t:'Hear them out',d:`${g} gold to set things right. The grudge cools.`,dis:G.gold<g,why:'Not enough gold',fn(){G.gold-=g;famNote(L.id,'moan','You heard them out',12);return `You listen, nod in the right places and pay. ${h.name} goes home a little less sour.`}},
     {t:'Send them away',d:'Free. They go home sourer.',fn(){famNote(L.id,'moan','You sent them away unheard',-5);for(const s of famLive(L.id))addBuff(s,'Sent away unheard',-3,6);return `${h.name} is shown the door, and tells the whole hold about the door on the way home.`}}].concat(famSecLive(L)?[
     {t:'Remind them what you know',d:'Free, and no grudge for it. The secret is spent, and secrets leak.',fn(){const x=famSecUse(L);return `You mention, very gently, what your spymaster found out. ${h.name} remembers urgent business at home.${x}`}}]:[])}}
 // two lines whose heads cannot stand each other
 function famPair(ls){let b=null,bv=-20;for(const [A,a] of ls)for(const [B,c] of ls)if(A.id<B.id){const v=getOp(a,c)+getOp(c,a);if(v<bv){bv=v;b=[A,a,B,c]}}return b}
-function famRowCard(ls){const [A,a,B,b]=famPair(ls),r=ruler(),na=famName(A),nb=famName(B),why=pick(QUARWHY),p=clamp(.4+r.skills.charm*.06,.3,.9);
-  return {who:[a,b],roles:['for '+na,'for '+nb],title:`${famNm(A)} and ${nb} are at it again`,text:`It started with ${why}. Now ${a.name} and ${b.name} have each brought half their kin, and the yard is full of folk shouting about things that happened before you were born.`,choices:[
-    {t:`Side with ${na}`,d:`${famNm(A)} will remember it fondly. ${famNm(B)} will not.`,fn(){famNote(A.id,'row',`You took their side against ${nb}`,8);famNote(B.id,'row',`You took the side of ${na} over theirs`,-8);return `${famNm(A)} cheer. ${famNm(B)} go home the long way, to have more time to talk about it.`}},
-    {t:`Side with ${nb}`,d:`${famNm(B)} will remember it fondly. ${famNm(A)} will not.`,fn(){famNote(B.id,'row',`You took their side against ${na}`,8);famNote(A.id,'row',`You took the side of ${nb} over theirs`,-8);return `${famNm(B)} cheer. ${famNm(A)} go home the long way, to have more time to talk about it.`}},
+function famRowCard(ls){const [A,a,B,b]=famPair(ls),r=ruler(),na=famCn(A),nb=famCn(B),NA=famCN(A),NB=famCN(B),la=famLone(A),lb=famLone(B),why=pick(QUARWHY),p=clamp(.4+r.skills.charm*.06,.3,.9);
+  const wk=(N,lo)=>lo?`${N} goes`:`${N} go`,ch=(N,lo)=>lo?`${N} cheers`:`${N} cheer`;
+  return {who:[a,b],roles:['for '+na,'for '+nb],title:`${NA} and ${nb} are at it again`,text:`It started with ${why}. Now ${a.name} and ${b.name} have each brought ${la||lb?'whoever would come':'half their kin'}, and the yard is full of folk shouting about things that happened before you were born.`,choices:[
+    {t:`Side with ${na}`,d:`${NA} will remember it fondly. ${NB} will not.`,fn(){famNote(A.id,'row',`You took their side against ${nb}`,8);famNote(B.id,'row',`You took the side of ${na} over theirs`,-8);return `${ch(NA,la)}. ${wk(NB,lb)} home the long way, to have more time to talk about it.`}},
+    {t:`Side with ${nb}`,d:`${NB} will remember it fondly. ${NA} will not.`,fn(){famNote(B.id,'row',`You took their side against ${na}`,8);famNote(A.id,'row',`You took the side of ${nb} over theirs`,-8);return `${ch(NB,lb)}. ${wk(NA,la)} home the long way, to have more time to talk about it.`}},
     {t:'Judge fairly',d:`Speech roll: about ${Math.round(p*100)}% to settle it.`,fn(){if(chance(p)){famNote(A.id,'row','You judged their quarrel fairly',3);famNote(B.id,'row','You judged their quarrel fairly',3);G.renown+=1;addXp(r,4);return 'Your ruling is so even that both families go home grumbling about how fair it was.'}
       famNote(A.id,'row',0,-2);famNote(B.id,'row',0,-2);return 'You try to be fair, and both families agree on one thing at last: you were not.'}}]}}
 // a wedding this season between two lines (the match itself is the courtship card's): the feast
 function famWed(){for(const s of homeAd()){const o=byId(s.spouse);if(o&&s.sex==='m'&&s.wed!=null&&G.day-s.wed<=DPS&&s.fm!==o.fm&&!bloodOf(s)&&!bloodOf(o)&&famRow(famL(s.fm))&&famRow(famL(o.fm))&&!away(o))return [s,o]}return null}
 function famWedCard(){const [m,f]=famWed(),A=famL(m.fm),B=famL(f.fm),g=6+3*G.rank;
-  return {who:[m,f],roles:['of '+famName(A),'of '+famName(B)],title:`${famNm(A)} and ${famName(B)}, joined`,text:`${m.name} and ${f.name} are wed, and now the two families must sit at one table and be polite about it. Everyone is looking to the hall to see what it sends.`,choices:[
+  const lo=famLone(A)&&famLone(B);
+  return {who:[m,f],roles:['of '+famCn(A),'of '+famCn(B)],title:lo?`${firstName(m)} and ${firstName(f)}, wed`:`${famCN(A)} and ${famCn(B)}, joined`,text:`${m.name} and ${f.name} are wed, and now ${lo?'the two households':'the two families'} must sit at one table and be polite about it. Everyone is looking to the hall to see what it sends.`,choices:[
     {t:'Send a cask and a ham',d:`${g} gold. Both families will remember it.`,dis:G.gold<g,why:'Not enough gold',fn(){G.gold-=g;famNote(A.id,'wed',`You feasted ${firstName(m)}'s wedding`,6);famNote(B.id,'wed',`You feasted ${firstName(f)}'s wedding`,6);allBuff('Wedding cheer',2,4);return 'The ham is admired, the cask is emptied, and both families agree the other side danced badly.'}},
     {t:'Send your blessing',d:'Free. Kind, and soon forgotten.',fn(){famNote(A.id,'wed',0,1);famNote(B.id,'wed',0,1);return 'Your blessing is read out between the soup and the arguing.'}}]}}
 /* ---------- part C: the council ----------
@@ -10566,6 +10595,8 @@ const famFeudW=(a,b)=>{const F=famFeud(a,b);return F?`${famNm(F[0])} against ${f
 function famFeudStart(a,b,w){const F=famFeud(a,b);if(!F)return '';const t=`${firstName(a)} and ${firstName(b)} fell out over ${w}, and the families took sides.`;famStory(F[0],t);famStory(F[1],t);
   return ` ${famNm(F[0])} and ${famName(F[1])} have taken sides.`}
 const famPlotKin=(p,s)=>famOn()&&p.fm!=null&&s.fm===p.fm&&!bloodOf(s)&&famFeel(s.fm)!=='fav';
+// a suitor from the hold: a soul of a Rising (1) or Strong (2) family comes first (the suitors card, evSuitors)
+const famSuitW=s=>famOn()&&s.fm!=null&&!bloodOf(s)&&famRow(famL(s.fm))?famPower(s.fm):0;
 const famOfW=s=>famOn()&&famKin(s)?` of ${famName(famOf(s))}`:'';
 function famSeize(F){if(!famOn())return '';const by={};for(const s of F)if(s.fm!=null&&!bloodOf(s)&&famRow(famL(s.fm)))(by[s.fm]||(by[s.fm]=[])).push(firstName(s));
   for(const id in by)famNote(+id,'seized',`You threw ${andW(by[id])} in the cellar`,-15);const N=Object.keys(by).filter(id=>famLive(+id).length>by[id].length).map(id=>famName(famL(+id)));return N.length?` ${andW(N)[0].toUpperCase()+andW(N).slice(1)} will not forgive it soon.`:''}
@@ -10591,9 +10622,9 @@ function famHeadDies(L,s){if(!famOn()||!(L.pw>=1)||isChild(s)||bloodOf(s)||famHe
     {t:'Pay for a proper wake',d:`${c} food. ${Nm} will remember it.`,dis:G.food<c,why:'Not enough food',fn(){G.food-=c;famNote(L.id,'honour',`You paid for ${f}'s wake`,8);for(const o of famLive(L.id))addBuff(o,'A proper wake',3,8);return `The wake goes on until the candles give up. ${nh.name} thanks you, twice, and means it once.`}},
     {t:'Send a few kind words',d:'Free. Polite, and quickly forgotten.',fn(){famNote(L.id,'honour',0,1);return `Your words are read out at the graveside. Somebody's dog howls through the best part.`}}]})}
 function famNamed(L,s,nm,k){if(k==='shame'||!famOn()||!(L.pw>=1)||!famCardOk())return;famCardUse();const g=5+3*G.rank;
-  queueEvent({kind:'Family',who:[s],roles:['the '+nm+' name'],title:`The ${nm}s`,text:`The whole hold is calling ${firstName(s)}'s family the ${nm}s, and the ${nm}s have noticed. They have come to the hall in their best, rather hoping you will notice too.`,choices:[
-    {t:`Raise a cup to the ${nm}s`,d:`${g} gold. They will remember it.`,dis:G.gold<g,why:'Not enough gold',fn(){G.gold-=g;famNote(L.id,'deed',`You drank to the ${nm} name`,6);return `The cup goes round. ${firstName(s)} makes a speech, and it is too long.`}},
-    {t:'Nod, and move on',d:'Free.',fn(){return `You nod. The ${nm}s nod back, a shade less warmly.`}}]})}
+  queueEvent({kind:'Family',who:[s],roles:['the '+nm+' name'],title:`The ${famPl(nm)}`,text:`The whole hold is calling ${firstName(s)}'s family the ${famPl(nm)}, and the ${famPl(nm)} have noticed. They have come to the hall in their best, rather hoping you will notice too.`,choices:[
+    {t:`Raise a cup to the ${famPl(nm)}`,d:`${g} gold. They will remember it.`,dis:G.gold<g,why:'Not enough gold',fn(){G.gold-=g;famNote(L.id,'deed',`You drank to the ${nm} name`,6);return `The cup goes round. ${firstName(s)} makes a speech, and it is too long.`}},
+    {t:'Nod, and move on',d:'Free.',fn(){return `You nod. The ${famPl(nm)} nod back, a shade less warmly.`}}]})}
 /* ---------- part D: Raise them up, the ladder ----------
    The third act on a family's page, for a Rising or Strong line only; a grudging line refuses; once a year a line (L.ru). Four rungs, each greyed
    with its reason when it cannot be done: a council seat (famRungSeat, through part C's famReplace, so it shares the one change a season);
@@ -10642,7 +10673,7 @@ function famDemCard(ls){const c=ls.filter(([L])=>famDemOk(L));if(!c.length)retur
     {t:'Think on it',d:'They will wait a season for an answer, on their page. Then they stop waiting.',fn(){L.dm={k,a,u:G.day+DPS};return `${h.name} bows, and says the family will wait. ${famHe(h)} makes waiting sound like a threat, a very polite one.`}}])}}
 // answer a demand (the card, or the page while it waits): yes or no
 function famDemDo(L,how,k,a){const D=FAMDEM[k],Nm=famNm(L);delete L.dm;
-  if(how==='yes'){G[D.r]-=a;famNote(L.id,'dem','You gave them what they asked',8);const t=`${Nm} have ${famDemW(L,k)} (−${a} ${D.r}). They thank you as if it were overdue.`;log(t,'good');return t}
+  if(how==='yes'){G[D.r]-=a;famNote(L.id,'dem','You gave them what they asked',8);const t=`${Nm} have ${famDemW(L,k).replace(/ \((.*)\)$/,', $1')} (−${a} ${D.r}). They thank you as if it were overdue.`;log(t,'good');return t}
   famNote(L.id,'dem','You refused what they asked',-8);const t=`You tell ${famName(L)} no. They take it well, in the sense that they take it home and polish it.`;log(t,'bad');return t}
 // each season: a waiting ask that ran out of time lapses
 function famDemSeason(){for(const L of Object.values(famS().L))if(L.dm&&(L.gone||G.day>=L.dm.u)){const k=L.dm.k;delete L.dm;if(L.gone)continue;famNote(L.id,'dem','You let their asking go unanswered',-4);log(`${famNm(L)} have stopped waiting for an answer about ${famDemT(famDemW(L,k))}, and say so.`,'bad')}}
@@ -11110,7 +11141,7 @@ function evSuitors(s,why,pref){
   if(!s)return null;
   const rv=rivals().filter(x=>!x.burnt).sort((a,b)=>b.att-a.att)[0],rs=mkSuitor(s),ms=mkSuitor(s,chance(.5)?['greedy',pick(['diligent','charming','content'])]:null);
   let g=0;while((ms.name===rs.name||G.settlers.some(o=>o.name===ms.name||o.name===rs.name))&&g++<20){rs.name=pickName(rs.sex);ms.name=pickName(ms.sex)}
-  const loc=pref&&G.settlers.includes(pref)&&!pref.spouse?pref:adults().filter(o=>o.sex!==s.sex&&!o.spouse&&!bloodOf(o)&&age(o)>=16&&Math.abs(age(o)-age(s))<=12&&!away(o)).sort((a,b)=>getOp(s,b)-getOp(s,a))[0]||null;
+  const loc=pref&&G.settlers.includes(pref)&&!pref.spouse?pref:adults().filter(o=>o.sex!==s.sex&&!o.spouse&&!bloodOf(o)&&age(o)>=16&&Math.abs(age(o)-age(s))<=12&&!away(o)).sort((a,b)=>famSuitW(b)-famSuitW(a)||getOp(s,b)-getOp(s,a))[0]||null;// one of a Rising or Strong family first (09-family.js), then the one most fond of them
   const dow=15+10*G.rank,hos=rv.att<=-50;
   const intro=why==='raise'?`The hall has let it be known that ${loc.name}${famOfW(loc)} would be welcome as kin to the house. Other suitors have heard, and come anyway.`:why==='widow'?`Word has spread that ${s.name} sits the high seat alone. Suitors are calling at the gate.`:why==='duty'?`The envoys return with the names of suitors fit for ${s.name}.`:`Your envoys return with suitors for ${s.name}. Children of the match may take after either parent.`;
   return {who:[s,rs,ms].concat(loc?[loc]:[]),kind:'Courtship',title:`Suitors for ${s.name}`,stale:()=>!G.settlers.includes(s)||!!s.spouse,
@@ -11118,7 +11149,7 @@ function evSuitors(s,why,pref){
     choices:[
       {t:`${rs.name} of House ${rv.house}`,d:`${suitTxt(rs)} Binds House ${rv.house} to you (+3 renown).`,dis:hos,why:`House ${rv.house} is hostile`,fn(){wedIn(s,rs);moveAtt(rv,30);G.renown+=3;gainAch('pact');annal(`House ${G.house} and House ${rv.house} are bound by marriage.`,'good');return `${s.name} and ${rs.name} are wed under two banners. ${lordOf(rv)} sends a cask of wine and a warm letter.`}},
       {t:`${ms.name}, a merchant's child`,d:`${suitTxt(ms)} Brings a dowry: +${dow} gold.`,fn(){wedIn(s,ms);G.gold+=dow;return `The merchant pays the dowry in silver and spends the wedding feast pricing the tapestries (+${dow} gold).`}},
-      loc?{t:`${loc.name}, of your own hold`,d:`${suitTxt(loc)} The hold loves to see one of its own raised up.${loc===pref?` ${famNm(famOf(loc))} become kin to the house.`:''}`,fn(){marry(s,loc);if(loc===pref)famRaised(famOf(loc),'match');allBuff('One of our own',5,12);adults().forEach(o=>{if(o!==s&&o!==loc)bump(o,s,4)});return `${s.name} weds ${loc.name} in the yard. Everyone claims to have seen it coming.`}}
+      loc?{t:`${loc.name}, ${famOn()&&famKin(loc)&&famPower(loc.fm)>0?'of '+famName(famOf(loc)):'of your own hold'}`,d:`${suitTxt(loc)} The hold loves to see one of its own raised up.${loc===pref?` ${famNm(famOf(loc))} become kin to the house.`:''}`,fn(){marry(s,loc);if(loc===pref)famRaised(famOf(loc),'match');allBuff('One of our own',5,12);adults().forEach(o=>{if(o!==s&&o!==loc)bump(o,s,4)});return `${s.name} weds ${loc.name} in the yard. Everyone claims to have seen it coming.`}}
         :{t:'Someone of your own hold',d:'No one in the hold is free to wed.',dis:true,why:'No one free in the hold',fn(){return 'No one.'}},
       {t:'Send them all home',d:why==='sought'?"The envoys' fee is spent.":'Perhaps another season.',fn(){return `The suitors ride home disappointed. ${s.name} stays unwed for now.`}}
     ]};
@@ -11340,6 +11371,7 @@ function goFix(k){
   if(w==='f'){uiSet('f',v);setView('folk');return jumpTo(()=>document.querySelector('#v-folk .asked')||(v==='kids'?document.querySelector('#v-folk .pwhead[data-s="kids"]')||document.querySelector('#v-folk .pwhead[data-s="house"]'):document.querySelector(`#v-folk .fgrp[data-g="${v}"] .ghead`)))}
   if(w==='j'){FIXJOB={j:v,k:x?v+':'+x:v,n0:jobN(v)};FO['g:'+v]=true;uiSet('f','all');setView('folk');jumpTo(()=>document.querySelector(`#v-folk .fgrp[data-g="${v}"] .ghead`));return}
   if(w==='s'){const s=byId(+v);if(!s)return;selected=expanded=s.id;uiSet('f','all');setView('folk');return jumpTo(()=>document.querySelector('#v-folk .folk.sel [data-act="perks"]')||document.querySelector('#v-folk .folk.sel'))}
+  if(w==='sj'){const s=byId(+v);if(!s)return;selected=expanded=s.id;uiSet('f','all');setView('folk');JP=s.id;renderFolk();return jumpTo(()=>document.querySelector('#v-folk .folk.sel')||document.querySelector('#v-folk .ptile.sel'))}// a feud's strip: their card with the job picker already open, so one tap moves them apart
   if(w==='plot'){const p=G.settlers.filter(hinted);if(p.length===1){selected=expanded=p[0].id;FO.life=1}uiSet('f',p.length>1?'hint':'all');setView('folk');
     jumpTo(()=>p.length===1?document.querySelector('#v-folk .folk.sel .life')||document.querySelector('#v-folk .folk.sel'):document.querySelector('#v-folk .asked'))}
 }
@@ -11553,7 +11585,7 @@ function settleGo(g,nm){const h=settleHead(g),stay=G.settlers.filter(o=>!g.inclu
     G.food-=10;G.wood-=10;G.settled=(G.settled||0)+g.length;rc('st');
     for(const o of stay){if(g.some(s=>isKin(o,s)))addBuff(o,'Kin moved away',-3,8);else if(g.some(s=>getOp(o,s)>=40))addBuff(o,'A friend moved away',-2,6)}
     landAdd(g,h,nm);
-    for(const s of g){life(s,g.length===1?'Left alone to settle new land, with a goat for company.':`Left with ${s===h?'the family':h.name+"'s family"} to settle new land.`);removeSettler(s)}
+    for(const s of g){life(s,g.length===1?'Left alone to settle new land, with a goat for company.':`Left with ${s===h?'the family':h.name+"'s family"} to settle new land.`);removeSettler(s,false,{wi:g})}
     const one=g.length===1;annal(one?`${h.name} leaves to settle new land.`:`${h.name}'s family leave to settle new land.`);
     return one?`${h.name} loads a cart with seed, timber, two hens and a goat with opinions, and sets off to clear land of ${hisW(h)} own. A bed stands empty, briefly.`:`${h.name}'s family load a cart with seed, timber, two hens and a goat with opinions, and set off to clear land of their own. ${g.length} beds stand empty, briefly.`}
 /* ---------- your lands: the farmsteads settled families make (Your lands on the House tab, landsHTML in 08) ----------
@@ -11762,8 +11794,7 @@ const VIGILW=[
 const ACTS={
   court:{n:'Hold court',d:'Call the council. Each adviser makes their case; heed one, or none.',cd:DPS,need:()=>{councilFill();return !councilSeated()?'No council yet':!councilAsks().length?'The council is content':''},fn(){queueEvent(evSitting());return 'You call the council to the hall.'}},
   banish:{n:'Banish a troublemaker',d:'Drive out the most disliked adult. Peace returns, mostly.',cd:30,need:()=>troublemaker()?'':'No one deserves it',fn(){
-    const t=troublemaker(),sp=byId(t.spouse);addGrudge(t,'banished');memPush({k:'banished',sid:t.id,name:t.name,sex:t.sex,traits:t.traits.slice(),d:G.day});removeSettler(t);// their kin may carry it on (memPass)
-    if(sp){sp.spouse=null;addBuff(sp,'Heartbroken',-14,12)}
+    const t=troublemaker();addGrudge(t,'banished');memPush({k:'banished',sid:t.id,name:t.name,sex:t.sex,traits:t.traits.slice(),d:G.day});removeSettler(t,false,{why:'heartbroken'});// their kin may carry it on (memPass)
     G.settlers.forEach(o=>{if(isKin(o,t))addBuff(o,'Kin banished',-8,10);else addBuff(o,'Peace restored',3,8)});
     G.renown-=1;annal(`${t.name} is banished from the hold.`,'bad');return `${t.name} is escorted to the road with a bundle and a warning. The hold exhales.`}},
   settle:{n:'Settle new land',d:'Every bed is taken. A family leaves to make a farmstead of their own (10 food, 10 wood).',cd:DPS,need:()=>G.settlers.length<housing()?'There is room enough':!settleFams().length?'No family can go':G.food<10||G.wood<10?'Needs 10 food and 10 wood':'',fn(){queueEvent(evSettle());return 'Word goes round that there is land to be had past the far woods.'}},
@@ -12284,7 +12315,7 @@ function thSeason(){const T=ig().their,rs=rivals(),sm=smOf();
     if(!a.bot&&rv.att<=-30&&chance(.04))a.bot=G.day;else if(a.bot&&G.day-a.bot>=2*DPS&&chance(sm?.4:.25)){queueEvent(evBought(rs.indexOf(rv)));}}}
 // they strike: costs gold, stores or renown, never a life; the agent slips away after
 function thStrike(i,t,s){const rv=rivals()[i],g=t.sch||thGoal(),H=`House ${rv.house}`;ig().nsd=G.day;delete ig().their[rv.id];delete s.ta;
-  const gone=()=>{removeSettler(s,true);for(const x of G.settlers)if(x!==s)bump(x,s,-5)};
+  const gone=()=>{removeSettler(s,true,{why:'spy'});for(const x of G.settlers)if(x!==s)bump(x,s,-5)};
   if(g==='sec'){const S=MYSEC();if(S.length){const ev=evMySec(i,pick(S));gone();if(ev){rpDeed('sec',{rv:rivals()[i]});queueEvent(ev)}return}}
   let t0='';
   // an empty strongbox is not worth robbing: the rude song instead (hunt 13: "0 gold lighter")
@@ -12308,7 +12339,7 @@ function evMySec(i,x){const rv=rivals()[i],L=lordOf(rv),r=ruler();if(!r)return n
 // their agent unmasked (replaces the old caught-spy card): cellar (questioned once: maybe a secret), turn them, feed them lies, send them home
 function evUnmask(i,f){const rv=rivals()[i],sm=smOf(),r=ruler(),inH=!!f&&G.settlers.includes(f);if(!rv||!f)return null;delete f.ta;rvc(rv,'sp');rv.lsp=G.day;annal(`A spy of House ${rv.house} is caught in the hold.`,'good');
   const mine=agOf(i),p=clamp(.3+(r?r.skills.charm:0)*.05+smBonus(),.2,.85),he=f.sex==='m'?'he':'she',his=f.sex==='m'?'his':'her';
-  const go=t=>{if(G.settlers.includes(f))removeSettler(f,true);return t};
+  const go=t=>{if(G.settlers.includes(f))removeSettler(f,true,{why:'spy'});return t};
   return {who:[f],kind:'Intrigue',seal:shield(rv.house,34),title:`${f.name} spies for House ${rv.house}`,stale:()=>inH&&!G.settlers.includes(f),
     text:`${sm?`${sm.name} was right.`:'A stable boy found it by accident.'} ${f.name}, who came to the gate ${inH?'asking for work':'last week, asking for work'}, keeps a letter in ${lordOf(rv)}'s hand in ${his} boot. ${f.sex==='m'?'He':'She'} has been reading yours.${famL(f.tfm)&&!famL(f.tfm).gone?` ${famNm(famL(f.tfm))} gave ${f.sex==='m'?'him':'her'} supper all along, and swear they never guessed.`:''}`,
     choices:[{t:gx('Throw them in the cellar',f),d:gx('Questioned once: they may give up a secret. House '+rv.house+' will want them back.',f),fn(){lockUp({sid:f.id,name:f.name,sex:f.sex,traits:f.traits.slice(),skills:Object.assign({},f.skills),type:'rival'},`Spied for House ${rv.house}`);moveAtt(rv,-5);
@@ -12319,7 +12350,7 @@ function evUnmask(i,f){const rv=rivals()[i],sm=smOf(),r=ruler(),inH=!!f&&G.settl
         return go(`${f.name} weighs the rope against your gold and picks the gold. ${f.sex==='m'?'He':'She'} goes home to House ${rv.house} and writes to you now, free for a year.`)}},
       {t:gx('Feed them lies',f),d:'Look strong (they will not dare raid or declare for a year) or look weak (lure them to your walls). You choose next.',fn(){queueEvent(evLies(i,f));return `${f.name} is not told ${he} has been found out. ${sm?sm.name:'You'} start${sm?'s':''} leaving letters lying about.`}},
       {t:gx('Send them home',f),d:'A warning, on a mule, facing backwards. House '+rv.house+' may respect it.',fn(){rememberRival('spysent',rv,{name:f.name});moveAtt(rv,8);return go(`${f.name} is put on a mule facing backwards and sent home. ${lordOf(rv)} sends a stiff apology.`)}}]}}
-function evLies(i,f){const rv=rivals()[i];const go=t=>{if(G.settlers.includes(f))removeSettler(f,true);return t};
+function evLies(i,f){const rv=rivals()[i];const go=t=>{if(G.settlers.includes(f))removeSettler(f,true,{why:'spy'});return t};
   return {who:[f],kind:'Intrigue',seal:shield(rv.house,34),title:'Which lies?',text:`${f.name} will carry home whatever is left lying about. What should House ${rv.house} believe?`,
     choices:[{t:'Look strong',d:'They will not dare raid, demand or declare for a year. A small chance each season they see through it.',fn(){ig().lies[rv.id]={k:'s',u:G.day+DPY};return go(`Letters about new sellswords, a second palisade and a very large dog are left about. ${f.name} copies them all and slips home. House ${rv.house} goes very quiet.`)}},
       {t:'Look weak',d:'A risk: they may march on your walls within two years, thinking you easy. You fight at home. A small chance each season they see through it.',fn(){ig().lies[rv.id]={k:'w',u:G.day+2*DPY};return go(`Letters about empty granaries, sick guards and a ruler afraid of the dark are left about. ${f.name} copies them all and slips home. Now you wait at your walls.`)}}]}}
@@ -12708,7 +12739,7 @@ function alerts(){
   const low=G.settlers.filter(s=>s.mood<25&&!isChild(s));
   if(low.length)a.push(['warn',`${low.length>3?low.slice(0,2).map(s=>s.name).join(', ')+' and '+(low.length-2)+' more':low.map(s=>s.name).join(', ').replace(/, ([^,]*)$/,' and $1')} ${low.length>1?'are':'is'} close to breaking.`,low.length>1?'f:unhappy':'s:'+low[0].id]);
   {const m=unrest();if(m.length>=3&&m.length>=adults().length*.3)a.push(['bad',`Unrest is spreading: ${m.length} are close to revolt. Feast, or ease the laws.`,'f:unhappy'])}
-  for(const k in G.feud||{}){const f=G.feud[k],x=byId(f.a),y=byId(f.b);if(x&&y&&f.st>=2){a.push(['warn',`${x.name} and ${y.name} are feuding over ${f.w}${f.st>=3?', and breaking things':''}. Set them to work apart before it gets worse.`,'s:'+x.id]);break}}
+  for(const k in G.feud||{}){const f=G.feud[k],x=byId(f.a),y=byId(f.b);if(x&&y&&f.st>=2&&x.job===y.job&&!isChild(x)&&!isChild(y)){a.push(['warn',`${x.name} and ${y.name} are feuding over ${f.w}${f.st>=3?', and breaking things':''}, and work the same job. Tap to move ${x.name.split(' ')[0]} to another job, away from ${y.name.split(' ')[0]}.`,'sj:'+x.id]);break}}
   if(seasonIdx()===3&&G.built.pasture&&!G.warm)a.push(['warn','Not enough wool for winter cloaks.']);
   // nudges: an act that would help right now, only when it is ready (the button takes you to where the act lives)
   {const rd=k=>!((G.cd[k]||0)>G.day)&&!ACTS[k].need(),ad=adults(),glum=ad.filter(s=>s.mood<40).length;
@@ -12808,7 +12839,7 @@ const TFX={diligent:'Works 15% faster. Likes long days, even forced labour.',laz
 const traitTxt=t=>`${TRAITS[t].n}: ${(TDESC[t]||'').replace(/^Works [^.,]*(, and |\. )/,'').replace(/^./,c=>c.toUpperCase())} ${TFX[t]||''}`;
 // what a child is up to: learning a trade from someone, refusing one, or just growing
 function childNote(s){
-  const y=14-age(s),gr=y<=1?'Grown within the year.':`Grown in ${nYears(y)}.`,ap=s.ap,T=ap&&TRADE[ap.j];
+  const y=Math.ceil(yearsToGrown(s)),gr=y<=1?'Grown within the year.':`Grown in ${nYears(y)}.`,ap=s.ap,T=ap&&TRADE[ap.j];
   if(age(s)<7||!T)return `Too young to work. ${gr}`;
   const who=ap.rel?`${s.sex==='m'?'his':'her'} ${ap.rel} ${ap.nm}`:ap.nm;
   if(ap.r)return `Will NOT be a ${T.one}, and says so at every meal. ${gr}`;
@@ -12898,7 +12929,7 @@ function folkCard(s,common,grp,inPanel){
     {const mk=scarCard(s);if(mk)h+=`<div class="mks">${mk}</div>`}// a scar, an eyepatch or a crusader's cross, told wryly
     if(!ch)h+=perkBtn(s);
     h+=`<div class="mood"><span class="ml">Mood</span><div class="bar"><i style="width:${s.mood}%;background:${moodBg(s.mood)}"></i></div><b style="color:${moodCol(s.mood)}">${fmt(s.mood)}</b></div>`;
-    {const mt=moodAim(s),r=Math.round(mt),now=Math.round(s.mood);h+=`<div class="sub maim">${r===now?`Steady at ${r}`:`Heading for ${r}`}: 50 to start, plus the reasons below.</div>`}
+    {const d=moodAim(s)-s.mood,m=Math.abs(d);if(m>=1)h+=`<div class="mtr ${d>0?'up':'dn'}" title="${d>0?'Mood is rising':'Mood is falling'}${m>=10?' fast':''}" aria-label="${d>0?'Mood rising':'Mood falling'}${m>=10?' fast':''}">${(d>0?'▲':'▼').repeat(m>=10?2:1)}</div>`}// an arrow under the number: one for a slight drift, two for a big one (moodAim, where it is heading)
     const mm=moodMods(s).filter(m=>m[1]).sort((x,y)=>Math.abs(y[1])-Math.abs(x[1]));
     // the three biggest lifts and the three biggest drags; the rest wait behind a fold (his playthrough, 2026-11-20: the list ran to 24 lines)
     const mrow=m=>`<div><span>${m[0]}</span><span class="${m[1]>0?'up':'dn'}">${m[1]>0?'+':''}${m[1]}</span></div>`+(/ the ruler$/.test(m[0])&&m[1]<0?`<p class="opw">${opReason(s)}</p>`:'');
@@ -14040,7 +14071,7 @@ function famLine(L){const l=famLive(L.id),gr=l.filter(s=>!isChild(s)),n=l.length
   const c={};for(const s of gr)if(s.job!=='rest'){const t=jobTitle(s).toLowerCase();c[t]=(c[t]||0)+1}const top=Object.entries(c).sort((a,b)=>b[1]-a[1])[0];
   const seat=Object.keys(COUNCIL).map(k=>[k,councillor(k)]).find(([k,s])=>s&&s.fm===L.id);
   return `${capW(n)} ${n===1?'soul':'folk'}${gr.length<n?`, ${numW(n-gr.length)} of them ${n-gr.length===1?'a child':'children'}`:''}.`+(top&&top[1]>1?` Mostly ${top[0].replace(/man$/,'men').replace(/([^n])$/,'$1s')}.`:'')
-    +(seat?` ${seat[1].name.split(' ')[0]} sits on the council as ${COUNCIL[seat[0]].n}.`:'')+(famFsN(L)?` Kin away at ${lands().find(x=>(L.fs||[]).includes(x.id)&&!x.free).nm}.`:'')+(famInlaw(L)?' Kin to the house.':'')}
+    +(seat?` ${seat[1].name.split(' ')[0]} sits on the council as ${COUNCIL[seat[0]].n.toLowerCase()}.`:'')+(famFsN(L)?` Kin away at ${lands().find(x=>(L.fs||[]).includes(x.id)&&!x.free).nm}.`:'')+(famInlaw(L)?' Kin to the house.':'')}
 function famRowHTML(L){const h=famHead(L),pw=L.pw||0;
   return `<button class="parch card fmrow" data-act="fampg" data-id="${L.id}">${h?portrait(h,46):''}<span class="fmt"><b>${famNm(L)}</b>${pw?`<i class="fmpw p${pw}">${FAMPW[pw]}</i>`:''}<small>${famLine(L)}</small></span>${famChip(L.id)}</button>`}
 const FAMMAUD2={'2grudge':'Strong and sour. Mind the cellar door.','2fav':'Strong, and fond of you. Enjoy it while it lasts.','2quiet':'Strong, and keeping their own counsel. I would rather know what they think.',
@@ -14096,7 +14127,7 @@ function famRaiseHTML(L){const id=L.id,g=famRaiseGate(L);
     +btn('rland','field','Land of their own',Array.isArray(N)?`${N[0].length===1?firstName(N[0][0])+' leaves':capW(N[0].length)+' of them leave'} for ${famFarmNm(L,N[0])}. 10 food, 10 wood.`:'')
     +btn('rnseat','keep',"A neighbour's seat",'')}
 // the line on a person's card: "of the Thatchers", once they have kin in the hold or the hold is a Village (a tap opens the family)
-function famCardLine(s){if(s.fm==null||bloodOf(s))return '';const L=famL(s.fm);if(!famRow(L))return '';const kin=famLive(L.id).length>1;if(!kin&&!famOn())return '';
+function famCardLine(s){if(s.fm==null||bloodOf(s))return '';const L=famL(s.fm);if(!famRow(L))return '';const kin=famLive(L.id).length>1;if(!kin)return '';// a lone soul is not "of" their own folk
   const n=famName(L);return famOn()&&!G.over?`<button class="cgo fmof" data-act="fampg" data-id="${L.id}">of ${n} ›</button>`:` <span class="fmof">of ${n}</span>`}
 function binfoHTML(){
   if(BI.fams)return FAMPG!=null?famPageHTML(FAMPG):famListHTML();
