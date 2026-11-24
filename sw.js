@@ -2,7 +2,7 @@
 // plays offline, and picks up new versions by itself: the build stamps VERSION with a fingerprint of the game, so a new
 // game means a new sw.js; the phone notices on its next online start, fetches the new files in the background, and the
 // next start after that plays the new version. Saves live in localStorage, which this never touches.
-const VERSION = '52f8ba4af542';
+const VERSION = '94dcfc84a002';
 const CACHE = 'emberholt-' + VERSION, FONTS = 'emberholt-fonts';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './favicon-32.png'];
 

@@ -397,8 +397,8 @@ canvas#map{display:block;width:100%;height:auto;aspect-ratio:15/11;max-width:100
 /* achievements */
 #achv,#namer{z-index:30}
 .chron h3{font-family:var(--f-display);font-weight:400;font-size:20px;line-height:1.15;margin:16px 0 4px;color:var(--ink)}.chron h3 small{font-size:13px;color:var(--ink2)}.chron p{margin:0 0 8px;line-height:1.5}.chron .btnrow{margin-top:14px}
-.achpop{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translate(-50%,-140%);width:calc(100% - 32px);max-width:380px;display:flex;align-items:center;gap:10px;padding:9px 14px;z-index:40;pointer-events:none;color:var(--ink);background-image:var(--paper),linear-gradient(#f3e3b0,#dcc27e);border:1px solid #a8791c;border-left:5px solid #c8961f;border-radius:4px;box-shadow:0 4px 14px rgba(0,0,0,.6);transition:transform .35s ease}
-.achpop.show{transform:translate(-50%,0)}
+.achpop{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translate(-50%,-30%);opacity:0;width:calc(100% - 32px);max-width:380px;display:flex;align-items:center;gap:10px;padding:9px 14px;z-index:40;pointer-events:none;color:var(--ink);background-image:var(--paper),linear-gradient(#f3e3b0,#dcc27e);border:1px solid #a8791c;border-left:5px solid #c8961f;border-radius:4px;box-shadow:0 4px 14px rgba(0,0,0,.6);transition:transform .35s ease,opacity .3s}
+.achpop.show{transform:translate(-50%,0);opacity:1}
 .achpop .ic{color:#a8791c;flex:none}
 .achpop span{display:grid;line-height:1.15}
 .achpop small{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
@@ -571,8 +571,9 @@ body:has(#modal:not([hidden])) #top,body:has(#binfo:not([hidden])) #top{z-index:
 body:has(#modal:not([hidden])) #top .ribbon,body:has(#binfo:not([hidden])) #top .ribbon{visibility:hidden}
 body:has(#modal:not([hidden])) #top .seg,body:has(#binfo:not([hidden])) #top .seg{opacity:.45}
 .achpop{top:calc(var(--toph,0px) + 4px)}
-/* tucked away while hidden: under the top bar the empty banner used to peek out as a gold strip over the day's gains */
-.achpop:not(.show){visibility:hidden;transition:transform .35s ease,visibility 0s .35s}
+/* tucked away while hidden: under the top bar the empty banner used to peek out as a gold strip over the day's gains.
+   It fades as it drops in or lifts away, moving only a little, so it never sweeps over the date, speed buttons and stores (animation hunt, 2026-11-23) */
+.achpop:not(.show){visibility:hidden;transition:transform .35s ease,opacity .3s,visibility 0s .35s}
 /* event-card faces can be tapped for a short who's-who note */
 .whorow figure.tapme{cursor:pointer}.whorow figure.tapme figcaption{text-decoration:underline dotted rgba(90,60,30,.5);text-underline-offset:3px}
 .whonote{font-size:15px;line-height:1.3;color:var(--ink2);background:rgba(120,80,30,.08);border-left:3px solid var(--edge);border-radius:3px;padding:7px 10px;text-align:left}
@@ -992,7 +993,7 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 .xfsheet{gap:10px}
 #modal .evpic{margin:-4px 0 0}#modal .evpic .hpic{margin:0;border:0;box-shadow:none;border-radius:2px}
 /* over the end screen the achievement banner comes up from the foot, so it never covers the house's name */
-.achpop.low{top:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px))}.achpop.low:not(.show){transform:translate(-50%,140%)}
+.achpop.low{top:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px))}.achpop.low:not(.show){transform:translate(-50%,30%)}
 
 /* Maud sees to the work (part 2, mock-up A): the slim strip at the top of the Work view with its round switch; the pin on a face the player moved by hand; the note in the job picker */
 .mzA{display:flex;align-items:center;gap:10px;margin:4px 0 10px;padding:6px 10px 6px 8px;border:1px solid var(--edge);border-left:4px solid var(--plum);border-radius:6px;background:var(--paper),var(--vellum);color:var(--ink);box-shadow:0 2px 5px rgba(0,0,0,.35)}
@@ -1636,7 +1637,7 @@ function succeed(old){
   if(!h){h=bloodHeir(old);line='kin'}
   if(!h){h=basOf(old)[0]||null;line='bas'}// no one else: a child born out of wedlock always presses the claim, and nobody is left to argue
   if(!h){lineEnds(old);return}
-  h.ruler=true;G.rulerId=h.id;G.regent=null;G.regAsk=0;musAfter('crown');
+  h.ruler=true;G.rulerId=h.id;G.regent=null;G.regAsk=0;musAfter('crown');CROWNQ=G.day+7;// cheered in on the map when the mourning week is out (05)
   if(line==='child'){const c=claimant(h,old),tp=Math.max(.25,1-.15*Math.min(4,h.tut||0));if(c&&chance((c.traits.includes('ambitious')?.8:c.bas?.5:age(h)<16?.6:.4)*tp)){if(c.bas)afN('c');queueEvent(evSuccession(h,c))}
     if((h.tut||0)>=2)allBuff('A worthy heir',4,10);else if(!h.tut&&!isChild(h))allBuff('Uncertain times',-3,10)}
   if(line==='kin'){const b=basOf(old).find(x=>age(x)>=16&&!sick(x)&&!away(x));if(b&&chance(.6)){afN('c');queueEvent(evSuccession(h,b))}}
@@ -1747,7 +1748,7 @@ function endReign(old,how,cause){
   if(G.built.statue&&how==='died'&&yrs>=5&&GOODEP.includes(ep)){G.plq=(G.plq||[]).concat(nm);G.renown+=3;annal(`A plaque for ${nm} goes up on ${G.gwn&&G.gwn.statue||"the founder's statue"}.`,'good')}
   const fate=how==='died'?(cause==='age'&&ag<55?'died, worn out,':REIGNDIE[cause]||'died'):{deposed:'was driven from the high seat',cast:'was cast aside by a rival claim'}[how]||'left the hold';
   // the card shows the heir beside the old ruler once the seat has passed (renderModal reads oid)
-  queueEvent({kind:'End of a reign',title:nm,oid:k.id,dead:how==='died',who:old?[old]:[],choices:[],res:{dl:{},text:`${k.name}, ${RANKS[G.rank][k.sex==='m'?'tm':'tf']} of House ${G.house}, ${fate} ${ag<1?'still in the cradle':'at '+ag}, and ${span}. ${EPWHY[ep]||''}${reignLines(g).map(t=>`<span class="rl">${t}</span>`).join('')}`}});
+  queueEvent({kind:'End of a reign',title:nm,oid:k.id,osx:k.sex,dead:how==='died',who:old?[old]:[],choices:[],res:{dl:{},text:`${k.name}, ${RANKS[G.rank][k.sex==='m'?'tm':'tf']} of House ${G.house}, ${fate} ${ag<1?'still in the cradle':'at '+ag}, and ${span}. ${EPWHY[ep]||''}${reignLines(g).map(t=>`<span class="rl">${t}</span>`).join('')}`}});
 }
 // the line of rulers with their epithets, oldest first
 // live: a Golden Age ending adds the ruler still in the high seat
@@ -4171,6 +4172,8 @@ function drawPerson(c,s,now){
   if(pose==='mourn')low=1.5;
   const cru=a.role==='march'||a.role==='homecome',ML=a.role==='march'?MARCH:a.role==='homecome'?MARCHIN:a.role==='mourn'?FUN:null,lead=!!(ML&&ML.ids[0]===s.id),mrn=a.role==='mourn';
   if(pose==='hoe'){low=2;lean=.14}
+  // leaning into an axe, pick or hammer blow: forward and a little down as the tool comes down
+  if(pose==='chop'||pose==='mine'||pose==='hammer'){const k=(swing(now,s.id,swP(s,pose==='hammer'?380:720),pose==='hammer'?.6:.72)[1]+1.6)/3.1;lean=.12*k;low=1.2*k}
   if(pose==='sit')low=6;
   if(pose==='drop')low=3;
   if(pose==='kneel')low=4;
@@ -4327,6 +4330,10 @@ function drawPerson(c,s,now){
     else if(!mrn){c.fillStyle='#8e2b1d';c.beginPath();c.arc(px-8*sc,py-13*sc+yb,5*sc,0,7);c.fill();c.strokeStyle='#e0b954';c.lineWidth=1.3;c.stroke()}
   }
   if(isSick(s)||hurt(s)){c.fillStyle='#d65a4c';c.beginPath();c.arc(px+9*sc,py-36*sc,3.4,0,7);c.fill()}
+  // a rioter shakes a pitchfork or a torch (a.riot, from plan)
+  if(a.riot&&pose==='argue'&&!ch){const w=Math.sin(now/90+s.id)*5,hx=px+11*sc,hy=py-26*sc+yb+w;c.strokeStyle='#5a3a20';c.lineWidth=1.7;c.beginPath();c.moveTo(hx,hy+8);c.lineTo(hx+2,hy-14);c.stroke();
+    if(a.riot==='fork'){c.strokeStyle='#8f9ca1';c.lineWidth=1.3;c.beginPath();for(const d of [-3,0,3]){c.moveTo(hx+2+d,hy-14);c.lineTo(hx+2+d,hy-21)}c.moveTo(hx-1,hy-14);c.lineTo(hx+5,hy-14);c.stroke()}
+    else{const fl=Math.sin(now/70+s.id*3)*1.2;c.fillStyle='#ff9a3a';c.beginPath();c.ellipse(hx+2,hy-18,3,5.5+fl,0,0,7);c.fill();c.fillStyle='#ffe08a';c.beginPath();c.ellipse(hx+2,hy-17,1.5,3,0,0,7);c.fill()}}
   if(pose==='light'){c.strokeStyle='#5a3a20';c.lineWidth=1.6;c.beginPath();c.moveTo(px+9*sc,py-27*sc+yb);c.lineTo(px+14,py-46);c.stroke();c.fillStyle='#ffcf5a';c.beginPath();c.arc(px+14,py-47,2,0,7);c.fill()}
   else if(a.role==='lamp'&&!ch){c.strokeStyle='#5a3a20';c.lineWidth=1.6;c.beginPath();c.moveTo(px+7*sc,py-14*sc+yb);c.lineTo(px+12,py-42+yb);c.stroke();c.fillStyle='#ffcf5a';c.beginPath();c.arc(px+12,py-43+yb,1.8,0,7);c.fill()}
   c.restore();
@@ -4484,7 +4491,7 @@ function drawMonster(c,type,now){
 }
 /* Contents of 05-life.js: Life on the map: who walks where and why, and the scenes (memory only, never saved).
    - life on the map: AN, POPB (a finished building's squash and pop: popBuild, popDraw), SCLK, weather, funerals, births, weddings, crusaders marching, animals, bells, chats, trait habits, river, night, festivals, zoom (MZ), HOUR, route (walk, wetLen, keepDry, blocks, clearOf, segIn, stepRound: round buildings, the wall and the river), boatReach, fishSpots, monX (beasts outside the wall), behind/clipBehind (folk hidden behind a building; trees and wall pieces in FRONT, 04, painted again over them)
-   - households: hhKey, households, homeOf, sceneNow, roleOf, plan, animate, drawSite, Great Works on the map (gwCrane, drawOpening, sentry, drawQuintain, drawCathLife, drawPigeon, hboat, drawHarbourLife, drawWorks), drawMap, frame
+   - households: hhKey, households, homeOf, sceneNow, riotRoles (REVB), roleOf, plan, animate, drawSite, Great Works on the map (gwCrane, drawOpening, sentry, drawQuintain, drawCathLife, drawPigeon, hboat, drawHarbourLife, drawWorks), drawMap, mapGap, frame
    - More: docs/map.md
    Names: docs/where.md. Keep this list true when a section is added or moved. */
 /* ---------- life on the map (cosmetic only, kept in memory, never saved) ----------
@@ -4553,12 +4560,13 @@ function birthScene(f,m){
 function marchOut(id){if(!MARCH||SCLK>MARCH.go)MARCH={ids:[],go:SCLK+5,end:SCLK+42};MARCH.ids.push(id)}
 // more life on the map, all cosmetic and kept in memory:
 // FIREB burning building (bucket line), SCORCH soot for a few days after, RIDER an envoy or herald at the gate,
-// RANKV a rank-up: the hold gathers before the hall, the old banner comes down and the new one goes up (at RANKV.up),
+// RANKV a rank-up: the hold gathers before the hall, the old banner comes down and the new one goes up (at RANKV.up);
+// the same for a new ruler once the week of mourning is over (CROWNQ, the day it is due, set by succeed; RANKV.cr: 'Long live ...'),
 // WEDV wedding walk to the chapel, HUNTV a hunt riding out, PRISV a prisoner led to the cellar, HCART the harvest cart,
 // TOURV the summer tourney: the hold lines the Tourney Field while two knights tilt (one may be a guard of the hold),
 // OPENV a Great Work's opening day: the hold gathers before it under bunting and the ruler cuts the ribbon (at OPENV.cut), BCART a cart crossing the bridge,
 // DOG the hold's dog, VDAY counts map days (the day/night cycle runs on its own clock, not game days).
-let FIREB=null,SCORCH=null,RIDER=null,TOURV=null,WEDV=null,RANKV=null,OPENV=null,BCART=null,bcartT=30,HUNTV=null,PRISV=null,HCART=null,DOG=null,MIST=[],FROST=[],
+let CROWNQ=0,FIREB=null,SCORCH=null,RIDER=null,TOURV=null,WEDV=null,RANKV=null,OPENV=null,BCART=null,bcartT=30,HUNTV=null,PRISV=null,HCART=null,DOG=null,MIST=[],FROST=[],
   VDAY=0,lastCLK=0,CHBELL=-1,HEALER=0,ESCORT=0,TOURON=false,hcT=8,READER=0,GUILDP=null;
 // life at the quieter buildings: market mornings, a reader at the library, two guildsmen haggling at the door, folk on the bridge
 // BRAWL two who can't stand each other spill out of the tavern door of an evening (a,b; w = two who come out to watch); BRAWLD the map day it was tried
@@ -4619,9 +4627,9 @@ function weddingScene(a,b){
   for(const o of G.settlers)if(ids.length<6&&ok(o)&&!ids.includes(o.id)&&o.job!=='guard')ids.push(o.id);
   WEDV={ids,a:a.id,b:b.id,go:SCLK+3,end:SCLK+40,ch:[ch.x,ch.y]};return true;
 }
-function rankScene(old){
+function rankScene(old,cr){
   const ok=o=>!away(o)&&!sick(o)&&age(o)>=2,r=ruler(),ids=G.settlers.filter(o=>ok(o)&&o!==r).sort((a,b)=>a.id-b.id).slice(0,14).map(o=>o.id);
-  RANKV={ids,r:r&&ok(r)?r.id:0,old,go:SCLK+2,up:SCLK+12,end:SCLK+26};
+  RANKV={ids,r:r&&ok(r)?r.id:0,old,cr,go:SCLK+2,up:SCLK+12,end:SCLK+26};
 }
 // a Great Work's opening day: f the spot before its door (person units), the ruler at the ribbon, up to 14 folk in an arc behind
 function openScene(t){
@@ -4856,6 +4864,16 @@ function trialRoles(){
   const cr=G.settlers.filter(s=>!away(s)&&!sick(s)&&s!==acc&&!s.ruler&&!gs.includes(s.id)&&age(s)>=2).sort((a,b)=>a.id-b.id).map(s=>s.id);
   return {acc:acc&&acc.id,gs,cr};
 }
+// a revolt card: the angry (the card's ringleaders, then the unhappy, up to 10) shout at the hall door with pitchforks and torches,
+// two guards brace before it and the ruler stands on the step; everyone else keeps indoors (REVB: now and then a cabbage flies)
+let REVB=1;
+function riotRoles(m){
+  const ok=s=>!away(s)&&!sick(s)&&!isChild(s)&&!s.ruler,rb=[];
+  for(const w of m.who||[]){const s=byId(w.id);if(s&&ok(s)&&!rb.includes(s.id))rb.push(s.id)}
+  for(const s of unrest())if(rb.length<10&&ok(s)&&!rb.includes(s.id))rb.push(s.id);
+  const gs=G.settlers.filter(s=>ok(s)&&s.job==='guard'&&!rb.includes(s.id)).sort((a,b)=>a.id-b.id).slice(0,2).map(s=>s.id);
+  return {rb,gs};
+}
 // moods you can see: two folk who loathe each other have a row, two friends stop to chat (PAIR)
 let PAIR=null,pairT=8,OWL=null,SHOOT=null,FLOOD=0,BOAT=null,DUCKS=null,FLOES=[],LANT=[],LAMPER=0,lantKey='',
   MAYV=null,BONV=null,CANDV=null,holLast=-1,FEST=null;
@@ -5087,7 +5105,19 @@ function walk(a,b,inn){
       let w=way(d);if(w.wet){const w2=way(d-Math.sign(d)*2*Math.PI);if(w2.wet<w.wet)w=w2}
       for(const q of w.o){pts.push(...stepRound(p,q),q);p=q}}}
   for(const q of keepDry(p,b)){pts.push(...stepRound(p,q),q);p=q}
-  return pts.concat(stepRound(p,b));
+  return keepSide(a,pts.concat(stepRound(p,b)),b,inn);
+}
+// the last small steps (round a rock, into a work spot by the wall) were never checked against the wall: near a bend in it one could
+// poke outside and the walker went through the wall (seed 2080205452, 2026-11-23). Each step that leaves its side gets a point pulled
+// back across, toward the middle of the hold (inside) or away from it (outside), and a little past the line
+function keepSide(a,ps,b,inn){
+  if(!(G.built.palisade>0))return ps;const L=[a].concat(ps,[b]),o=[];
+  for(let i=1;i<L.length;i++){const A=footOf(L[i-1]),B=footOf(L[i]),n=Math.ceil(Math.hypot(B[0]-A[0],B[1]-A[1])/6);
+    for(let j=1;j<n;j++){let x=A[0]+(B[0]-A[0])*j/n,y=A[1]+(B[1]-A[1])*j/n;if(inWallPx(x,y)===inn)continue;
+      const dx=WCX()-x,dy=WCY()-y,d=Math.hypot(dx,dy)||1,ux=(inn?1:-1)*dx/d,uy=(inn?1:-1)*dy/d;let k=0;
+      while(inWallPx(x,y)!==inn&&k++<20){x+=ux*4;y+=uy*4}if(k<20)o.push(sPt(x+ux*10,y+uy*10));break}
+    if(i<L.length-1)o.push(L[i])}
+  return o;
 }
 /* buildings folk walk round (memory only, laid out again when the hold changes): the ground each picture stands on, in map
    pixels of a person's feet. A foot inside one would draw them over the building. Fields, orchards, the lists, the bridge, the
@@ -5199,6 +5229,7 @@ function sceneNow(){
   if(m&&(m.kind==='Raid'||m.monster))return {k:'alarm',m};
   if(m&&m.kind==='Fire')return {k:'fire',m};
   if(m&&m.kind==='Justice'&&m.who&&m.who[0]&&byId(m.who[0].id)){const o={k:'trial',m};SCENE=o;o.tr=trialRoles();return o}
+  if(m&&m.kind==='Revolt'&&!m.res){const o={k:'riot',m};SCENE=o;o.tr=riotRoles(m);return o}
   if((m&&(m.kind==='Festival'||m.kind==='Courtship'))||GATHER>ANOW)return {k:'gather',m};
   return null;
 }
@@ -5207,6 +5238,7 @@ function roleOf(s){
   const ch=isChild(s),gd=!ch&&s.job==='guard';
   if(SCENE&&SCENE.k==='alarm')return gd?'alarm':'hide';
   if(SCENE&&SCENE.k==='fire')return ch?'hide':'fire';
+  if(SCENE&&SCENE.k==='riot'){const T=SCENE.tr;if(T.rb.includes(s.id))return 'riot';if(s.ruler)return 'judge';if(T.gs.includes(s.id))return 'flank';return 'hide'}
   if(SCENE&&SCENE.k==='trial'){const T=SCENE.tr;if(s.id===T.acc)return 'accused';if(s.ruler)return 'judge';if(T.gs.includes(s.id))return 'flank';return 'crowd'}
   if(PRISV&&!PRISV.done&&s.id===PRISV.g)return 'jailer';
   if(HUNTV&&HUNTV.ids.includes(s.id)&&!HUNTV.done.includes(s.id))return 'hunt';
@@ -5242,7 +5274,7 @@ function roleOf(s){
   return s.job;
 }
 function plan(s,a,r){
-  const q=a.q,id=s.id;a.n=(a.n||0)+1;a.rn=(a.rn||0)+1;a.toy=null;
+  const q=a.q,id=s.id;a.n=(a.n||0)+1;a.rn=(a.rn||0)+1;a.toy=null;a.riot=r==='riot'?(id%3?'fork':'torch'):null;
   if(r==='bed'){const b=bOf('infirmary');if(b){q.push({go:doorOf(b),tr:trOf(b),pace:.5},{hide:1,t:1e9});return}}
   if(r==='home'&&famHome(s,a))return;
   if(r==='home'&&a.prev==='tavern'&&(id+VDAY)%2===0){a.drunk=1;q.push({go:homeOf(s),pace:.55},{fin:()=>{a.drunk=0}},{hide:1,t:1e9});return}
@@ -5253,6 +5285,8 @@ function plan(s,a,r){
   if(r==='accused'){q.push({go:[HX+.2,HY+1.6],fast:1},{act:'mourn',t:1e9,faceTo:[HX+.2,HY]});return}
   if(r==='judge'){q.push({go:[HX+.2,HY+.78],fast:1},{act:'look',t:1e9,faceTo:[HX+.2,HY+2]});return}
   if(r==='flank'){const T=SCENE.tr,i=Math.max(0,T.gs.indexOf(id));q.push({go:[HX+.2+(i?.5:-.5),HY+1.62],fast:1},{act:'brace',t:1e9,faceTo:[HX+.2,HY+1.6]});return}
+  if(r==='riot'){const T=SCENE.tr,i=Math.max(0,T.rb.indexOf(id)),n=Math.max(3,T.rb.length),an=.3+i/(n-1||1)*2.54;
+    q.push({go:[HX+.2+Math.cos(an)*1.25,HY+2.05+Math.sin(an)*.45],fast:1},{act:'argue',t:1e9,faceTo:[HX+.2,HY+1.2]});return}
   if(r==='crowd'){const T=SCENE.tr,i=Math.max(0,T.cr.indexOf(id)),n=Math.max(3,T.cr.length),an=.25+i/(n-1||1)*2.64;
     q.push({go:[HX+.2+Math.cos(an)*1.35,HY+2.15+Math.sin(an)*.5]},{act:'look',t:1e9,faceTo:[HX+.2,HY+1.6]});return}
   if(r==='jailer'){const P=PRISV;q.push({go:P.st,fast:1},{act:'look',t:1,faceTo:[P.x,P.y]},{fin:()=>{P.led=1}},{go:P.dest,tr:P.tr,pace:.55},{act:'look',t:1.2},{fin:()=>{P.done=1}});return}
@@ -5411,7 +5445,13 @@ function popDraw(c,now){if(!POPB)return;if(POPB.t0==null)POPB.t0=now;const t=cla
     TERR=false;c.restore()}
   if(t>=1)POPB=null}
 function puff(x,y,col,n,sp,up){for(let i=0;i<n;i++)PARTS.push({x,y,vx:(rnd()-.5)*sp,vy:-rnd()*sp*.8-(up||0),g:120,life:.5+rnd()*.4,t:0,col,r:1.2+rnd()*1.8})}
-const swing=(now,id,per,raise)=>{const c=((now/per)+id*.37)%1;return [c,c<raise?-.3-1.3*(c/raise):-1.6+3.1*((c-raise)/(1-raise))]};
+// an axe, pick or hammer blow: [where in the cycle, tool angle]. The blade lands as the cycle ends (+1.5), rests a moment with a little
+// bounce, lifts with ease to the top (-1.6) by `raise`, then falls ever faster: chips, leaves and sound come on the landing (stepPerson)
+const swing=(now,id,per,raise)=>{const c=((now/per)+id*.37)%1,r0=.14;let a;
+  if(c<r0)a=1.5-.18*Math.sin(Math.PI*c/r0);
+  else if(c<raise){const t=(c-r0)/(raise-r0),e=t*t*(3-2*t);a=1.5-3.1*e}
+  else{const t=(c-raise)/(1-raise);a=-1.6+3.1*t*t}
+  return [c,a]};
 function stepPerson(s,a,dt){
   const r=roleOf(s);
   if(r!==a.role){a.prev=a.role;a.role=r;a.q=[];a.carry=null;a.in=0;a.rn=0;a.help=0;a.wave=0;a.pose=null;if(r!=='home')a.drunk=0}
@@ -5454,8 +5494,8 @@ function stepPerson(s,a,dt){
       if(st.forge)FORGET=ANOW;
       if(st.hop&&!st.h0){st.h0=1;a.hop=ANOW}
       if(st.act==='chop'||st.act==='mine'||st.act==='hammer'){
-        const [c]=swing(ANOW,s.id,swP(s,st.act==='hammer'?380:720),st.act==='hammer'?.6:.72),hit=st.act==='hammer'?.6:.72;
-        if(a.lc!=null&&a.lc<hit&&c>=hit){const hx=(s.x+.5)*TS+(a.face||1)*18,hy=(s.y+.5)*TS+12-(st.act==='hammer'?14:8);
+        const [c]=swing(ANOW,s.id,swP(s,st.act==='hammer'?380:720),st.act==='hammer'?.6:.72);
+        if(a.lc!=null&&c<a.lc){/* the blow lands as the cycle comes round */const hx=(s.x+.5)*TS+(a.face||1)*18,hy=(s.y+.5)*TS+12-(st.act==='hammer'?14:8);
           if(st.act==='chop')puff(hx,hy,'#c9a06a',4,90);else if(st.act==='mine'){puff(hx,hy,'#b9c4c7',3,80);puff(hx,hy,'#ffd27a',2,110)}else if(st.forge){puff(hx,hy+6,'#ffb347',4,110,20);puff(hx,hy+6,'#fff0a0',2,140,30)}else puff(hx,hy+10,'#d9c7a0',3,50,10);workHit(s,a,st.act,hx,hy)}
         a.lc=c;
       }
@@ -5485,8 +5525,13 @@ function animate(dt,now){
   if(G.modal&&G.modal.kind==='Hunt'&&/boar/.test(G.modal.title||'')&&(!HUNTV||HUNTV.m!==G.modal)){HUNTV=null;huntScene((G.modal.who||[]).map(w=>byId(w.id)));if(HUNTV)HUNTV.m=G.modal}
   if(HUNTV&&(SCLK>HUNTV.end||HUNTV.done.length>=HUNTV.ids.length))HUNTV=null;
   if(RANKV&&SCLK>=RANKV.up&&!RANKV.fan){RANKV.fan=1;auPlay('fanfare');musEvent('crown');const f=FLAGS[0];if(f)for(const c of ['#e0b954','#fff4d0',houseCol()])puff(f[0]+8,f[1]-6,c,10,110,40);
-    for(const o of G.settlers)if(o.id===RANKV.r||RANKV.ids.includes(o.id))think(o,o.id===RANKV.r?'crown':'joy',rnd()*1.5,0,'A proud day')}
+    for(const o of G.settlers)if(o.id===RANKV.r||RANKV.ids.includes(o.id))think(o,o.id===RANKV.r?'crown':'joy',rnd()*1.5,0,RANKV.cr?(o.id===RANKV.r?'The banner flies for a new reign':'Long live '+RANKV.cr):'A proud day')}
   if(RANKV&&SCLK>RANKV.end){GATHER=ANOW+10000;RANKV=null}
+  // a new ruler is cheered in once the mourning week is out (only if the map is seen within ten days of it; never over a card)
+  // a revolt: now and then a cabbage (or a turnip) flies at the hall door
+  if(REVB&&SCENE&&SCENE.k==='riot'&&rnd()<dt*.45){const ids=SCENE.tr.rb,s=byId(ids[Math.floor(rnd()*ids.length)]),an=s&&AN.get(s.id);
+    if(an&&!an.in&&an.pose==='argue'){const x=(s.x+.5)*TS,y=(s.y+.5)*TS-14,tx=(HX+.7)*TS+(rnd()-.5)*20,ty=(HY+.9)*TS,t=.9;PARTS.push({x,y,vx:(tx-x)/t,vy:(ty-y)/t-80*t,g:160,life:t,t:0,col:rnd()<.7?'#7fae4a':'#c9b8d8',r:3.2})}}
+  if(CROWNQ&&G.day>=CROWNQ){const r=ruler();if(!r||G.day>CROWNQ+10||G.over)CROWNQ=0;else if(!RANKV&&!G.modal&&!SCENE&&!FUN){CROWNQ=0;rankScene(G.rank||0,r.name)}}
   if(OPENV&&SCLK>=OPENV.cut&&!OPENV.fan){OPENV.fan=1;auPlay('fanfare');musEvent('crown');const [x,y]=ribbonAt(OPENV);for(const c of ['#e0b954','#fff4d0',houseCol()])puff(x,y,c,10,110,40);
     for(const o of G.settlers)if(o.id===OPENV.r||OPENV.ids.includes(o.id))think(o,'joy',rnd()*1.5,0,'Opening day')}
   if(OPENV&&SCLK>OPENV.end){GATHER=ANOW+10000;OPENV=null}
@@ -5976,11 +6021,16 @@ function drawMap(now){
   if(!VIGN){VIGN=document.createElement('canvas');VIGN.width=W;VIGN.height=H;const v=VIGN.getContext('2d'),vg=v.createRadialGradient(W/2,H/2,H*.38,W/2,H/2,W*.62);vg.addColorStop(0,'rgba(20,10,0,0)');vg.addColorStop(1,'rgba(20,10,0,.42)');v.fillStyle=vg;v.fillRect(0,0,W,H)}
   ctx.setTransform(bs,0,0,bs,0,0);ctx.drawImage(VIGN,0,0);
 }
+// how often the map is drawn (ms between frames): about 20 a second under an open card (dimmed and mostly hidden; saves a phone's battery,
+// and the card unrolls smoothly), but full speed while a raid or the like plays before its card (#modal.pre) and under the wraith;
+// about 30 a second in a hold of over 50 folk, where drawing everyone every frame made a phone stutter (animation hunt, 2026-11-23)
+function mapGap(){if(G.modal&&!G.modal.monster){const m=$('#modal');if(m&&!m.hidden&&!m.classList.contains('pre'))return 45}
+  return G.settlers.length>50?30:10}
 function frame(now){
   const dt=Math.min(.1,((now-lastF)/1000)||0);lastF=now;
   if(G&&!G.over&&speed>0&&!G.modal&&$('#start').hidden)CLK=(CLK+dt*SPM[speed]/60)%1;
   lightState();updateTod();
-  if(G&&mapOn()&&$('#start').hidden&&now-lastD>=10){lastD=now;drawMap(now)}
+  if(G&&mapOn()&&$('#start').hidden&&now-lastD>=mapGap()){lastD=now;drawMap(now)}
   requestAnimationFrame(frame);
 }
 
@@ -6438,11 +6488,12 @@ function work(si){
     if(G.proj.done>=G.proj.need)finishBuild();
   }else mendOld();
   // skills come quickly at first and slowly near the top; working beside a master (3+ better, same job) teaches faster.
-  // Each gain is told in the season report; only reaching master (9) gets its own line.
+  // Each gain is told in the season report and with a star over the worker's head; only reaching master (9) gets its own line.
   {const lib=G.built.library?1.5+up('library',.25,.25):1,top={},ok=s=>!isChild(s)&&!sick(s)&&!away(s)&&JOBSKILL[s.job];
     for(const s of G.settlers)if(ok(s)){const k=JOBSKILL[s.job];top[s.job]=Math.max(top[s.job]||0,s.skills[k])}
     for(const s of G.settlers){if(!ok(s))continue;const k=JOBSKILL[s.job],v=s.skills[k];
-      if(v<10&&chance(.012*lib*(1.5-.1*v)*(top[s.job]>=v+3?1.5:1))){s.skills[k]++;if(G.ssn)(G.ssn.sk||(G.ssn.sk=[])).push([s.name,k]);
+      if(v<10&&chance(.012*lib*(1.5-.1*v)*(top[s.job]>=v+3?1.5:1))){s.skills[k]++;if(G.ssn)(G.ssn.sk||(G.ssn.sk=[])).push([s.name,k]);think(s,'star',0,1,`${k==='farm'?foodL(s,2):SKL[k]} up to ${v+1}`);// a gold star over the worker on the map (unless a bubble is up)
+        
         if(v+1===9){life(s,`Becomes a master of ${k==='farm'?foodL(s,2).toLowerCase():SKN[k]}. ${pick(['Others come to watch.','Has opinions about it now, and shares every one.',s.ruler?'The hold pretends not to notice the ruler in the mud.':'Now has an eye on the feathered cap.','Takes it very seriously indeed.'])}`)}}}}
   for(const s of G.settlers){if(!isChild(s)&&!sick(s)&&!away(s)&&s.job!=='rest')addXp(s,1)}
   G.gold+=taxHead()+taxMul()*((.5+.5*lv('tavern'))*G.built.tavern+G.built.hall+(1.5+up('market',1,1.5))*(G.built.market||0)+(G.built.keep||0)+(2+up('guildhall',1,0))*(G.built.guildhall||0)+2*(G.built.bridge||0)+2*(G.built.palace||0)+2*(G.built.harbour||0)+.5*relicN());
@@ -13336,7 +13387,7 @@ function whoNote(s){
 // only while the map is really on screen and drawing (frames this last half second), never in tests or bots
 const PREMS=3600;let preT=0;
 function preOk(ev){
-  if(!(ev.kind==='Raid'||ev.kind==='Pretender'||ev.monster&&ev.monster!=='wraith'))return false;
+  if(!(ev.kind==='Raid'||ev.kind==='Pretender'||ev.kind==='Revolt'||ev.monster&&ev.monster!=='wraith'))return false;// a revolt: the angry crowd gathers at the hall door first
   try{return mapOn()&&!document.hidden&&typeof performance!=='undefined'&&lastF>0&&performance.now()-lastF<500&&$('#start').hidden}catch(e){return false}
 }
 // your own war: before a battle's card, the battle itself (1C): their painted hold, both shields, a swaying battle bar, three beats in turn; a tap skips.
@@ -13359,7 +13410,7 @@ function renderModal(){
   w.classList.remove('bsw');
   if(!ev.shown&&!ev.res&&ev.pre==null)ev.pre=preOk(ev)?performance.now()+PREMS:0;
   if(ev.pre&&!ev.res){const left=ev.pre-performance.now();
-    if(left>0&&mapOn()){if(!w.classList.contains('pre')){w.classList.add('pre');w.innerHTML='<div class="preskip" data-act="preskip"></div>';const ms={Raid:'horn',Beast:'howl',Monster:'roar',Dragon:'roar',Pretender:'horn'}[ev.kind];if(ms)auPlay(ms)}clearTimeout(preT);preT=setTimeout(renderModal,left+30);return}
+    if(left>0&&mapOn()){if(!w.classList.contains('pre')){w.classList.add('pre');w.innerHTML='<div class="preskip" data-act="preskip"></div>';const ms={Revolt:'horn',Raid:'horn',Beast:'howl',Monster:'roar',Dragon:'roar',Pretender:'horn'}[ev.kind];if(ms)auPlay(ms)}clearTimeout(preT);preT=setTimeout(renderModal,left+30);return}
     ev.pre=0;ev.pred=1}
   clearTimeout(preT);w.classList.remove('pre');
   const fresh=!ev.shown;ev.shown=true;
@@ -13371,7 +13422,7 @@ function renderModal(){
   const who=ev.pic&&ev.kind==='A new rank'?[]:(ev.heir?(ev.who||[]).concat(ev.heir):ev.who||[]).slice(0,3);
   let h=`<div class="scroll"><div class="roller"></div><div class="unroll${fresh?' fresh':''}"><div class="sheet parch${ev.war?' war':''}">${ev.pic?`<div class="bookb ihead evpic"><div class="hpic">${holdPic(ev.pic)}</div>${VNS}</div>`:''}<div class="shead"><div><div class="kind">${ev.kind}</div><h2>${ev.title}</h2></div>${ev.seal?'<div class="wseal">'+ev.seal+'</div>':`<div class="waxseal">${ic(KINDIC[ev.kind]||'renown',24)}</div>`}</div>`;
   if(who.length)h+=`<div class="whorow">${fresh&&!ev.res&&ev.kind==='Courtship'?loveHearts(ev.tempt):''}${who.map((s,wi)=>`<figure${G.settlers.includes(s)&&!(ev.dead&&s===ev.who[0])?` class="tapme mr${s.mood>=75?' hi':s.mood<25&&!isChild(s)?' low':''}" style="--mc:${moodCol(s.mood)}" data-act="whonote" data-id="${s.id}" role="button" tabindex="0"`:''}>${ev.dead&&s===ev.who[0]?portrait(s,66,1).replace('class="pt"','class="pt dead"')+SKULL:portrait(s,66)}<figcaption>${s.name}${ev.roles&&ev.roles[wi]?`<small class="role">${ev.roles[wi]}</small>`:''}</figcaption></figure>`).join('')}</div><div class="whonote" hidden></div>`;
-  if(ev.res)h+=`<p class="out">${ev.res.text}${ev.heir?`<span class="rl"><b>${ev.heir.name} takes the high seat${age(ev.heir)<16?(age(ev.heir)<1?', still in the cradle':' at '+age(ev.heir)):''}.</b></span>`:''}</p>${resChips(ev.res.dl)}${ev.kind==='End of a reign'?rpReignNote(ev):''}<button class="choice go" data-act="cont"><b>${ev.heir?'Continue as '+ev.heir.name:'Continue'}</b></button>${ev.oid!=null?'<button class="cgo ftcard" data-act="tree">See the family tree ›</button>':''}`;
+  if(ev.res)h+=`<p class="out">${ev.res.text}${ev.heir&&ev.dead?`<span class="rl"><b>The old ${RANKS[G.rank][ev.osx==="f"?"tf":"tm"]} is dead. Long live the ${titleOf(ev.heir)}!</b></span>`:""}${ev.heir?`<span class="rl"><b>${ev.heir.name} takes the high seat${age(ev.heir)<16?(age(ev.heir)<1?', still in the cradle':' at '+age(ev.heir)):''}.</b></span>`:''}</p>${resChips(ev.res.dl)}${ev.kind==='End of a reign'?rpReignNote(ev):''}<button class="choice go" data-act="cont"><b>${ev.heir?'Continue as '+ev.heir.name:'Continue'}</b></button>${ev.oid!=null?'<button class="cgo ftcard" data-act="tree">See the family tree ›</button>':''}`;
   else{h+=`<p class="ev-text">${ev.text}</p>${ev.post||''}`;ev.choices.forEach((c,i)=>{h+=`<button class="choice" data-act="choice" data-i="${i}" ${c.dis?'disabled':''}><b>${c.t}</b><span>${c.dis&&c.why?c.why:(c.d||'')+rpFsChoice(ev,c)}</span></button>`})}
   w.innerHTML=h+'</div><div class="morecue" aria-hidden="true">More below &#9662;</div></div><div class="roller"></div></div>';renderTip();moreCue(fresh);
 }
@@ -13677,7 +13728,7 @@ function begin(fresh){
   TUTF={};HO={law:null,rv:-1,les:0};if(fresh){G.tut=G.diff===2?-1:0;G.gd=G.tut>=0?1:0}else if(G.tut>=0)G.tut=-1;
   if(BI){BI=null;$('#binfo').hidden=true}
   mzReset();AN=new Map();PARTS=[];FELL.clear();FALL=null;FELLAT=-99;CROWS=[];SPAR=0;HAY.clear();CART=null;RAID=MONV=null;BIRDS=[];GATHER=0;FUN=BIRTHV=MARCH=MARCHIN=null;SNOWV=-1;RAIN=[];SPLASH=[];
-  POPB=FIREB=SCORCH=RIDER=TOURV=WEDV=RANKV=OPENV=BCART=HUNTV=PRISV=HCART=DOG=null;PAIR=OWL=SHOOT=BOAT=DUCKS=MAYV=BONV=CANDV=BRAWL=null;FLOES=[];FLOOD=0;holLast=-1;lantKey='';FISHK='';BRK='';
+  CROWNQ=0;POPB=FIREB=SCORCH=RIDER=TOURV=WEDV=RANKV=OPENV=BCART=HUNTV=PRISV=HCART=DOG=null;PAIR=OWL=SHOOT=BOAT=DUCKS=MAYV=BONV=CANDV=BRAWL=null;FLOES=[];FLOOD=0;holLast=-1;lantKey='';FISHK='';BRK='';
   PREVRES={};PREVRANK=null;CHTOP=null;
   resetNamer();$('#start').hidden=true;$('#over').hidden=true;
   menuSpeed=0;setView('hold');renderModal();setSpeed(1);
