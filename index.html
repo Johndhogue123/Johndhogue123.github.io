@@ -1084,6 +1084,21 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 
 /* the House board's tiles: every picture a little window on its page's scene (hpWinS, his pick A 2026-11-25) */
 .hpwin{display:block;width:100%;aspect-ratio:2.37;border-radius:5px;overflow:hidden;border:2px solid #6a4a22;box-shadow:0 2px 5px rgba(60,40,10,.3);background:#cfe3ea;box-sizing:border-box}.hpwin svg{display:block;width:100%;height:100%}
+
+/* the card in a short wide box, such as itch.io's 940x620 before Full screen (his pick C, 2026-11-25: choices were out of sight below the story):
+   the card takes the whole height over the top bar, the story on the left and the choices (.chs) in their own column on the right. On a phone .chs is no box at all */
+#modal .chs{display:contents}
+@media (orientation:landscape) and (min-width:760px) and (max-height:760px){
+  #modal{padding-top:8px}
+  body:has(#modal:not([hidden])) #top{z-index:1}
+  #modal .sheet{max-height:calc(100vh - 56px);max-height:calc(100dvh - 56px)}
+  #modal .scroll:has(.chs){width:min(880px,96vw);max-width:none}
+  #modal .sheet:has(.chs){grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);grid-template-rows:repeat(8,max-content) 1fr;column-gap:22px;row-gap:0;align-content:start;padding:16px 22px}
+  #modal .sheet:has(.chs)>:not(.chs){grid-column:1;margin-bottom:10px}
+  #modal .sheet:has(.chs) .whorow{zoom:.8}
+  #modal .chs{display:grid;grid-column:2;grid-row:1/-1;gap:9px;align-content:start}
+  #modal .chs .choice{padding-top:7px;padding-bottom:7px;min-height:0}
+}
 </style>
 
 <div id="app">
@@ -10835,7 +10850,7 @@ function famShowdown(){const p=ig().plot,r=ruler(),F=plotFolk(),l=F[0],L=p&&famL
   return {who:F.slice(0,3),roles:F.slice(0,3).map((s,j)=>j?'with them':'for '+nm),kind:'Intrigue',title:`${Nm} gather`,stale:()=>!ig().plot||ruler()!==r,
     text:`It is the night. ${l.name}'s barn is full of ${nm}${hs.some(s=>s.fm!==L.id)?' and their friends':''}, and every lamp in it is lit. Your guards are at the door, waiting to hear what you want done. So, by the sound of it, are ${nm}.`,
     choices:[{t:'Seize them all',d:`Into the cellar for a while. ${Nm} will not forgive it soon.${p.sec?' The secret may come out in the shouting.':''}`,fn(){return plotSeize(F,p)}},
-      {t:`Buy off ${nm}`,d:`${cost} gold. The plot ends, and they think a little better of you for paying.`,dis:G.gold<cost,why:'Not enough gold',fn(){const t=plotBuy(l,hs,cost);famNote(L.id,'buy','You paid them to go home',10);return t}}].concat(famSecLive(L)?[
+      {t:`Buy off ${nm}`,d:`${cost} gold. The plot ends, and they think a little better of you for paying.`,get dis(){return G.gold<cost},why:'Not enough gold',fn(){const t=plotBuy(l,hs,cost);famNote(L.id,'buy','You paid them to go home',10);return t}}].concat(famSecLive(L)?[
       {t:'Remind them what you know',d:'Free. The plot ends. The secret is spent, and secrets leak.',fn(){plotEnd();const x=famSecUse(L);return `You send ${l.name} a note with one line on it, about what your spymaster found. The lamps go out one by one, and ${nm} remember urgent business at home.${x}`}}]:[]).concat([
       {t:'Let them come',d:`Catch them in the act: more renown. About ${Math.round(cp*100)}% it ends badly.${dif().exile>=1?' Losing the seat ends your house.':dif().exile?' Losing the seat may end your house.':''}`,fn(){return plotNight(l,F,cp,p.inf,'in the barn')||'The barn doors open, and they come.'}}])}}
 // the hired knife: the sourest strong line with a head at home (no luck of our own: the knife is the card's)
@@ -12126,7 +12141,7 @@ function evPost(){
   for(const c of cart){g.food=(g.food||0)+c.fd;g.wood=(g.wood||0)+c.wd;g.gold=(g.gold||0)+c.g}
   const pl=farm.find(x=>x.t==='plea'),pk=pl&&Object.keys(pl.c)[0],pa=pl&&pl.c[pk],pland=pl&&lf(pl.lid);
   const letter=x=>{if(x.t==='war')return `<span class="vlet"><span class="vfrom">${chrPic(x.k,30,x.mood)}<span><b>${x.n}</b>, chronicler of House ${x.h}${x.ex?', in exile':''}</span></span>"${x.txt}"<span class="vmar">${maudPic(26,x.mm)}<i>${x.mar}</i></span></span>`;
-    const l=lf(x.lid);return `<span class="vlet"><span class="vfrom">${portrait(landFace(l),30)}<span><b>${l.hn}</b>, of ${l.nm}</span></span>"${x.txt}"</span>`};
+    const l=lf(x.lid);return `<span class="vlet"><span class="vfrom">${portrait(landFace(l),30)}<span><b>${l.hn}</b>, ${l.nm===`${l.hn}'s farmstead`?`from ${l.f&&l.f.sex==='f'?'her':'his'} farmstead`:`of ${l.nm}`}</span></span>"${x.txt}"</span>`};// a place still under its writer's own name: "from his farmstead", not the name twice (hunt 17)
   const cartT=cart.map(c=>`<span class="pcart">A cart rolls in from House ${c.h}, your share of the spoils: ${c.fd} food, ${c.wd} wood and ${c.g} gold, and a dented helmet nobody claims.</span>`).join('');
   const one=it.length===1&&farm.length===1;
   const title=one?`A letter from ${lf(farm[0].lid).nm}`:war.length&&!farm.length&&!cart.length&&war.every(x=>x.ex)?(war.length>1?'Letters from exile':'A letter from exile'):war.length&&!farm.length&&!cart.length&&war.every(x=>x.nw)?'News from the old ashes':war.length&&!farm.length&&war.every(x=>!x.ex&&!x.nw)?(cart.length?'Spoils and letters from the war':'Letters from the war'):'The post';// exiles (rv.ex) and newcomers (vNew in 07) write too
@@ -12804,7 +12819,7 @@ function evRing(){const r=ruler(),p=ig().plot,F=plotFolk(),l=F[0];if(!r||!p||!l|
   return {who:F.slice(0,3),roles:F.slice(0,3).map((s,j)=>j?'helper':'ringleader'),kind:'Intrigue',title:`Whispers about ${l.name}`,stale:()=>!ig().plot||ruler()!==r,
     text:`${sm?`${sm.name} has names. `:''}${names}, and they stop talking when the bucket comes up.${p.inf?' Your informer says they mean to move before the next season is out.':''}${p.sec?' Worse: one of them knows something about you that you would rather they did not.':''}`,
     choices:[{t:'Seize them all',d:`Into the cellar for a while. Their kin will not forgive it soon.${p.sec?' The secret may come out in the shouting.':''}`,fn(){return plotSeize(F,p)}},
-      {t:`Buy off ${l.name}`,d:`${cost} gold. The others lose heart.`,dis:G.gold<cost,why:'Not enough gold',fn(){return plotBuy(l,hs,cost)}},
+      {t:`Buy off ${l.name}`,d:`${cost} gold. The others lose heart.`,get dis(){return G.gold<cost},why:'Not enough gold',fn(){return plotBuy(l,hs,cost)}},
       {t:'Let it ripen',d:`Catch them in the act next season: more renown. About ${Math.round(cp*100)}% chance it ends badly.${dif().exile>=1?' Losing the seat ends your house.':dif().exile?' Losing the seat may end your house.':''}`,fn(){p.rip=G.day;p.since=G.day;return 'You say nothing, and watch. So, you notice, does everyone else.'}},
       {t:'Plant an informer',d:sm?`${sm.name} slips one of yours in. You learn their plan, and the odds turn your way.`:sm0?`${sm0.name} is your spymaster, and one of them. Awkward.`:'Needs a spymaster.',dis:!sm||!!p.inf,why:p.inf?'One is there already':sm0?'Your spymaster is in it':'No spymaster',fn(){p.inf=1;p.since=G.day;return `${sm.name} finds a cousin of a friend who is very keen to join. By next season you will know everything, including who brings the cake.`}}]}}
 // the ways a plot ends, shared by the ring card, the night a ripened plot comes, and a family's showdown (famShowdown in 09-family.js)
@@ -13679,7 +13694,7 @@ const hpArt=(t,w,h)=>{const big=t==='hall'||t==='keep'||t==='palace',u=bPic(t,bi
 const hpSeat=()=>G.built.palace?'palace':G.built.keep?'keep':'hall';
 // every tile a little window on its page's scene (his pick A of three mock-ups, 2026-11-25; "tidy it up so there's consistency"): hpWinT(k) crops the page's
 // header scene (hpScene) round its focal point (HPFOC: x, y, size), hpWinS(svg) shows a whole picture (a neighbour's hold, your own, a farmstead) the same way
-const HPFOC={crown:[180,62,110],laws:[180,66,110],council:[180,88,120],heir:[130,100,110],crus:[150,82,120],cellar:[268,84,100],hall:[180,88,120],legacy:[180,92,110],set:[180,82,120]};
+const HPFOC={land0:[190,112,120],crown:[180,62,110],laws:[180,66,110],council:[180,88,120],heir:[130,100,110],crus:[150,82,120],cellar:[268,84,100],hall:[180,88,120],legacy:[180,92,110],set:[180,82,120]};
 const hpWinS=svg=>`<span class="hpwin">${svg.replace('width="100%"','width="100%" height="100%" preserveAspectRatio="xMidYMid slice"')}</span>`;
 const hpWinT=k=>{const [x,y,z]=HPFOC[k];return hpWinS(hpScene(k).replace(/viewBox="[^"]*"/,`viewBox="${x-z*.9} ${y-z*.38} ${z*1.8} ${z*.76}"`))};
 const hpCn=()=>Object.keys(COUNCIL).map(councillor).filter(Boolean);
@@ -13715,9 +13730,9 @@ const HPT=[
     st:()=>{const K=Object.keys(SPL),d=K.filter(k=>splWhy(k)==='Done').length;return [d<K.length?`${d} of ${K.length} done`:'All splendid',d<K.length?'':'good']},
     title:'The Lord’s Hall',pic2:()=>hpScene('hall'),maud:['smile','Peacocks. We are spending gold on peacocks. I have said nothing, in writing.'],body:()=>houseNote('hall')+lordsHallHTML()},
   {k:'lands',sec:'Court',n:'Your lands',on:()=>hpLands().length>0||!!G.crew||G.day>=DPY&&!ACTS.settle.need()||rivals().some(r=>r.held),later:'your lands, once a family goes out to settle',
-    pic:()=>{const l=hpLandNow();return l?hpWinS(landPic(l,1)):hpArt('hut')},
+    pic:()=>{const l=hpLandNow();return l?hpWinS(landPic(l,1)):hpWinT('land0')},
     st:()=>{const n=hpLands().length;return G.crew?['Crew out','good']:hpLands().some(l=>l.hold&&!l.free&&(l.loy==null?70:l.loy)<25)?['Restless','bad']:[n?`${n} place${n>1?'s':''}`:'Found one','']},
-    title:'Your lands',pic2:()=>{const l=hpLandNow();return l?landPic(l,1):''},maud:['smile','They write mostly about the goat. I file the letters under Goat.'],body:()=>landsHTML()},
+    title:'Your lands',pic2:()=>{const l=hpLandNow();return l?landPic(l,1):hpScene('land0')},maud:['smile','They write mostly about the goat. I file the letters under Goat.'],body:()=>landsHTML()},
   {k:'blood',sec:'Story',n:'Bloodline',on:()=>1,pic:()=>hpWinS(holdPic(holdSnap())),st:()=>['Family tree',''],
     title:'Bloodline',pic2:()=>holdPic(holdSnap()),maud:['smile','Every name on the tree, spelled right, which is more than the family manages.'],body:()=>bloodHTML()},
   {k:'legacy',sec:'Story',n:'Legacy & Annals',on:()=>1,pic:()=>hpWinT('legacy'),st:()=>[fmt(legacy()),''],
@@ -13833,7 +13848,7 @@ function renderModal(){
   let h=`<div class="scroll"><div class="roller"></div><div class="unroll${fresh?' fresh':''}"><div class="sheet parch${ev.war?' war':''}">${ev.pic?`<div class="bookb ihead evpic"><div class="hpic">${holdPic(ev.pic)}</div>${VNS}</div>`:''}<div class="shead"><div><div class="kind">${ev.kind}</div><h2>${ev.title}</h2></div>${ev.seal?'<div class="wseal">'+ev.seal+'</div>':`<div class="waxseal">${ic(KINDIC[ev.kind]||'renown',24)}</div>`}</div>`;
   if(who.length)h+=`<div class="whorow">${fresh&&!ev.res&&ev.kind==='Courtship'?loveHearts(ev.tempt):''}${who.map((s,wi)=>`<figure${G.settlers.includes(s)&&!(ev.dead&&s===ev.who[0])?` class="tapme mr${s.mood>=75?' hi':s.mood<25&&!isChild(s)?' low':''}" style="--mc:${moodCol(s.mood)}" data-act="whonote" data-id="${s.id}" role="button" tabindex="0"`:''}>${ev.dead&&s===ev.who[0]?portrait(s,66,1).replace('class="pt"','class="pt dead"')+SKULL:portrait(s,66)}<figcaption>${s.name}${ev.roles&&ev.roles[wi]?`<small class="role">${ev.roles[wi]}</small>`:''}</figcaption></figure>`).join('')}</div><div class="whonote" hidden></div>`;
   if(ev.res)h+=`<p class="out">${ev.res.text}${ev.heir&&ev.dead?`<span class="rl"><b>The old ${RANKS[G.rank][ev.osx==="f"?"tf":"tm"]} is dead. Long live the ${titleOf(ev.heir)}!</b></span>`:""}${ev.heir?`<span class="rl"><b>${ev.heir.name} takes the high seat${age(ev.heir)<16?(age(ev.heir)<1?', still in the cradle':' at '+age(ev.heir)):''}.</b></span>`:''}</p>${resChips(ev.res.dl)}${ev.kind==='End of a reign'?rpReignNote(ev):''}<button class="choice go" data-act="cont"><b>${ev.heir?'Continue as '+ev.heir.name:'Continue'}</b></button>${ev.oid!=null?'<button class="cgo ftcard" data-act="tree">See the family tree ›</button>':''}`;
-  else{h+=`<p class="ev-text">${ev.text}</p>${ev.post||''}`;ev.choices.forEach((c,i)=>{h+=`<button class="choice" data-act="choice" data-i="${i}" ${c.dis?'disabled':''}><b>${c.t}</b><span>${c.dis&&c.why?c.why:(c.d||'')+rpFsChoice(ev,c)}</span></button>`})}
+  else{h+=`<p class="ev-text">${ev.text}</p>${ev.post||''}<div class="chs">`;ev.choices.forEach((c,i)=>{h+=`<button class="choice" data-act="choice" data-i="${i}" ${c.dis?'disabled':''}><b>${c.t}</b><span>${c.dis&&c.why?c.why:(c.d||'')+rpFsChoice(ev,c)}</span></button>`});h+='</div>'}// .chs: the choices together (no box on a phone; their own column in a short wide box, his pick C 2026-11-25)
   w.innerHTML=h+'</div><div class="morecue" aria-hidden="true">More below &#9662;</div></div><div class="roller"></div></div>';renderTip();moreCue(fresh);
 }
 // love cards: a few faint hearts drift up behind the faces when the card first opens; the temptation's are blush-pink, one of them cracked
@@ -14661,7 +14676,13 @@ const HPSC={
   // crusades: the knight on the road out, the host's tents on the far hill
   // crusades: the knight at the gallop on the road out (hpKnight), the host marching off behind him to the camp on the far hill, at sunset
   crus:{bg:'march',draw:g=>hpTent(300,86,1,'#b3261e')+hpTent(324,90,.8,'#f2ecdc')+hpTent(342,88,.9,'#b3261e')+hpHost()+`<g transform="translate(118 144) scale(1.15)">${hpKnight()}</g>`+hpFolk(330,148,'#8a5a2a',1,3,1.2)+hpFolk(346,150,'#5f7f3a',1,1,1.2)},
-  // the cellar: the dungeon inside (hpDungeon)
+  // your lands before the first farmstead (hunt 17, 2026-11-25: the tile was a bare cottage icon among framed windows): open land past the far woods,
+  // a plot staked out with string, a signpost "Land to be had", a cart with a family's bundles waiting by it
+  land0:{bg:'hills',draw:g=>hpTree(40,104,1.1)+hpTree(70,100,.9)+hpTree(330,102,1)
+    +`<path d="M196 130 L266 120 L304 134 L232 145Z" fill="${g[1]}" opacity=".35"/><path d="M196 130 L266 120 L304 134 L232 145Z" fill="none" stroke="#efe6cf" stroke-width=".8" stroke-dasharray="3 2"/>`+[[196,130],[266,120],[304,134],[232,145]].map(([x,y])=>`<path d="M${x} ${y+1} V${y-6}" stroke="#6a4525" stroke-width="2.2" stroke-linecap="round"/>`).join('')
+    +`<g stroke="#4a3020" stroke-width=".6"><path d="M164 142 V100" stroke="#6a4525" stroke-width="3.2"/><path d="M140 98 H184 L192 105 L184 112 H140Z" fill="#c9a26a"/><text x="162" y="108" font-size="7.5" font-family="serif" font-style="italic" text-anchor="middle" fill="#4a3020" stroke="none">Land to be had</text></g>`
+    +`<g transform="translate(104 140)"><path d="M-18 -14 H18 L16 -4 H-16Z" fill="#8a5a2a" stroke="#4a3020" stroke-width=".6"/><path d="M18 -10 L34 -6" stroke="#6a4525" stroke-width="2"/><ellipse cx="-6" cy="-18" rx="8" ry="5" fill="#d8c49a" stroke="#8a7a5a" stroke-width=".6"/><ellipse cx="7" cy="-17" rx="6" ry="4" fill="#b8a06a" stroke="#8a7a5a" stroke-width=".6"/><circle cx="-8" cy="-3" r="5" fill="none" stroke="#4a3020" stroke-width="1.6"/><circle cx="9" cy="-3" r="5" fill="none" stroke="#4a3020" stroke-width="1.6"/></g>`
+    +hpFolk(222,136,null,0,3,1.2)+hpFolk(236,138,null,1,4,1.2)},
   cellar:{inside:1,draw:()=>hpDungeon()},
   // settings: a scribe's corner (hpSet): the book of your saves, a lute for the sound, a candle, a window
   set:{inside:1,draw:()=>hpSet()},
@@ -14757,13 +14778,15 @@ const hpKnight=()=>`<g stroke="#4a3020" stroke-width=".55" stroke-linejoin="roun
   // the caparison: white cloth from neck to tail with a scalloped red hem and red crosses, the chanfron on the head
   +`<path d="M-36 -48 Q0 -62 30 -56 L36 -26 Q30 -21 24 -26 Q18 -21 12 -26 Q6 -21 0 -26 Q-6 -21 -12 -26 Q-18 -21 -24 -26 Q-30 -21 -36 -26 L-40 -38Z" fill="#f4efe2"/><path d="M36 -26 Q30 -21 24 -26 Q18 -21 12 -26 Q6 -21 0 -26 Q-6 -21 -12 -26 Q-18 -21 -24 -26 Q-30 -21 -36 -26" fill="none" stroke="#b3261e" stroke-width="2.5"/>`
   +`<g stroke="none" fill="rgba(90,70,50,.13)"><path d="M-32 -47 Q-34 -36 -33 -26 L-27 -26 Q-29 -38 -28 -49Z M-8 -55 Q-10 -40 -8 -26 L-2 -26 Q-4 -42 -3 -56Z M12 -57 Q14 -42 13 -26 L19 -26 Q20 -42 17 -57Z"/><path d="M-38 -32 Q0 -36 36 -32 L36 -26 Q0 -22 -36 -26Z"/></g><path d="M-22 -48 V-32 M-29 -40 H-15 M18 -50 V-34 M11 -42 H25" stroke="#b3261e" stroke-width="3.2"/>`
-  +`<path d="M22 -54 L33 -72 L42 -76 L38 -58Z" fill="#f4efe2"/><path d="M31 -70 V-60 M27 -65 H36" stroke="#b3261e" stroke-width="2.2"/>`
-  +`<path d="M44 -81 L60 -68 Q61 -63 56 -61 L47 -64Z" fill="#a8b0b8"/><path d="M46 -79 L58 -68" stroke="#e8eef2" stroke-width=".8" fill="none"/><path d="M48 -74 L50 -80 L52 -73" fill="#b3261e"/><circle cx="50" cy="-70" r="1.2" fill="#2a1d14" stroke="none"/><path d="M40 -76 Q36 -66 34 -58" stroke="#c8a83a" stroke-width="1.2" fill="none"/>`
+  // the neck cover (tidied 2026-11-25, his ask "can you tidy up that piece"): follows the neck from mane to throat, a red hem behind the head, the cross centred
+  +`<path d="M19 -55 Q24 -69 34 -78 L41 -82 Q44 -73 45 -64 Q40 -60 36 -49 Q28 -50 19 -55Z" fill="#f4efe2"/><path d="M41 -82 Q44 -73 45 -64" stroke="#b3261e" stroke-width="2.2" fill="none"/><path d="M34 -72 V-58 M29 -66 H39" stroke="#b3261e" stroke-width="2.4"/><path d="M20 -56 Q26 -72 38 -82 L42 -84" stroke="#4a3220" stroke-width="3" fill="none" stroke-linecap="round"/>`
+  +`<path d="M44 -81 L60 -68 Q61 -63 56 -61 L47 -64Z" fill="#a8b0b8"/><path d="M46 -79 L58 -68" stroke="#e8eef2" stroke-width=".8" fill="none"/><path d="M48 -74 L50 -80 L52 -73" fill="#b3261e"/><circle cx="50" cy="-70" r="1.2" fill="#2a1d14" stroke="none"/><path d="M54 -63 Q34 -66 9 -82" stroke="#c8a83a" stroke-width="1.2" fill="none"/>`
   // the knight: surcoat, mailed arm, great helm with a plume
   +`<path d="M-8 -54 L8 -54 L6 -86 L-6 -86Z" fill="#f4efe2"/><path d="M0 -82 V-60 M-6 -72 H6" stroke="#b3261e" stroke-width="3"/><path d="M-2 -54 L6 -32 L12 -34 L6 -54" fill="#9aa0a6"/><path d="M-8 -86 H8 V-98 Q0 -104 -8 -98Z" fill="#a8b0b8"/><path d="M-8 -92 H8" stroke="#2a1d14" stroke-width="1.6"/><path d="M-6 -97 Q-3 -101 3 -101" stroke="#eef3f6" stroke-width="1" fill="none"/><path d="M4 -86 V-98 Q6 -99 8 -98 V-86Z" fill="rgba(0,0,0,.15)" stroke="none"/><path d="M0 -92 V-86" stroke="#2a1d14"/><path d="M-6 -101 Q-16 -112 -22 -100 Q-12 -104 -6 -98Z" fill="#b3261e"/>`
   // the lance couched under the arm, pennon forked with the red cross
-  +`<path d="M-20 -70 L96 -84" stroke="#7a5632" stroke-width="3" stroke-linecap="round"/><path d="M96 -84 L104 -85 L96 -82Z" fill="#a8b0b8"/><path d="M78 -82 L96 -84 L92 -76 L96 -70 L80 -74Z" fill="#f4efe2"/><path d="M85 -81 V-73 M81 -77 H90" stroke="#b3261e" stroke-width="1.8"/>`
-  +`<rect x="2" y="-74" width="7" height="5" fill="#9aa0a6"/>`
+  // (raised 2026-11-25 so it rides clear above the horse's ears, not through its head)
+  +`<path d="M-20 -78 L96 -104" stroke="#7a5632" stroke-width="3" stroke-linecap="round"/><path d="M96 -104 L104 -106 L96 -102Z" fill="#a8b0b8"/><path d="M78 -100 L96 -104 L92 -96 L96 -90 L80 -92Z" fill="#f4efe2"/><path d="M85 -99 V-91 M81 -95 H90" stroke="#b3261e" stroke-width="1.8"/>`
+  +`<rect x="2" y="-84" width="7" height="5" fill="#9aa0a6"/>`
   // the kite shield on the near arm
   +`<path d="M-14 -80 H4 V-68 Q4 -56 -5 -50 Q-14 -56 -14 -68Z" fill="#f4efe2" stroke-width="1"/><path d="M-5 -78 V-54 M-12 -70 H2" stroke="#b3261e" stroke-width="3"/></g>`;
 // the host marching down the road behind: small spearmen two by two, a red-cross banner
@@ -14779,11 +14802,12 @@ function hpDungeon(){const n=Math.min(3,prisoners().length);
     +hpTorch(140,52)+``
     +hpFloor(108,'#5a524a','#463e38')+`<ellipse cx="208" cy="130" rx="16" ry="3" fill="#6a7a86" opacity=".6"/>`
     // the cell: a dark recess behind iron bars, straw, its folk
-    +`<rect x="216" y="40" width="128" height="74" fill="#2a2420"/><path d="M222 114 Q250 104 280 114Z" fill="#b8a05a"/>`
-    +(n?[244,276,308].slice(0,n).map((x,i)=>hpFolk(x,112,['#7a7266','#6a6258','#8a8070'][i],0,i+2,1.3,prisoners()[i]||null)).join(''):hpRat(262,112)+hpRat(300,113,-1))
-    +`<g stroke="#2a2a2a" stroke-width="3">${[...Array(12)].map((_,i)=>`<path d="M${220+i*11} 38 V116"/>`).join('')}<path d="M216 52 H344 M216 100 H344" stroke-width="3.5"/></g><rect x="214" y="36" width="132" height="5" fill="#3a3a3a"/><rect x="288" y="70" width="8" height="10" fill="#8a7a3a" stroke="#2a2a2a"/>`
+    // (2026-11-25: the prisoners drawn big, standing against the back wall in the gaps between fewer, thinner bars, the middle one gripping them)
+    +`<rect x="216" y="40" width="128" height="74" fill="#2e2824"/><ellipse cx="280" cy="84" rx="60" ry="32" fill="url(#hptg)" opacity=".4"/><path d="M218 114 Q232 106 246 114Z M314 114 Q328 105 342 114Z" fill="#b8a05a"/>`
+    +(n?[[248,0],[280,1],[312,0]].slice(0,n).map(([x,up],i)=>hpFolk(x,111,['#7a7266','#6a6258','#8a8070'][i],up,i+2,2.2,prisoners()[i]||null)).join(''):hpRat(262,112)+hpRat(300,113,-1))
+    +`<g stroke="#2a2a2a" stroke-width="2.6">${[...Array(8)].map((_,i)=>`<path d="M${224+i*16} 38 V116"/>`).join('')}<path d="M216 52 H344 M216 104 H344" stroke-width="3"/></g><rect x="214" y="36" width="132" height="5" fill="#3a3a3a"/><rect x="332" y="72" width="8" height="10" fill="#8a7a3a" stroke="#2a2a2a"/>`
     // the jailer asleep on his stool, keys on his belt, a bowl of gruel; z's
-    +`<g transform="translate(110 142)"><rect x="-10" y="-12" width="20" height="4" fill="#7a5632"/><path d="M-8 -8 V0 M8 -8 V0" stroke="#5a3a20" stroke-width="2.5"/></g>`+hpFolk(110,130,'#5a4a3a',0,5,1.4,councillor('marshal')||hpCast(5))
+    +`<g transform="translate(110 142)"><rect x="-10" y="-12" width="20" height="4" fill="#7a5632"/><path d="M-8 -8 V0 M8 -8 V0" stroke="#5a3a20" stroke-width="2.5"/></g>`+hpFolk(110,131,'#5a4a3a',0,5,1.9,councillor('marshal')||hpCast(5))
     +`<circle cx="122" cy="124" r="4" fill="none" stroke="#d9b24a" stroke-width="1.5"/><path d="M122 128 l2 5 M120 128 l-1 5" stroke="#d9b24a" stroke-width="1.2"/><ellipse cx="80" cy="142" rx="8" ry="3" fill="#8a6a42"/><ellipse cx="80" cy="140" rx="6" ry="1.8" fill="#c8b890"/>`
     +`<g fill="#e8e0d0" font-family="serif" font-style="italic"><text x="124" y="102" font-size="9">z</text><text x="131" y="94" font-size="11">z</text><text x="140" y="84" font-size="13">Z</text></g>`
     +hpRat(176,146);
