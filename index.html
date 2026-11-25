@@ -1060,9 +1060,6 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 .ht.good{box-shadow:inset 0 0 12px rgba(120,80,30,.4),0 0 7px 1px rgba(240,200,90,.75)}
 .ht .hpn{position:absolute;top:4px;right:5px;min-width:18px;background:var(--rubric);color:#fff;border-radius:9px;font-size:11.5px;line-height:18px;padding:0 5px;font-weight:700}
 .ht .ndot{position:absolute;top:5px;right:6px;margin:0;width:10px;height:10px}
-.hpf{display:flex}.hpf>*+*{margin-left:-12px}
-.hpc{width:52px;height:52px;border-radius:50%;overflow:hidden;display:block;border:2px solid var(--edge);box-shadow:inset 0 0 0 1px #e0b954}.hpc svg{width:100%;height:100%;display:block}
-.hpl{display:block;width:84px}.hpl svg{width:100%;height:auto;display:block;border-radius:3px;border:1px solid var(--edge)}
 .ht .medal.hpm{width:44px;height:44px}
 /* a House page in the tab: the page template, with a Back bar above it instead of a Close button */
 .hpback{display:inline-flex;align-items:center;gap:4px;margin:2px 2px 8px;padding:6px 12px;min-height:36px;border-radius:5px;font-family:var(--f-display);font-size:15px;letter-spacing:.03em;color:#f3e2b4;background:linear-gradient(180deg,#2b4a8a,#23386a);border:1px solid #e0b954}
@@ -1084,6 +1081,9 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 .crewc{display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:center}
 .crewc .crt{display:flex;justify-content:space-between;gap:6px;font-family:var(--f-display);font-size:16px}
 .crewc .crt b{font-weight:400}
+
+/* the House board's tiles: every picture a little window on its page's scene (hpWinS, his pick A 2026-11-25) */
+.hpwin{display:block;width:100%;aspect-ratio:2.37;border-radius:5px;overflow:hidden;border:2px solid #6a4a22;box-shadow:0 2px 5px rgba(60,40,10,.3);background:#cfe3ea;box-sizing:border-box}.hpwin svg{display:block;width:100%;height:100%}
 </style>
 
 <div id="app">
@@ -12846,11 +12846,11 @@ function spyHTML(){const sm=smOf(),r=ruler(),A=rivals().map((rv,i)=>[rv,i,agOf(i
 /* Contents of 10-screen.js: What is on screen: icons, portraits, the tabs, cards, input and the guide.
    - icons & portraits: ICONS, ic, gBody, pNeck (necklaces), pScarf, pScar (scars and eyepatches), portrait
    - rendering: renderTop (with the ruler medallion, medal), alerts, the Hold tab (jobTiles, alertsHTML, projCard, renderHold), the Folk tab (People: folkTile, wallSec, peopleHTML; Work: maudStrip (Maud sees to the work, the switch and her line), groupHead, fixStrip, wpPanel (Where they work, from Barony), workHTML; folkCard, jobPick, renderFolk), renderBuild, renderHouse, renderModal (your own war: the battle scene before its card, BSMS, bsOk, battleHTML; ev.seal, ev.post, ev.war; love cards: loveHearts), refresh, setView, begin, showStart
-   - the House tab (his pick B, 2026-11-25): a picture board, HPT (one entry per tile and its page), hpTile, hpPageHTML (the page in the tab, UI.hp; act hpo), rulerCard, cellarHTML, bloodHTML, legacyHTML, setHTML, crusPic (the Crusades tile), hpArt, hpNoteK, lawsW, renderHouse
+   - the House tab (his pick B, 2026-11-25): a picture board, HPT (one entry per tile and its page), hpTile, hpPageHTML (the page in the tab, UI.hp; act hpo), rulerCard, cellarHTML, bloodHTML, legacyHTML, setHTML, hpArt, hpNoteK, lawsW, renderHouse
    - the hold from the front: the neighbours' pictures (HPROW, hpCot in the house style, the land: hpCrag, hpWood, hpRiver; hpWorks; life: hpWar, hpSnow; nbLook, nbLookAt, nbLookG and nbSty for newcomers (rv.gen), nbFolk, nbSnap; a burned seat hpAsh), holdPic (dusk with p.dk, style p.st, land p.ld, life p.lf, war p.war), holdSnap; nbPageHTML with Declare war (pwPageHTML); nbCrop (the round picture on a neighbour row) and a neighbour's page (ATTL, NBHX, NBCI, openNb, nbSide their side of it, nbPageHTML; the bond on it: loyBar, nbBondHTML; a burned seat's page ashPageHTML; Declare independence on your overlord's page)
    - the share card (after legacy): shareSVG, shareBlob, openShare (the picture with the hold code, for itch.io comments)
    - the start screen: the title page (renderStartPic, stCardHTML, stIconsHTML, stWarnHTML: a browser that will not keep the hold, the houses that were: pastAdd, stPastHTML), the sigil maker, the founder page, startPage, renderDiffs, showStart
-   - the House tab pages' header pictures (hpFolk, HPC, hpFlag, hpTorch, hpWin, hpFloor, HPREL, hpRelic, hpLook, hpCast, hpChand, hpRug, hpCouncil, hpThrone, hpCourt, hpKnight, hpHost, hpRat, hpDungeon, HPDEF, hpTree, hpBarrel, hpTent, hpImg, HPBG, HPSC, hpScene), after landPic
+   - the House tab pages' header pictures (hpFolk, HPC, hpFlag, hpTorch, hpWin, hpFloor, HPREL, hpRelic, hpLook, hpCast, HPFOC, hpWinS, hpWinT, hpSet, hpChand, hpRug, hpCouncil, hpThrone, hpCourt, hpKnight, hpHost, hpRat, hpDungeon, HPDEF, hpTree, hpBarrel, hpTent, hpImg, HPBG, HPSC, hpScene), after landPic
    - colonies part 1: the drawn place and the Send a crew page (CLS, CLMAP, clArt, clWall, CLPOS, clLane, clImg, clPlot, clCrew, clTufts, PALP, LANDBK, landPic, CRW, crewFix, crewSwap, crewPageHTML; acts crewpg, crewsw, crewgo; BI.crew)
    - Families of the Hold (Notable families part B): FAMALL, FAMCOL, famPic, famHomePic (FHPIC), famCol, FAMPW, FAMFL, famChip, famLine, famRowHTML, FAMMAUD2, famListHTML, famTree, famPageHTML, FAMPG, famDemHTML, famRaiseHTML (part D: a waiting demand, Raise them up), famCardLine (the person card's "of the Brannocks")
    - input; map zoom gestures; tap a building: bldAt, openBinfo, sheets
@@ -13675,20 +13675,13 @@ function greatState(t){const b=BUILD[t];if(G.built[t])return gwCap(t)+(G.gwn&&G.
    (the job-tile look), a count badge, a gold dot while its lesson waits. A tile opens its page in the tab itself (UI.hp, memory only:
    the board again whenever you come to the tab; a jump, goFix, sets it), drawn on the page template with a Back bar, holding the
    cards the tab used to show. Parts not open yet wait in one Later line. Rules: docs/screens.md The House tab. */
-const HPPIC={};
-// a crusader for the Crusades tile: the map's knight in a white surcoat with the red cross, on this season's ground (cached)
-// bare: no ground patch (hpScene)
-function crusPic(w,h,bare){const si=seasonIdx(),k=si+'|'+w+'|'+h+(bare?'|b':'');if(HPPIC[k])return HPPIC[k];let u='';
-  try{const cv=document.createElement('canvas');cv.width=w*2;cv.height=h*2;const c=cv.getContext('2d');c.scale(2,2);
-    const g=c.createRadialGradient(w/2,h*.72,4,w/2,h*.72,w*.5);g.addColorStop(0,PAL.light[si]);g.addColorStop(.55,PAL.base[si]);g.addColorStop(1,'rgba(0,0,0,0)');if(!bare){c.fillStyle=g;c.fillRect(0,0,w,h)}
-    const s=h/52*1.5;c.translate(w/2,h-6);c.scale(s,s);drawKnight(c,0,0,1,0,0,'#f2ecdc');
-    c.fillStyle='#b3261e';c.fillRect(-.7,-21.2,1.4,6.2);c.fillRect(-2.2,-19.4,4.4,1.4);
-    u=cv.toDataURL?cv.toDataURL():''}catch(e){u=''}
-  return HPPIC[k]=u}
 const hpArt=(t,w,h)=>{const big=t==='hall'||t==='keep'||t==='palace',u=bPic(t,big?null:0,w||64,h||52,big?.42:0);return u?`<img src="${u}" alt="" width="${w||64}" height="${h||52}">`:ic(t,30)};
 const hpSeat=()=>G.built.palace?'palace':G.built.keep?'keep':'hall';
-const hpCrop=svg=>`<span class="hpc">${svg.replace('viewBox="0 0 300 120"','viewBox="98 22 104 104" preserveAspectRatio="xMidYMid slice"')}</span>`;
-const hpFaces=L=>`<span class="hpf">${L.slice(0,3).map(s=>portrait(s,30)).join('')}</span>`;
+// every tile a little window on its page's scene (his pick A of three mock-ups, 2026-11-25; "tidy it up so there's consistency"): hpWinT(k) crops the page's
+// header scene (hpScene) round its focal point (HPFOC: x, y, size), hpWinS(svg) shows a whole picture (a neighbour's hold, your own, a farmstead) the same way
+const HPFOC={crown:[180,62,110],laws:[180,66,110],council:[180,88,120],heir:[130,100,110],crus:[150,82,120],cellar:[268,84,100],hall:[180,88,120],legacy:[180,92,110],set:[180,82,120]};
+const hpWinS=svg=>`<span class="hpwin">${svg.replace('width="100%"','width="100%" height="100%" preserveAspectRatio="xMidYMid slice"')}</span>`;
+const hpWinT=k=>{const [x,y,z]=HPFOC[k];return hpWinS(hpScene(k).replace(/viewBox="[^"]*"/,`viewBox="${x-z*.9} ${y-z*.38} ${z*1.8} ${z*.76}"`))};
 const hpCn=()=>Object.keys(COUNCIL).map(councillor).filter(Boolean);
 const hpLands=()=>lands().filter(landOn);
 const hpLandNow=()=>{const L=hpLands();return G.crew&&L.find(l=>l.id===G.crew.lid)||L[L.length-1]};
@@ -13697,39 +13690,39 @@ const hpNb=()=>{const R=rivals();if(!R.length)return -1;const w=R.findIndex(r=>r
 const lawsW=()=>{const o=Object.keys(LAWS).filter(k=>law(k)!==1).map(k=>(LAWS[k].o[law(k)].l||LAWS[k].n+': '+LAWS[k].o[law(k)].n.toLowerCase()));const s=o.slice(0,2).join(', ').toLowerCase();return o.length?s[0].toUpperCase()+s.slice(1):'All fair, as of old'};
 // k, sec, n (tile), on (shown now), later (the Later line while it is not), pic, st ([word, '', 'bad' or 'good', count]), note (lesson id), page {title, kind, pic, maud, body}
 const HPT=[
-  {k:'crown',sec:'Rule',n:'Crown & repute',on:()=>1,pic:()=>hpArt('tower'),
+  {k:'crown',sec:'Rule',n:'Crown & repute',on:()=>1,pic:()=>hpWinT('crown'),
     st:()=>{const L=crownLevel(crownThreats());return [CROWNL[L.i][0],L.i>=2?'bad':L.i===0?'good':'']},
     title:'Crown and repute',pic2:()=>hpScene('crown'),maud:['sigh','A crown sits easier on a head the hold likes. I have written that down for the next one too.'],body:()=>rpHTML()+crownHTML()},
-  {k:'laws',sec:'Rule',n:'Laws',on:()=>1,note:'laws',pic:()=>hpArt('library'),st:()=>[lawsW(),''],
+  {k:'laws',sec:'Rule',n:'Laws',on:()=>1,note:'laws',pic:()=>hpWinT('laws'),st:()=>[lawsW(),''],
     title:'Laws of the hold',pic2:()=>hpScene('laws'),maud:['smile','Five laws, and every one of them argued over at supper. I keep the minutes. Nobody reads them.'],body:()=>houseNote('laws')+lawsHTML()},
-  {k:'council',sec:'Rule',n:'Council',on:()=>hpCn().length>0,later:'a council, once four grown-ups besides the ruler live here',note:'council',pic:()=>hpFaces(hpCn()),
+  {k:'council',sec:'Rule',n:'Council',on:()=>hpCn().length>0,later:'a council, once four grown-ups besides the ruler live here',note:'council',pic:()=>hpWinT('council'),
     st:()=>{const n=hpCn().length,cross=hpCn().filter(s=>getOp(s,ruler())<=-20).length;return [cross?`${cross} cross with you`:`${n} seat${n>1?'s':''} filled`,cross?'bad':'']},
     title:'The council',pic2:()=>hpScene('council'),maud:['smile','Four advisers and one table. The spymaster sits with his back to the wall, which tells you everything.'],body:()=>houseNote('council')+councilHTML()+spyHTML()},
-  {k:'heir',sec:'Rule',n:'Heir & matches',on:()=>1,note:'heir',pic:()=>{const h=heirOf(ruler())||bloodHeir(ruler());return h?portrait(h,46):hpArt('hut')},
+  {k:'heir',sec:'Rule',n:'Heir & matches',on:()=>1,note:'heir',pic:()=>hpWinT('heir'),
     st:()=>{const r=ruler(),h=heirOf(r)||bloodHeir(r);return h?[`${firstName(h)}, ${age(h)<1?'a babe':age(h)}`,'']:['No heir','bad']},
     title:'Heir and matches',pic2:()=>hpScene('heir'),maud:['smile','An heir, a spare and a sensible match. Two out of three is usual.'],body:()=>houseNote('heir')+heirHTML()+matchHTML()},
-  {k:'crus',sec:'Rule',n:'Crusades',on:()=>G.rank>=2||!!G.crus||!!G.crusN,later:'calls to crusade, once you are a Barony',pic:()=>{const u=crusPic(64,52);return u?`<img src="${u}" alt="" width="64" height="52">`:ic('cross',30)},
+  {k:'crus',sec:'Rule',n:'Crusades',on:()=>G.rank>=2||!!G.crus||!!G.crusN,later:'calls to crusade, once you are a Barony',pic:()=>hpWinT('crus'),
     st:()=>G.crus?['The host is away','good']:[G.day>=(G.crusCd||0)?'A call may come':'All quiet',''],
     title:'Crusades',pic2:()=>hpScene('crus'),maud:['sigh','They march off singing and come back limping, with a relic and a tan. Every time.'],
     body:()=>crusadeHTML()||'<div class="sub">No call to crusade has come yet. It will, once the King remembers you.</div>'},
-  {k:'cellar',sec:'Rule',n:'The Cellar',on:()=>prisoners().length>0,pic:()=>hpArt('dungeon'),st:()=>{const n=prisoners().length;return [`${n} to judge`,'bad',n]},
+  {k:'cellar',sec:'Rule',n:'The Cellar',on:()=>prisoners().length>0,pic:()=>hpWinT('cellar'),st:()=>{const n=prisoners().length;return [`${n} to judge`,'bad',n]},
     title:'The Cellar',pic2:()=>hpScene('cellar'),maud:['sigh','They eat half rations and complain at full volume.'],body:()=>cellarHTML()},
-  {k:'nb',sec:'Court',n:'Neighbours',on:()=>rivals().length>0,note:'rivals',pic:()=>{const i=hpNb();return i>=0?hpCrop(holdPic(Object.assign(nbSnap(i),{lf:0}))):hpArt('palisade')},
+  {k:'nb',sec:'Court',n:'Neighbours',on:()=>rivals().length>0,note:'rivals',pic:()=>{const i=hpNb();return i>=0?hpWinS(holdPic(Object.assign(nbSnap(i),{lf:0}))):hpArt('palisade')},
     st:()=>{const R=rivals(),w=R.filter(r=>r.war||r.pend).length,h=R.filter(r=>r.att<=-50).length;return w?['At war','bad']:h?[`${h} hostile`,'bad']:[R.some(r=>r.att>=50)?'Friends nearby':'At peace','']},
     title:'Neighbours',pic2:()=>{const i=hpNb();return i>=0?holdPic(Object.assign(nbSnap(i),{lf:0})):''},maud:['smile','Three houses, three opinions of us, and all of them wrong in different ways.'],
     body:()=>{G.rk=1;return houseNote('rivals')+rivalsHTML()}},
-  {k:'hall',sec:'Court',n:'Lord’s Hall',on:()=>!!G.built.hall,later:'the Lord’s Hall, once you build a great hall',note:'hall',pic:()=>hpArt(hpSeat(),84,56),
+  {k:'hall',sec:'Court',n:'Lord’s Hall',on:()=>!!G.built.hall,later:'the Lord’s Hall, once you build a great hall',note:'hall',pic:()=>hpWinT('hall'),
     st:()=>{const K=Object.keys(SPL),d=K.filter(k=>splWhy(k)==='Done').length;return [d<K.length?`${d} of ${K.length} done`:'All splendid',d<K.length?'':'good']},
     title:'The Lord’s Hall',pic2:()=>hpScene('hall'),maud:['smile','Peacocks. We are spending gold on peacocks. I have said nothing, in writing.'],body:()=>houseNote('hall')+lordsHallHTML()},
   {k:'lands',sec:'Court',n:'Your lands',on:()=>hpLands().length>0||!!G.crew||G.day>=DPY&&!ACTS.settle.need()||rivals().some(r=>r.held),later:'your lands, once a family goes out to settle',
-    pic:()=>{const l=hpLandNow();return l?`<span class="hpl">${landPic(l,1)}</span>`:hpArt('hut')},
+    pic:()=>{const l=hpLandNow();return l?hpWinS(landPic(l,1)):hpArt('hut')},
     st:()=>{const n=hpLands().length;return G.crew?['Crew out','good']:hpLands().some(l=>l.hold&&!l.free&&(l.loy==null?70:l.loy)<25)?['Restless','bad']:[n?`${n} place${n>1?'s':''}`:'Found one','']},
     title:'Your lands',pic2:()=>{const l=hpLandNow();return l?landPic(l,1):''},maud:['smile','They write mostly about the goat. I file the letters under Goat.'],body:()=>landsHTML()},
-  {k:'blood',sec:'Story',n:'Bloodline',on:()=>1,pic:()=>{const r=ruler(),sp=byId(r.spouse);return hpFaces([r,sp].filter(Boolean))},st:()=>['Family tree',''],
+  {k:'blood',sec:'Story',n:'Bloodline',on:()=>1,pic:()=>hpWinS(holdPic(holdSnap())),st:()=>['Family tree',''],
     title:'Bloodline',pic2:()=>holdPic(holdSnap()),maud:['smile','Every name on the tree, spelled right, which is more than the family manages.'],body:()=>bloodHTML()},
-  {k:'legacy',sec:'Story',n:'Legacy & Annals',on:()=>1,pic:()=>hpArt('statue'),st:()=>[fmt(legacy()),''],
+  {k:'legacy',sec:'Story',n:'Legacy & Annals',on:()=>1,pic:()=>hpWinT('legacy'),st:()=>[fmt(legacy()),''],
     title:'Legacy and Annals',pic2:()=>hpScene('legacy'),maud:['smile','The great moments of the house. I have left out the one with the goose.'],body:()=>legacyHTML()},
-  {k:'set',sec:'Story',n:'Settings',on:()=>1,pic:()=>`<span class="medal hpm">${ic('gear',24)}</span>`,st:()=>['Sound, saves',''],title:'Settings',body:()=>setHTML()}];
+  {k:'set',sec:'Story',n:'Settings',on:()=>1,pic:()=>hpWinT('set'),st:()=>['Sound, saves',''],title:'Settings',pic2:()=>hpScene('set'),body:()=>setHTML()}];
 const hpOf=k=>HPT.find(p=>p.k===k);
 // the waiting House lesson's tile (its id is the tile's note)
 const hpNoteK=()=>{const n=noteOn();const p=n&&HPT.find(x=>x.note===n.id&&x.on());return p?p.k:null};
@@ -14670,6 +14663,8 @@ const HPSC={
   crus:{bg:'march',draw:g=>hpTent(300,86,1,'#b3261e')+hpTent(324,90,.8,'#f2ecdc')+hpTent(342,88,.9,'#b3261e')+hpHost()+`<g transform="translate(118 144) scale(1.15)">${hpKnight()}</g>`+hpFolk(330,148,'#8a5a2a',1,3,1.2)+hpFolk(346,150,'#5f7f3a',1,1,1.2)},
   // the cellar: the dungeon inside (hpDungeon)
   cellar:{inside:1,draw:()=>hpDungeon()},
+  // settings: a scribe's corner (hpSet): the book of your saves, a lute for the sound, a candle, a window
+  set:{inside:1,draw:()=>hpSet()},
   // the Lord's Hall: the seat on its rise, the house's banners, cottages around it
   hall:{bg:'hills',draw:(g,hc)=>[44,320].map(x=>hpImg('hut',x,104,36,0,1.4)).join('')+hpImg('hut',84,114,40,0,1.4)+hpImg('hut',278,114,40,0,1.4)+`<path d="M150 152 Q170 140 180 134" stroke="${g[3]}" stroke-width="14" fill="none" stroke-linecap="round"/>`+hpImg(hpSeat(),180,138,112,.42,2.6)+hpFlag(98,140,40,hc)+hpFlag(250,140,40,hc)+hpFolk(156,146,'#2b4a8a',0,1,1.2)+hpFolk(206,148,'#8a5a2a',0,4,1.2)+hpFolk(222,144,'#5f7f3a',1,2,1.1)},
   // legacy: the statue on a paved square, flower beds, trees, and folk come to look
@@ -14796,6 +14791,14 @@ function hpDungeon(){const n=Math.min(3,prisoners().length);
 // the finish (his note 2026-11-25: "clean them up so they're not cheap looking"): gradients for torchlight (hptg), window light (hpsh), moonlight (hpmn),
 // a vignette, and outdoors a sun glow, haze on the far hills and a darker foreground; drawn last over the scene, or under it where noted
 const HPDEF=`<radialGradient id="hptg"><stop offset="0" stop-color="#ffd27a" stop-opacity=".5"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient><linearGradient id="hpsh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6d8" stop-opacity=".32"/><stop offset="1" stop-color="#fff6d8" stop-opacity="0"/></linearGradient><linearGradient id="hpmn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe0f0" stop-opacity=".3"/><stop offset="1" stop-color="#cfe0f0" stop-opacity="0"/></linearGradient><radialGradient id="hpvi" cx=".5" cy=".45" r=".72"><stop offset=".5" stop-color="#1a120a" stop-opacity="0"/><stop offset="1" stop-color="#1a120a" stop-opacity=".6"/></radialGradient><radialGradient id="hpvo" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#2a1a0a" stop-opacity="0"/><stop offset="1" stop-color="#2a1a0a" stop-opacity=".28"/></radialGradient><linearGradient id="hphz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".6" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><linearGradient id="hpfg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2a10" stop-opacity="0"/><stop offset="1" stop-color="#1a2a10" stop-opacity=".22"/></linearGradient><radialGradient id="hpsg"><stop offset="0" stop-color="#fff4c0" stop-opacity=".7"/><stop offset="1" stop-color="#fff4c0" stop-opacity="0"/></radialGradient>`;
+// the settings scene: plaster and timber, a window, a shelf of books, the desk with the great book open (your saves), quill and inkpot, a candle, a lute against it
+function hpSet(){return `<rect width="360" height="150" fill="#e6d6b4"/>`+[0,90,270,360].map(x=>`<path d="M${x} 0 V104" stroke="#4a2f1a" stroke-width="5"/>`).join('')+`<path d="M0 10 H360 M0 102 H360" stroke="#4a2f1a" stroke-width="5"/>`
+  +hpWin(30,24,30,56)+hpWin(300,24,30,56)+`<rect x="112" y="22" width="136" height="6" fill="#6a4525"/>`+[...Array(14)].map((_,i)=>`<rect x="${116+i*9}" y="${8+i%3*2}" width="7" height="${14-i%3*2}" fill="${['#8e2b1d','#2b4a8a','#5f7f3a','#9a7a2a','#6a3a6a'][i%5]}" stroke="#3b2614" stroke-width=".5"/>`).join('')
+  +hpFloor(102,'#9a8a70','#7e6e56')+hpTorch(96,64)+hpTorch(264,64)
+  +`<path d="M108 92 H252 L262 116 H98Z" fill="#7a4a24" stroke="#3b2614"/><path d="M98 116 H262 V122 H98Z" fill="#5a3418"/><path d="M106 122 V146 M254 122 V146" stroke="#5a3418" stroke-width="5"/>`
+  +`<path d="M140 98 Q160 92 180 98 Q200 92 220 98 L224 112 Q202 106 180 112 Q158 106 136 112Z" fill="#f3e6c4" stroke="#8a6a3a" stroke-width=".8"/><path d="M180 98 V112" stroke="#8a6a3a" stroke-width=".8"/><path d="M146 102 h26 M146 105 h22 M146 108 h24 M186 102 h26 M186 105 h20 M186 108 h24" stroke="#8a6a3a" stroke-width=".6"/><rect x="176" y="112" width="8" height="10" fill="#b3261e"/>`
+  +`<rect x="228" y="96" width="8" height="8" fill="#2a1d14"/><path d="M232 96 L244 74" stroke="#f2ecdc" stroke-width="2"/><rect x="118" y="88" width="6" height="12" fill="#f4efe2"/><path d="M121 80 Q124 84 121 88 Q118 84 121 80Z" fill="#fbd06a"/><circle cx="121" cy="84" r="20" fill="url(#hptg)"/>`
+  +`<g transform="translate(286 146) rotate(-18)"><ellipse cx="0" cy="-14" rx="13" ry="16" fill="#b8863e" stroke="#5a3a20"/><circle cx="0" cy="-12" r="4" fill="#3b2614"/><rect x="-2.5" y="-62" width="5" height="34" fill="#7a5632" stroke="#3b2614" stroke-width=".6"/><rect x="-4" y="-70" width="8" height="9" fill="#6a4525"/><path d="M-1 -62 V-6 M1 -62 V-6" stroke="#f2ecdc" stroke-width=".4"/></g>`}
 function hpScene(k){const o=HPSC[k];if(o.inside)return `<svg viewBox="0 0 360 150" width="100%" role="img" aria-hidden="true"><defs>${HPDEF}</defs>${o.draw(null,houseCol())}<rect y="98" width="360" height="14" fill="url(#hpfg)" opacity=".8"/><rect width="360" height="150" fill="url(#hpvi)"/></svg>`;const B=HPBG[o.bg],si=seasonIdx(),g=[PAL.base[si],PAL.dark[si],PAL.light[si],PAL.path[si]],hc=houseCol(),sky=si===3&&o.bg!=='dusk'?['#c8d2da','#efe3c2']:B.sky;
   return `<svg viewBox="0 0 360 150" width="100%" role="img" aria-hidden="true"><defs><linearGradient id="hpsk${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient>${HPDEF}</defs>`
     +`<rect width="360" height="150" fill="url(#hpsk${k})"/>`+(o.bg==='dusk'||o.bg==='march'?'':`<circle cx="326" cy="22" r="11" fill="#f4d66a"/><g fill="#fbf6ea" opacity=".85"><ellipse cx="62" cy="24" rx="22" ry="6"/><ellipse cx="78" cy="20" rx="14" ry="6"/><ellipse cx="214" cy="30" rx="18" ry="4.5"/></g>`)
