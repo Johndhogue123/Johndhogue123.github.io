@@ -355,6 +355,7 @@ canvas#map{display:block;width:100%;height:auto;aspect-ratio:15/11;max-width:100
 .ft li{display:flex;flex-direction:column;align-items:center;position:relative;padding:0 2px}
 .ft li.fgrid{padding-top:12px}
 .ft ul.fg{display:grid;padding:0 0 0 12px;gap:16px 0;justify-items:center;align-items:start}
+.ft li.fgrid.stk>ul.fg{padding:10px 6px;margin-top:0;background:rgba(150,110,50,.13);border:1.5px solid rgba(150,110,50,.35);border-radius:14px}
 .ftv{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
 .ftv path{fill:none;stroke-linecap:round}
 .ftv .vn{stroke:#b08a3a;stroke-width:2.5}
@@ -576,6 +577,7 @@ body:has(#modal:not([hidden])) #top .seg,body:has(#binfo:not([hidden])) #top .se
 .achpop:not(.show){visibility:hidden;transition:transform .35s ease,opacity .3s,visibility 0s .35s}
 /* event-card faces can be tapped for a short who's-who note */
 .whorow figure.tapme{cursor:pointer}.whorow figure.tapme figcaption{text-decoration:underline dotted rgba(90,60,30,.5);text-underline-offset:3px}
+.whonote .whotap{cursor:pointer;text-decoration:underline dotted rgba(90,60,30,.5);text-underline-offset:3px}
 .whonote{font-size:15px;line-height:1.3;color:var(--ink2);background:rgba(120,80,30,.08);border-left:3px solid var(--edge);border-radius:3px;padding:7px 10px;text-align:left}
 /* the Valley Roll card (evValley): the list, the chroniclers' letters with Maud's margin, her closing word */
 .vroll{display:block;clear:both;margin:8px 0 4px;border-top:1px solid var(--edge)}
@@ -939,6 +941,12 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 .nql .x{flex:none;width:40px;height:40px;border:0;background:none;font-size:20px;color:var(--ink);cursor:pointer}
 /* a farmstead's panel on the House tab (landPanel): what you can do for it */
 .lpanel{margin-top:-2px;padding:8px 10px;display:grid;gap:8px}.lpanel .btnrow{flex-wrap:wrap}.lpanel .btn{flex:1 1 140px}
+/* colonies: the drawn place, its line and key, the crew, the Send a crew page */
+.lpicb{display:block;border:1px solid #8a6a36;border-radius:4px;background:#efe3c2}.clline{text-align:center}
+.clleg{display:grid;gap:1px;font-size:14.5px;font-style:italic;line-height:1.2}.clleg b{font-style:normal;font-family:var(--f-display);font-weight:400;margin-right:4px}
+.ckg{color:#4f6f2c}.ckl{color:#2e4d78}.cks{color:#8e2b1d}.clcrew{font-style:italic;color:var(--rubric);font-size:15px;text-align:center}
+.clpk{justify-content:flex-start;text-align:left;width:100%;margin:4px 0}.clpk .pp{background:#ecdcb2;border-radius:4px;padding:2px;flex:none;margin-right:8px}.clpk em{font-size:14px;font-style:normal}.btn.wax.clpk em{color:#f0d890}
+.crw{align-items:center}.crw>div{flex:1;min-width:0}.crw small{display:block}
 .rrow.land .rrin{min-height:56px}
 /* the chapel's reliquary (relicHTML) */
 .relics{display:flex;gap:6px;font-size:22px;color:#b8892c;text-shadow:0 1px 0 #fff8}
@@ -984,7 +992,7 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 .bscn img{display:block;width:100%;height:auto}
 .ihead>svg.hp,.ihead>svg{display:block;width:100%;height:auto}
 /* a short window (the itch.io box is 940x620): the page picture drawn smaller, so the words start in view (hunt 13); same shape and frame */
-@media (max-height:700px){.ihead{width:min(100%,240px)}}
+@media (max-height:700px){.ihead{width:min(100%,240px)}.lpicb{width:min(100%,280px);justify-self:center}}
 /* THE PAGE TEMPLATE ON THE BIG SCREENS (visual pass, 2026-11-21): the family tree, the Chronicle, achievements, Share your hold
    and the save code wear the template's drop-letter title on the divider (class illum + a bhead title); the tree's "The story of"
    is a red-gem heading; a card's hold picture (rank-up, Golden Age) sits in the map's frame with vine corners (evpic). */
@@ -998,7 +1006,7 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 /* Maud sees to the work (part 2, mock-up A): the slim strip at the top of the Work view with its round switch; the pin on a face the player moved by hand; the note in the job picker */
 .mzA{display:flex;align-items:center;gap:10px;margin:4px 0 10px;padding:6px 10px 6px 8px;border:1px solid var(--edge);border-left:4px solid var(--plum);border-radius:6px;background:var(--paper),var(--vellum);color:var(--ink);box-shadow:0 2px 5px rgba(0,0,0,.35)}
 .mzA.off{border-left-color:var(--edge)}.mzA.off .maudpic{filter:grayscale(.5);opacity:.85}
-.mzA .tx{flex:1;min-width:0;line-height:1.2}.mzA b{display:block;font-family:var(--f-display);font-weight:400;font-size:15.5px}.mzA i{display:block;font-size:13.5px;color:var(--ink2);overflow-wrap:anywhere}
+.mzA .tx{flex:1;min-width:0;line-height:1.2}.mzA b{display:block;font-family:var(--f-display);font-weight:400;font-size:15.5px}.mzA i{display:block;font-size:13.5px;color:var(--ink2);overflow-wrap:anywhere}.mzA i.mzc{margin-top:2px;font-size:12.5px;color:var(--plum)}
 .tog{flex:none;position:relative;width:58px;height:30px;border-radius:15px;background:#8a7a5e;box-shadow:inset 0 1px 3px rgba(0,0,0,.45);color:#f4e9c8;font-family:var(--f-display);font-size:12px;text-align:right;padding:0 8px;transition:background .2s}
 .tog::after{content:'';position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f0e2bc,#a89770);box-shadow:0 1px 2px rgba(0,0,0,.5);transition:left .2s}
 .tog.on{background:var(--moss);text-align:left}.tog.on::after{left:31px;background:radial-gradient(circle at 35% 30%,#e8c76a,#9c7020)}
@@ -1669,7 +1677,7 @@ function seatFalls(){
   return {lg,fall:was>0?` House ${G.house} falls to ${aRank(RANKS[G.rank].n)}.`:''};
 }
 /* ---------- reigns: each ruler's deeds are counted in G.reign (started when the seat has a new holder) and earn an epithet when the reign ends ---------- */
-// n counts: b works built, gw great works, pi chapel/cathedral, w battles won, l lost, ch children, h harsh, k kind, p pious, rv risings survived, dd deaths in the hold.
+// n counts: b works built (crew-raised colony buildings too), tm places finished (colonies), gw great works, pi chapel/cathedral, w battles won, l lost, ch children, h harsh, k kind, p pious, rv risings survived, dd deaths in the hold.
 function reign(){
   const r=ruler();if(!r||!G||G.over)return null;let g=G.reign;
   if(g&&g.id!==r.id){endReign(null,'gone');g=null}
@@ -1710,6 +1718,7 @@ function epithet(g,how,ag,yrs,tr,bas){
     ['the Steadfast',q('rv')/3],
     ['the Poisoner',q('po')*1.6],// a lord removed (or tried), and traced to you (intrigue part 4)
     ['the Wandering',q('af')/(.5+.05*y)],// affairs that came out (afOut): one in a reign up to ten years, two in a long one
+    ['the Town-Maker',q('tm')>=2?3+.5*(q('tm')-2):0],// two or more places finished in one reign (colonies part 3, clFinish): a rare feat, so it nearly always wins
     ['the Founder of Farmsteads',q('st')/(2+.3*y)],// families sent to settle new land (about 2 in a short reign, 5 in ten years)
     ['the Young',ag<20?2:0],
     [ag>=78?'the Ancient':'the Old',ag>=62?1.1+(ag-62)/8:0],
@@ -1720,11 +1729,12 @@ function epithet(g,how,ag,yrs,tr,bas){
   tr=tr||[];let b=[tr.includes('lazy')?'the Lazy':tr.includes('drunkard')?'the Thirsty':tr.includes('gloomy')?'the Dreary':EPDULL[g.id%EPDULL.length],1];for(const e of c)if(e[1]>=b[1]&&e[1]>=1)b=e;return b[0];
 }
 const REIGNDIE={war:'fell in battle at the head of the host',age:'died of old age',fever:'died of fever',starvation:'starved',raid:'fell defending the hold',beast:'was killed by a beast',strife:'was killed in the strife within the hold',chill:'was taken by a wraith',hunt:'was killed on a hunt',murder:'was murdered',spy:'was hanged',crusade:'fell on crusade',childbirth:'died in childbirth'};
-const EPWHY={'the Builder':'Remembered for the works raised.','the Bold':'Remembered for battles won.','the Conqueror':'Remembered for houses brought to heel.','the Victorious':'Remembered for battle after battle won.','the Peaceful':'Remembered for wars not fought.','the Peacemaker':'Remembered for a war between neighbours brought to an end.','the Hammer':'Remembered for wars started and won.','the Penniless':'Remembered for an empty strongbox.','the Bastard':'Remembered as the child nobody planned, who ruled anyway.','the Ancient':'Remembered for outliving almost everyone.','the Diplomat':'Remembered for wars turned away at the gate.','the Good Neighbour':'Remembered for gifts and pacts up and down the valley.','the Matchmaker':'Remembered for pacts sealed at the altar.','the Bane of the Valley':'Remembered for a hall burned to the ground.','the Scourge of the Valley':'Remembered, warily, for halls burned to the ground.','the Kind':'Remembered for mercy and open doors.','the Stern':'Remembered for a hard hand.','the Cruel':'Remembered with fear.','the Pious':'Remembered for prayer and the chapel.','the Rich':'Remembered for a full treasury.','the Fruitful':'Remembered for a house full of children.','the Great':'Remembered for raising the house high.','the Beloved':'Remembered fondly by the hold.','the Grim':'Remembered for hard, joyless years.','the Unlucky':'Remembered for ill fortune.','the Steadfast':'Remembered for holding the seat against all comers.','the Wandering':'Remembered for a wandering eye.','the Poisoner':'Remembered for a lord next door who did not wake up, and the questions after.','the Founder of Farmsteads':'Remembered for the farmsteads past the far woods.','the Young':'Gone too young.','the Old':'Remembered for a long life.','the Brief':'The reign was over almost before it began.','the Deposed':'Remembered for the seat that was lost.','the Usurped':'Remembered for the seat that was taken.','the Grasping':'Remembered for heavy taxes.','the Openhanded':'Remembered for light taxes and full purses.','the Bountiful':'Remembered for big ladles.','the Lean':'Remembered for small ladles.','the Taskmaster':'Remembered for long, hard days.','the Easygoing':'Remembered for days of rest.','the Lazy':'Remembered mostly for naps.','the Thirsty':'Remembered fondly by the tavern.','the Dreary':'Remembered for a long face.','the Boring':'Nothing much happened, and the hold was grateful.','the Droll':'Remembered for a dry wit, and little else.','the Middling':'Neither good nor bad, at anything.','the Forgettable':'Sister Maud struggled to fill a page.','the Unremarkable':'Ruled, ate, slept. Much like everyone.'};
-const GOODEP=['the Builder','the Bold','the Conqueror','the Victorious','the Hammer','the Ancient','the Peaceful','the Peacemaker','the Diplomat','the Good Neighbour','the Matchmaker','the Kind','the Pious','the Rich','the Fruitful','the Great','the Beloved','the Steadfast','the Openhanded','the Bountiful','the Old','the Founder of Farmsteads'];
+const EPWHY={'the Builder':'Remembered for the works raised.','the Bold':'Remembered for battles won.','the Conqueror':'Remembered for houses brought to heel.','the Victorious':'Remembered for battle after battle won.','the Peaceful':'Remembered for wars not fought.','the Peacemaker':'Remembered for a war between neighbours brought to an end.','the Hammer':'Remembered for wars started and won.','the Penniless':'Remembered for an empty strongbox.','the Bastard':'Remembered as the child nobody planned, who ruled anyway.','the Ancient':'Remembered for outliving almost everyone.','the Diplomat':'Remembered for wars turned away at the gate.','the Good Neighbour':'Remembered for gifts and pacts up and down the valley.','the Matchmaker':'Remembered for pacts sealed at the altar.','the Bane of the Valley':'Remembered for a hall burned to the ground.','the Scourge of the Valley':'Remembered, warily, for halls burned to the ground.','the Kind':'Remembered for mercy and open doors.','the Stern':'Remembered for a hard hand.','the Cruel':'Remembered with fear.','the Pious':'Remembered for prayer and the chapel.','the Rich':'Remembered for a full treasury.','the Fruitful':'Remembered for a house full of children.','the Great':'Remembered for raising the house high.','the Beloved':'Remembered fondly by the hold.','the Grim':'Remembered for hard, joyless years.','the Unlucky':'Remembered for ill fortune.','the Steadfast':'Remembered for holding the seat against all comers.','the Wandering':'Remembered for a wandering eye.','the Poisoner':'Remembered for a lord next door who did not wake up, and the questions after.','the Founder of Farmsteads':'Remembered for the farmsteads past the far woods.','the Town-Maker':'Remembered for farmsteads raised into towns.','the Young':'Gone too young.','the Old':'Remembered for a long life.','the Brief':'The reign was over almost before it began.','the Deposed':'Remembered for the seat that was lost.','the Usurped':'Remembered for the seat that was taken.','the Grasping':'Remembered for heavy taxes.','the Openhanded':'Remembered for light taxes and full purses.','the Bountiful':'Remembered for big ladles.','the Lean':'Remembered for small ladles.','the Taskmaster':'Remembered for long, hard days.','the Easygoing':'Remembered for days of rest.','the Lazy':'Remembered mostly for naps.','the Thirsty':'Remembered fondly by the tavern.','the Dreary':'Remembered for a long face.','the Boring':'Nothing much happened, and the hold was grateful.','the Droll':'Remembered for a dry wit, and little else.','the Middling':'Neither good nor bad, at anything.','the Forgettable':'Sister Maud struggled to fill a page.','the Unremarkable':'Ruled, ate, slept. Much like everyone.'};
+const GOODEP=['the Builder','the Bold','the Conqueror','the Victorious','the Hammer','the Ancient','the Peaceful','the Peacemaker','the Diplomat','the Good Neighbour','the Matchmaker','the Kind','the Pious','the Rich','the Fruitful','the Great','the Beloved','the Steadfast','the Openhanded','the Bountiful','the Old','the Founder of Farmsteads','the Town-Maker'];
 function reignLines(g){
   const q=k=>g.n[k]||0,pl=(n,w)=>`${n} ${w}${n===1?'':'s'}`,L=[],w=q('w'),l=q('l'),gd=G.gold-g.gold,ru=G.rank-g.rank,md=g.md?g.mood/g.md:50;
   if(q('b'))L.push(`Raised ${pl(q('b'),'building')}${q('gw')?', a Great Work among them':''}.`);
+  if(q('tm'))L.push(`Finished ${q('tm')===1?'a town':q('tm')+' towns'} at the end of the drove roads.`);
   if(w||l)L.push(`${w?'Won '+pl(w,'battle'):'Won no battles'}, lost ${l||'none'}.`);
   if(q('ch'))L.push(`Had ${q('ch')} ${q('ch')===1?'child':'children'}.`);
   if(ru)L.push(ru>0?`Raised the house to ${aRank(RANKS[G.rank].n)}.`:`Saw the house fall to ${aRank(RANKS[G.rank].n)}.`);
@@ -1781,6 +1791,7 @@ const CHEP={'the Poisoner':['{n} was never asked to supper again, by anyone, in 
   'the Unlucky':['If a thing could go wrong under {n}, it did, and then did it again.','{n} meant well, but fortune had other plans, mostly bad ones.'],
   'the Wandering':['{n} had a wandering eye, and the hold had a long memory.','{n} was often missing from the hall of an evening, and everyone knew where.'],
   'the Steadfast':['Many tried to pull {n} from the high seat. {n} simply sat harder.','{n} held the seat the way a limpet holds a rock.'],
+  'the Town-Maker':['{n} sent crew after crew up the drove roads, and the farmsteads came back towns, each with a banner and a market that sold mostly string.','{n} could not leave a farmstead alone until it had a mill, a chapel and a muster yard, and the folk there were very grateful, and a little tired.'],
   'the Founder of Farmsteads':['{n} sent so many carts past the far woods that the valley beyond filled with farmsteads, each with a goat that had opinions.','Half the farms over the hills were started by {n}, who handed out seed and spades the way others hand out sweets.','{n} could not see a full cottage without pointing at the horizon and saying there was good land out there.'],
   'the Young':['{n} left the high seat before {he} had quite grown into it.','{n} never quite grew into the high seat, though not for want of trying.'],
   'the Old':['{n} lived so long that the hold assumed it was on purpose.','{n} outlived friends, foes and most of {his} own teeth.'],
@@ -1931,6 +1942,7 @@ function chronicle(){
     if(/ of the family to take up .* from now on.$/.test(t))return [6,'good'];
     if(/^A plaque for /.test(t))return [6,'good'];// it names the statue, so it is not a great work of its own (hunt 13: counts ran one high)
     if(gw.some(w=>t.toLowerCase().includes(w)))return /^House /.test(t)&&!t.startsWith('House '+G.house+' ')?[2,'news']:[9,'good','gw'];// a neighbour's great work is their news, not your reign's
+    if(/ is finished, every roof and stake of it: /.test(t))return [7,'good'];// a finished town (colonies part 3), told in its reign
     if(/is raised\.$/.test(t))return [0,'built'];
     if(/is born to/.test(t))return [t.includes(r.name)?4:0,'born'];
     if(/^A revolt led by .* is crushed/.test(t))return [8,'revolt'];
@@ -3829,7 +3841,7 @@ function paintTerrain(si){
   {const w=WELL(),wx=(w[0]+.5)*TS,wy=(w[1]+.5)*TS+12;items.push({y:wy,f:cc=>drawWell(cc,wx,wy,si)})}
   if(G.yard&&G.graves)items.push({y:(G.yard[1]+1)*TS-6,f:cc=>drawYard(cc,G.yard[0]*TS,G.yard[1]*TS,si)});
   drawSplendours(items,si);
-  if(G.built.palisade)palisadeItems(items,FR);FRONT=FR;
+  if(G.built.palisade)palisadeItems(items,FR);FRONT=FR.sort((a,b)=>a.y-b.y);
   TERR=true;try{items.sort((a,b)=>a.y-b.y).forEach(i=>i.f(c))}finally{TERR=false}
   return cv;
 }
@@ -4491,7 +4503,7 @@ function drawMonster(c,type,now){
 }
 /* Contents of 05-life.js: Life on the map: who walks where and why, and the scenes (memory only, never saved).
    - life on the map: AN, POPB (a finished building's squash and pop: popBuild, popDraw), SCLK, weather, funerals, births, weddings, crusaders marching, animals, bells, chats, trait habits, river, night, festivals, zoom (MZ), HOUR, route (walk, wetLen, keepDry, blocks, clearOf, segIn, stepRound: round buildings, the wall and the river), boatReach, fishSpots, monX (beasts outside the wall), behind/clipBehind (folk hidden behind a building; trees and wall pieces in FRONT, 04, painted again over them)
-   - households: hhKey, households, homeOf, sceneNow, riotRoles (REVB), roleOf, plan, animate, drawSite, Great Works on the map (gwCrane, drawOpening, sentry, drawQuintain, drawCathLife, drawPigeon, hboat, drawHarbourLife, drawWorks), drawMap, mapGap, frame
+   - households: hhKey, households, homeOf, sceneNow, riotRoles (REVB), roleOf, plan, animate, drawSite, Great Works on the map (gwCrane, drawOpening, sentry, drawQuintain, drawCathLife, drawPigeon, hboat, drawHarbourLife, drawWorks), drawMap, frontOver, mapGap, frame
    - More: docs/map.md
    Names: docs/where.md. Keep this list true when a section is added or moved. */
 /* ---------- life on the map (cosmetic only, kept in memory, never saved) ----------
@@ -6001,8 +6013,7 @@ function drawMap(now){
   drawWorks(ctx,now);
   const order=G.settlers.slice().sort((a,b)=>a.y-b.y);
   for(const s of order){const o=behind(s);if(o.length){ctx.save();clipBehind(ctx,o);drawPerson(ctx,s,now);ctx.restore()}else drawPerson(ctx,s,now);
-    // a tree or a stretch of wall just in front of them is painted again over them
-    const f=footOf([s.x,s.y]);for(const F of FRONT)if(F.y>f[1]+1&&F.y-F.h<f[1]&&Math.abs(F.x-f[0])<F.w/2+9){NOSHAD=1;try{F.f(ctx)}finally{NOSHAD=0}}}
+    frontOver(ctx,s)}
   drawPrisoner(ctx,now);drawRider(ctx,now);drawJoust(ctx,now);drawMinstrel(ctx,now);
   drawRaiders(ctx,now);drawCart(ctx,now);if(HCART)drawCart(ctx,now,HCART);if(BCART)drawCart(ctx,now,BCART);drawParts(ctx);
   drawBeast(ctx,now);
@@ -6021,6 +6032,17 @@ function drawMap(now){
   if(!VIGN){VIGN=document.createElement('canvas');VIGN.width=W;VIGN.height=H;const v=VIGN.getContext('2d'),vg=v.createRadialGradient(W/2,H/2,H*.38,W/2,H/2,W*.62);vg.addColorStop(0,'rgba(20,10,0,0)');vg.addColorStop(1,'rgba(20,10,0,.42)');v.fillStyle=vg;v.fillRect(0,0,W,H)}
   ctx.setTransform(bs,0,0,bs,0,0);ctx.drawImage(VIGN,0,0);
 }
+// a tree or a stretch of wall just in front of someone is painted again over them, but only inside their own outline (a box
+// round the figure), with every FRONT piece that reaches into that box painted back to front: painting one whole piece again
+// set it over its neighbours in the wall (they overlap) and over folk beside it, so the wall and crowds by it blinked as
+// people moved (his report, 2026-11-24). FRONT is sorted by y (drawMap in 04-art.js).
+function frontOver(c,s){
+  const f=footOf([s.x,s.y]),x=f[0],y=f[1];
+  if(!FRONT.some(F=>F.y>y+1&&F.y-F.h<y&&Math.abs(F.x-x)<F.w/2+9))return;
+  const x0=x-15,x1=x+15,y0=y-50,y1=y+4,P=FRONT.filter(F=>F.y>y+1&&F.y-F.h<y1&&Math.abs(F.x-x)<F.w/2+15);
+  c.save();c.beginPath();c.rect(x0,y0,x1-x0,y1-y0);c.clip();NOSHAD=1;
+  try{for(const F of P)F.f(c)}finally{NOSHAD=0;c.restore()}
+}
 // how often the map is drawn (ms between frames): about 20 a second under an open card (dimmed and mostly hidden; saves a phone's battery,
 // and the card unrolls smoothly), but full speed while a raid or the like plays before its card (#modal.pre) and under the wraith;
 // about 30 a second in a hold of over 50 folk, where drawing everyone every frame made a phone stutter (animation hunt, 2026-11-23)
@@ -6038,7 +6060,7 @@ function frame(now){
 /* Contents of 06-day.js: The day: building, work, food, births; the events engine; levels, perks and monsters.
    - construction: bcost, canBuild, startBuild, startUpgrade, mendOld, finishBuild, Great Works' opening day and names (GWNOUN, GWFOLK, GWLINE, founderK, evNameWork)
    - food workers (Specialising part 1, above `yWood`): FOODP, WPN, WPSH, wpCap, wpTotal, wpOf, pickDay, yPlace, wpAnnual, foodWork, wpCheck, fillWP (the Farm job's work places, auto fill, the autumn apple picking in `work`); part 3 (the Barony setting): wpMan, wpFw, wpSeed, wpSet, wpAuto (targets G.wpT, G.wpO, G.wpAuto; fillWP's manual branch), BOUNTY (the bounty card by food); part 2: FOODL, foodL, aN (Farmer/Fisherman/Apple picker/Shepherd words), foodBy, foodLead, MASTF (masters by place), wpRoom, wpMove, wpBack ("move the workers"), KNOWN, knownYear, knownSeason (known for, text only; G.fsrc, G.known)
-   - Maud sees to the work (part 1, just above `yWood`): MJ, MSK, maudCan, maudUp, maudTeach, maudWho, maudWorst, maudFarmers, maudWant, maudTarget, maudMove, maudSplit, maudBuild, maudNew, maudHungry, maudTick, maudOn, maudPin, MSAYJ, maudSay, maudLog (G.maud: Sister Maud sets the jobs, food first)
+   - Maud sees to the work (part 1, just above `yWood`): MJ, MSK, maudCan, maudUp, maudTeach, maudWho, maudWorst, maudFarmers, maudWn, maudPl, maudFull (the full-stores mark), maudWant, maudTarget, maudMove, maudSplit, maudBuild, maudNew, maudHungry, maudTick, maudOn, maudPin, MSAYJ, maudSay, maudLog (G.maud: Sister Maud sets the jobs, food first)
    - the day: tick, work, eat, relations, births, riseRank, goldenAge (its life lines GOLDLF), tourney, pedlars, headDay
    - family trades: tradeSeason, teach, grownTrade
    - events: queueEvent (a gentle third card on one day waits: LATER, nextCard, laterCard), DIFF, dif, drawEvent, choose, EVENTS, everyday events
@@ -6196,6 +6218,7 @@ function tick(){
   births();
   jailbreak();
   if(G.spy&&G.day>=G.spy.until)resolveSpy();
+  crewDay();// a crew away at your lands (09-rule.js)
   igDay();// agents abroad: the daily cleanup (09-scheme.js)
   tutorTick();regencyTick();rpDaily();// rpDaily: a child ruler's new-reign choices at sixteen, the league's ally (09-repute.js)
   for(const s of G.settlers.slice()){
@@ -6363,7 +6386,15 @@ function maudFarmers(want,si){const tl=workTl(),sl=[];
   let free=(G.built.fishery||0)*(si===3?.5:1)*1.5**lv('fishery')+(G.built.harbour?(si===3?1:2):0)+(.5+up('orchard',.25,0))*(G.built.orchard||0)+.4*(G.built.pasture||0)*1.5**lv('pasture');
   if(G.built.orchard&&si===2)free+=(20+up('orchard',10,10))*G.built.orchard*(G.frost?.5:1)/DPS;
   let got=free,n=0;while(got<want&&n<60){got+=n<sl.length?sl[n]:Math.max(.05,over);n++}return n}
-// the wanted headcount per job for the whole hold, in priority order: Farm, a Wood floor for winter, Build once Farm is met, Guard; the rest Wood and Stone
+// the wanted headcount per job for the whole hold, in priority order: Farm, a Wood floor for winter, Build once Farm is met, Guard; the rest Wood and Stone.
+// Guards (2026-11-24, his "very few to guard", then his pick "full stores only"): one guard, as before, until the stores are full (G.mPl, on at wood 3x the
+// winter need and 600+ with stone 600+, off again below 2x or 400); then one for every 6 grown folk (+1 in a war of your own, G.pw) and spare hands too,
+// up to a quarter of the grown, before any more to wood and stone. Winter keeps 2 on wood while it is short of the winter need (wn).
+// the winter's wood need, and the full-stores mark (on at wood 3x it and 600+ with stone 600+; once on, off again below 2x or 400); maudFull is the
+// mark as it stands, read by her quiet crew line (maudCrewLn, colonies part 3): her own flag while she works, the stricter "on" test while she is off
+const maudWn=()=>Math.ceil(G.settlers.length*winterWood()*DPS*(lv('hut')>=2?.8:1)*1.2)+10;
+const maudPl=(on,wn)=>on?!(G.wood<Math.max(400,wn*2)||G.stone<400):G.wood>=Math.max(600,wn*3)&&G.stone>=600;
+const maudFull=()=>maudPl(G.maud&&G.mPl,maudWn());
 function maudWant(){
   const ad=maudUp(),n=ad.length;if(!n)return null;
   const si=seasonIdx(),need=foodNeed(),stock=need*5,winter=need*DPS*.9;
@@ -6372,10 +6403,11 @@ function maudWant(){
   let f=maudFarmers(want,si);
   if(si===3)f=G.food>=winter*1.1?Math.min(f,1):Math.min(f,Math.ceil(n/2));
   f=Math.min(f,n);let left=n-f;
-  const wn=Math.ceil(G.settlers.length*winterWood()*DPS*(lv('hut')>=2?.8:1)*1.2)+10;
-  const wf=Math.min(left,n<3?0:si<3&&G.wood<wn?(si>=1?2:1):1);left-=wf;
+  const wn=maudWn();
+  const wf=Math.min(left,n<3?0:G.wood<wn?(si>=1?2:1):1);left-=wf;
   const b=G.proj&&left>0?1:0;left-=b;
-  const g=n>=6&&left>0?1:0;left-=g;
+  const pl=maudPl(G.mPl,wn);G.mPl=pl?1:0;
+  let g=n<6?0:1;if(pl)g=Math.max(Math.floor(n/6)+(G.pw?1:0),left-2);g=Math.max(0,Math.min(g,left,n>=6?Math.max(1,Math.ceil(n/4)):0));left-=g;
   const st=Math.floor(left*(G.wood<40||G.wood<wn?1:1.5)/3);
   return {farm:f,build:b,guard:g,wood:wf+left-st,stone:st}}
 // the movers' share of the wants: fixed folk (ruler, pinned, trades, agents at home...) are taken off first
@@ -8330,10 +8362,10 @@ const pwThem=(rv,them)=>rivalStr(rv)*(G.diff<2&&G.ov!=null&&rivals()[G.ov]===rv?
 const pwWalls=()=>(G.built.palisade||0)*(6+up('palisade',6,5))+(G.built.tower||0)*(5+up('tower',4,6))+6*(G.built.keep||0);
 // at home the whole hold fights: the host (with its bonds and the ruler if leading) plus everything fightPower counts that is not in the host
 // (guards on the walls, palisade, towers, keep, kit, the stoutest folk, friendly houses), times the home bonus
-// a House of Swords fights 5% harder in your wars (09-repute.js)
-function pwMine(host,lead,whole,ind){const sw=rpTouch('s')?1.05:1;if(ind!=='them')return pwStr(host,lead,whole)*sw;const r=ruler();
+// a House of Swords fights 5% harder in your wars (09-repute.js); a Palisade or Muster yard at your lands adds clStr (09-rule.js), in wars with neighbours only
+function pwMine(host,lead,whole,ind){const sw=rpTouch('s')?1.05:1;if(ind!=='them')return pwStr(host,lead,whole)*sw+clStr();const r=ruler();
   let p=host.reduce((a,s)=>a+pwMan(s)*pwBond(s,host,lead),0)+fightPower({not:host});if(lead&&r)p+=3+Math.max(0,r.skills.fight+traitSum(r,'fight'))*.8;
-  return p*[1.5,1.3,1.1][G.diff]*sw}
+  return p*[1.5,1.3,1.1][G.diff]*sw+clStr()}
 // the talk at market: a rough read of the odds when no spy has reported (a spy gives the sharper words of pwOdds)
 const pwTalk=(my,th)=>{const q=my/Math.max(1,th);return q<.75?'By the talk at market, they look much stronger.':q>1.35?'By the talk at market, they look weaker.':'By the talk at market, it could go either way.'};// they keep a few spears at home too; against your rising, on Easy and Normal, an overlord sends only part of its host
 const pwHost=()=>G.pw?G.pw.host.map(byId).filter(s=>s&&G.settlers.includes(s)&&!s.ruler):[];
@@ -9827,7 +9859,7 @@ function landsHTML(){
   for(const [rv,i] of hs)h+=`<div class="parch card rrow land"><button class="rrin" data-act="rvo" data-i="${i}"><span class="lpic">${rportrait(rv,34)}</span><span class="rn"><b>House ${rv.house}'s seat</b><small>Held by you · ${rv.lord} rules</small></span><span class="bdg own">${loyWord(heldLoy(rv))}</span><span class="chev">›</span></button></div>`;
   const shown=L.slice().reverse().slice(0,8),so=n=>`${n} ${n===1?'soul':'souls'}`;
   for(const l of shown){const t=l.hold&&!l.free?landTithe(l):null;
-    const inner=`<span class="lpic">${portrait(landFace(l),34)}</span><span class="rn"><b>${l.nm}</b><small>${t?`Daughter hold · ${so(l.n)} · tithe ${t.food} food, ${t.wood} wood`:l.free?`Free · ${so(l.n)} · writes now and then`:`${l.pl} · ${so(l.n)} · ${yrs(l)}`}</small></span>${t?`<span class="bdg own">${loyWord(l.loy==null?70:l.loy)}</span>`:l.free?`<span class="${l.att>0?'up':'dn'}">${l.att>0?'Fond':'Cross'}</span>`:''}`;
+    const inner=`<span class="lpic">${portrait(landFace(l),34)}</span><span class="rn"><b>${l.nm}</b><small>${t?`${l.ttl?`${(l.tw||"fair")[0].toUpperCase()+(l.tw||"fair").slice(1)} town`:"Daughter hold"} · ${so(l.n)} · tithe ${t.food} food, ${t.wood} wood${t.gold?`, ${t.gold} gold`:""}`:l.free?`Free · ${so(l.n)} · writes now and then`:`${l.pl} · ${so(l.n)} · ${yrs(l)}`}</small></span>${t?`<span class="bdg own">${loyWord(l.loy==null?70:l.loy)}</span>`:l.free?`<span class="${l.att>0?'up':'dn'}">${l.att>0?'Fond':'Cross'}</span>`:''}`;
     // one of yours (a farmstead or a daughter hold): a tap opens what you can do for it, or ask of it (landPanel in 09)
     h+=l.free?`<div class="parch card rrow land">${inner}</div>`:`<div class="parch card rrow land${LANDO===l.id?' lopen':''}"><button class="rrin" data-act="lando" data-id="${l.id}" aria-expanded="${LANDO===l.id}">${inner}<span class="chev">${LANDO===l.id?'⌄':'›'}</span></button></div>${LANDO===l.id?landPanel(l):''}`}
   if(L.length>shown.length)h+=`<div class="sub later">And ${L.length-shown.length} older farmstead${L.length-shown.length===1?'':'s'}, still writing now and then.</div>`;
@@ -10097,7 +10129,7 @@ function treeHTML(){
   // four or more brothers and sisters with no children of their own (and who never ruled) stand in a block two or three across,
   // where their first one would be, so a big brood does not stretch the tree across nine screens (treeVines draws them a comb)
   const group=(ks,d)=>{const hs=ks.map(c=>[c,node(c,d)]).filter(x=>x[1]),lf=hs.filter(([c,h])=>!h.includes('<ul')&&!c.ruled);
-    if(lf.length<4)return hs.map(x=>x[1]).join('');const g=`<li class="fgrid"><ul class="fg" style="grid-template-columns:repeat(${lf.length<5?2:3},auto)">${lf.map(x=>x[1]).join('')}</ul></li>`;
+    if(lf.length<4)return hs.map(x=>x[1]).join('');const g=`<li class="fgrid"><ul class="fg" data-c="${lf.length<5?2:3}" data-n="${lf.length}" style="grid-template-columns:repeat(${lf.length<5?2:3},auto)">${lf.map(x=>x[1]).join('')}</ul></li>`;
     let out='',put=0;for(const x of hs){if(!lf.includes(x))out+=x[1];else if(!put){out+=g;put=1}}return out};
   const node=(k,d)=>{if(seen.has(k.id))return '';seen.add(k.id);gens=Math.max(gens,d);
     const ch=group(all.filter(c=>!c.inlaw&&c.parents.includes(k.id)).sort((a,b)=>a.born-b.born),d+1);
@@ -10116,7 +10148,8 @@ function treeVines(){const ft=$('#tree .ft');if(!ft||!ft.querySelectorAll)return
     const [px]=off(fp),[,fy]=off(fn),x0=px+fp.offsetWidth/2,y0=fy+fn.offsetHeight+2,pk=K[li.dataset.id];
     for(const ch of ul.querySelectorAll(':scope>li')){
       if(ch.classList.contains('fgrid')){const rows={};for(const q of ch.querySelectorAll(':scope>ul>li>.fn .fp')){const [qx,qy]=off(q);(rows[qy]=rows[qy]||[]).push(qx+q.offsetWidth/2)}
-        const ys=Object.keys(rows).map(Number).sort((a,b)=>a-b),xg=off(ch.querySelector(':scope>ul'))[0]+3;
+        const ys=Object.keys(rows).map(Number).sort((a,b)=>a-b),gu=ch.querySelector(':scope>ul'),xg=off(gu)[0]+3;
+        if(ys.length>1){const [ux,uy]=off(gu),xt=ux+gu.offsetWidth/2,m=(y0+uy)/2;p+=`M${x0} ${y0}C${x0} ${m} ${xt} ${m} ${xt} ${uy}`;continue}
         ys.forEach((y,i)=>{const xs=rows[y],yr=y-12,xa=Math.min(...xs),xb=Math.max(...xs);
           if(!i){const xt=Math.min(Math.max(x0,xa),xb),m=(y0+yr)/2;p+=`M${x0} ${y0}C${x0} ${m} ${xt} ${m} ${xt} ${yr}`}
           p+=`M${ys.length>1?Math.min(xg,xa):xa} ${yr}H${xb}`;xs.forEach(x=>{p+=`M${x} ${yr}V${y-5}`})});
@@ -10129,7 +10162,10 @@ function treeVines(){const ft=$('#tree .ft');if(!ft||!ft.querySelectorAll)return
   ft.insertAdjacentHTML('afterbegin',s)}
 // after drawing: vines, "swipe" only when the tree is wider than the screen, the whole-tree view, and where to start (x: keep a scroll):
 // the founder in the middle, or in a tree more than two screens wide the ruler, scrolled down to them once the scroll has unrolled
-function treeFit(x){const b=$('#tree .ftbox');if(!b||!b.getBoundingClientRect)return;const ft=b.querySelector('.ft');treeVines();
+// a block of brothers and sisters stands in one row when the whole tree still fits the screen that way, stacked two or three across (on a shaded panel, .stk) when it does not
+function treeRows(b,ft){const gs=[...ft.querySelectorAll('ul.fg')];if(!gs.length)return;const set=one=>gs.forEach(u=>{u.style.gridTemplateColumns=`repeat(${one?u.dataset.n:u.dataset.c},auto)`;u.parentNode.classList.toggle('stk',!one)});
+  ft.style.transform='';set(1);if(b.scrollWidth>b.clientWidth+2)set(0)}
+function treeFit(x){const b=$('#tree .ftbox');if(!b||!b.getBoundingClientRect)return;const ft=b.querySelector('.ft');treeRows(b,ft);treeVines();
   ft.style.transform='';ft.style.marginBottom='';const wide=b.scrollWidth>b.clientWidth+2;$('#tree').classList.toggle('ftwide',wide);
   if(!wide){treeZ=0;return}
   if(treeZ){const k=b.clientWidth/ft.scrollWidth;ft.style.transform=`scale(${k})`;ft.style.marginBottom=`${-(ft.offsetHeight*(1-k))}px`;b.scrollLeft=0;return}
@@ -10234,6 +10270,7 @@ const ACH=[
   {id:'execute3',g:'execute',need:13,n:'A Baker\'s Dozen of Gloom',d:'Execute 13 prisoners, across all your holds.'},
   {id:'golden',n:'A Golden Age',d:'Hold a Kingdom ten years with an heir and a steady crown.'},
   {id:'valley',n:'Lord of the Valley',d:'Hold every seat in the valley at once: your vassals, or your kin in the high seat.'},
+  {id:'town',n:'A Town of Your Own',d:'Finish a daughter hold: all six buildings raised by your crews.',ok:()=>lands().some(l=>l.ttl)},
   {id:'fallen',tk:'fallen',need:1,n:'All Things End',d:'See a house fall.'},
   {id:'fallen2',g:'fallen',need:5,n:'Rise and Fall, Repeat',d:'See 5 houses fall.'},
   {id:'fallen3',g:'fallen',need:13,n:'Professional Ruin',d:'See 13 houses fall.'}
@@ -10322,7 +10359,7 @@ function resetNamer(){nameQ=[];nameCur=null;$('#namer').hidden=true;$('#namer').
    - names: famSync (a trade surname becomes the line's), famDeedSn, famSnOk (deed and shame names pass only down the line),
      FAMN (the name pools), famFree, famDeed (grant a deed or shame name, with the caps and the wash-off)
    - the deed hooks: famGate (held the gate), famCrus (home from crusade), famWar (a won war), famFire (the bucket line),
-     famBuild (a Great Work), famRan (one who ran, 1 in 4 on a lost fight)
+     famBuild (a Great Work), famRan (one who ran, 1 in 4 on a lost fight); the crew's name is given by crewName in 09-rule.js (colonies part 2)
    - part B, favour, feeling and power: FAMT, famOn (from Village), famSn, famNm, famPl (plural of a surname), famRow, FAMK, famMem (from remember), famNote, famStory, famFeel, famPower,
      famFsN, famGrown, famInl, famSize, famEarned, famSeatNow, famPw, famFolk (the folk's feeling for the ruler, each season), FAMDIE, famDie (a death the hold had a hand in),
      famHead, FAMRISE, FAMSLIP, famTurn (each season: fading, power, rise and slip lines), famOpen (Village), famMood (moodMods), famPlotW, famTip (plotStart)
@@ -10404,9 +10441,10 @@ const FAMN={
   war:['Strongarm','Bowman','Spearman','Banner','Hardy'],
   fire:['Ashworth','Burnell','Smoke','Brand','Bucket'],
   build:['Bridger','Steeple','Keystone','Plumb','Masterton'],
+  crew:['Townsend','Newbold','Farbridge','Wayland','Roadwright'],
   shame:['Quickfoot','Hidebush','Lightheel','Haybarn','Fleetly']};
 // what they did, for the Chronicle ({n} the doer's first name)
-const FAMDID={gate:'{n} held the gate',crus:'{n} came home from the crusade',war:'{n} fought in the won war',fire:'{n} led the bucket line through the fire',build:'{n} was master builder of the {w}',shame:'Somebody saw {n} run from the fight'};
+const FAMDID={gate:'{n} held the gate',crus:'{n} came home from the crusade',war:'{n} fought in the won war',fire:'{n} led the bucket line through the fire',build:'{n} was master builder of the {w}',crew:'{n} led the crew that raised the {w}',shame:'Somebody saw {n} run from the fight'};
 // Maud's wry line ({N} the new name), by a fixed index from the line id
 const FAMMAUD={
   gate:['{N}. {He} will never let us forget it.','{N}. The gate has not been told, and would not care.'],
@@ -10414,6 +10452,7 @@ const FAMMAUD={
   war:['{N}. {He} tells it with a different sword each time.','{N}. Mostly {he} stood very bravely in the right place.'],
   fire:['{N}. {He} still smells faintly of thatch.','{N}. The well has never been so popular.'],
   build:['{N}. {He} pats the stones when {he} thinks nobody is looking.','{N}. {He} would like you to know it is level.'],
+  crew:['{N}. {He} gives directions to everyone now, wanted or not.','{N}. {He} has seen the far end of the valley, and describes it at supper.'],
   shame:['{N}. {He} says {he} was fetching help. From two valleys over.','{N}. It is not a kind name, but it is a quick one.'],
   wash:['{O} no more. {N}, now. Nobody mention the {o}.']};
 const FAMWASH={Quickfoot:'feet',Hidebush:'bush',Lightheel:'heels',Haybarn:'hay',Fleetly:'running'};
@@ -11125,8 +11164,13 @@ function rpLgEnd(w){try{if(!w||!w.lg)return;const y=rivals().find(x=>x.id===w.lg
 /* Contents of 09-rule.js: Ruling: the heir, the family, crown safety, laws, council and acts; saving and new games.
    - decrees: heir lessons (TUTOR), nameHeir, the cradle card (evChildless, seekHeir), matches (seekMatch, evSuitors), pregnancies, regency
    - crown safety: crownThreats, crownLevel, Here's the fix (goFix, jumpTo); laws (LAWS, setLaw, lawDay); council (COUNCIL, councilPool, councilFill, evCouncil, councilHTML with Replace: COUNSK, councilRepHTML); acts (ACTS, decree; their varied lines TOOLSL, CLOTHL, HUNTW/HUNTL/HUNTH, VIGILL/VIGILW)
-   - your lands: farmsteads from Settle new land (settleFams, evSettle, settleHead, settleGo: shared with Raise them up; lands, landAdd), their letters (LANDGIFT, LANDNEWS, LANDPLEA, LANDOLD, landLetter) and the season's post card (postAdd, postSeason, evPost);
-     daughter holds (part 4: LANDH, landOn, landTithe, landAim, landGrow, landSeason, landStr, landCard, evLandBreak, landFree, landMarch)
+   - your lands: farmsteads from Settle new land (settleFams, settleWho, evSettle, settleHead, kinGone, settleGo: shared with Raise them up and Found a farmstead; lands, landAdd),
+     Found a farmstead, its late form (colonies part 2: fdCost, fdNote, fdFams, fdDef, fdName, fdCrew, fdWhy, foundGo), their letters (LANDGIFT, LANDNEWS, LANDPLEA, LANDOLD, landLetter) and the season's post card (postAdd, postSeason, evPost);
+     daughter holds (part 4: LANDH, landOn, landTithe, titheW, landAim, landGrow, landSeason, landStr, landCard, evLandBreak, landFree, landMarch); land kinds (LANDKIND, landKind);
+     colonies part 1, crews and buildings (CLB, CLKS, CLKW, CLKD, clBl, clHas, clN, clMax, clMine, clOpen, clStr, crewN, crewSeat, crewCan, crewRel, crewWill, crewTrade, crewCands, crewPick,
+     crewAt, crewDays, crewCheap, clAfford, crewWhy, crewSend, crewOff, crewWhat, crewDay, crewDone, crewLead, crewName, CLWED, crewLove, CLLET, clLine, CLLEG, crewHome);
+     part 3, a finished place (CLTW, clDone, clTown, clFinish) and Maud's quiet crew line (maudCrewLn); who built it, places raising their own (CLSELFP, CLPRIDE, clPride, CLSLET, clSelf; landCool), the founding family (landFp, landLean, landLeanW) and a lost break-away (landHeel, before landMarch);
+     part 2's letters by land kind are tagged lines in LANDGIFT and LANDNEWS (landPick)
    - save: save, loadSave, packSave, unpackSave, file transfer
    - new game: newGame (hold codes: G.hc), makeHold
    - More: docs/rule.md, docs/screens.md
@@ -11224,7 +11268,7 @@ function evExpecting(f,m){
     text:expOpen(f,m)+' '+pickLine(EXPRISK,'exp',G.house),
     choices:[
       {t:'Send for a midwife',d:`${mc} gold. Risk to the mother about ${pm}% instead of ${pc}%.`,dis:G.gold<mc,why:'Not enough gold',fn(){G.gold=Math.max(0,G.gold-mc);f.mid=2;return pick(['A midwife arrives from the market town with a bag of herbs and very firm opinions.','The midwife comes, inspects the hold, and sends three men out for hot water they will not need.','A midwife moves in with her herbs, her stool and a stare that settles every argument.'])}},
-      {t:G.built.chapel?'Keep vigil at the chapel':'Keep vigil by her bed',d:'3 food. A little safer.',dis:G.food<3,why:'Not enough food',fn(){G.food-=3;f.mid=1;allBuff('Prayers said',2,6);return pick(G.built.chapel?['Candles burn in the chapel every night until the birth.','The chapel keeps a candle lit, and the whole hold drops by to check on it.','Prayers are said, and then said again, louder, in case.']:['Candles burn by her bed every night until the birth.','Someone sits up with her every night, knitting and listening.','Prayers are said by her bed, and then said again, louder, in case.'])}},
+      {t:G.built.chapel?'Keep vigil at the chapel':'Keep vigil by her bed',d:'3 food. A little safer.',dis:G.food<3,why:'Not enough food',fn(){G.food=Math.max(0,G.food-3);f.mid=1;allBuff('Prayers said',2,6);return pick(G.built.chapel?['Candles burn in the chapel every night until the birth.','The chapel keeps a candle lit, and the whole hold drops by to check on it.','Prayers are said, and then said again, louder, in case.']:['Candles burn by her bed every night until the birth.','Someone sits up with her every night, knitting and listening.','Prayers are said by her bed, and then said again, louder, in case.'])}},
       {t:'Trust to fortune',d:`Risk to the mother about ${pc}%.`,fn(){return pick(['The hold goes on as usual and hopes for the best.','Nobody fusses. The hens are told to keep their voices down.','The hold crosses its fingers and gets on with the chores.'])}}
     ]};
 }
@@ -11624,18 +11668,45 @@ function settleFams(){
   const ok=[...by.entries()].filter(([k,g])=>k!=='R'&&g.some(s=>!isChild(s))&&!g.some(s=>s.ruler||s.ward!=null||bloodOf(s)||(r&&r.spouse===s.id)||(G.regent&&G.regent.id===s.id)||away(s)));
   return ok.map(e=>e[1]).sort((a,b)=>b.length-a.length||a.reduce((x,s)=>x+s.mood,0)/a.length-b.reduce((x,s)=>x+s.mood,0)/b.length);
 }
+// the card: every bed taken, the old cheap way for up to 3 households (and Found a farmstead for the first, when it can be done); beds to spare,
+// Found a farmstead for up to 3 (colonies part 2: one act, its text changes; the cost is the only gate, his call)
+const settleWho=g=>{const h=settleHead(g),md=g.reduce((x,s)=>x+s.mood,0)/g.length;return `${g.length} ${g.length>1?'people':'person'}: ${g.map(s=>s.name+(isChild(s)?' (child)':'')).join(', ')}. ${md<40?'Glad of a fresh start.':md>70?'Happy here, but willing.':'Willing enough.'}`};
 function evSettle(){
-  const fams=settleFams().slice(0,3);if(!fams.length)return null;
-  const go=g=>settleGo(g);
-  return {who:fams.map(settleHead),kind:'Court',title:'Settle new land',text:`Every bed in the hold is taken. Somewhere past the far woods there is good land and nobody on it. One family could go and make a farmstead of their own, with a cart of seed and timber from the stores.`,
-    choices:fams.map(g=>{const h=settleHead(g),md=g.reduce((x,s)=>x+s.mood,0)/g.length;return {t:g.length>1?`${h.name}'s family`:`${h.name}, alone`,d:`${g.length} ${g.length>1?'people':'person'}: ${g.map(s=>s.name+(isChild(s)?' (child)':'')).join(', ')}. ${md<40?'Glad of a fresh start.':md>70?'Happy here, but willing.':'Willing enough.'} 10 food, 10 wood.`,dis:G.food<10||G.wood<10,why:'Needs 10 food and 10 wood',fn(){return go(g)}}}).concat([{t:'Not now',d:'Nobody goes. You can ask again whenever you like.',fn(){G.cd.settle=0;return 'The hold stays crowded and cosy. Mostly crowded.'}}])};
+  const full=G.settlers.length>=housing(),fams=settleFams().slice(0,3);if(!fams.length)return null;
+  const c=fdCost(),FD=fdFams().slice(0,full?1:3).filter(g=>!full||!fdWhy(g)),nm=g=>{const h=settleHead(g);return g.length>1?`${h.name}'s family`:`${h.name}, alone`};
+  const cheap=full?fams.map(g=>({t:nm(g),d:`${settleWho(g)} 10 food, 10 wood.`,dis:G.food<10||G.wood<10,why:'Needs 10 food and 10 wood',fn(){return settleGo(g)}})):[];
+  const found=FD.map(g=>{const why=fdWhy(g),fn=fdName(g);return {t:`Found ${fn===fdDef(g)?'a farmstead':fn}: ${nm(g)}`,d:`${settleWho(g)} A crew of ${crewN()} rides out with them for a season. ${c.wood} wood, ${c.stone} stone, ${c.food} food.`,dis:!!why,why,fn(){return foundGo(g)}}});
+  return {who:(full?fams:FD).map(settleHead),kind:'Court',title:full?'Settle new land':'Found a farmstead',
+    text:full?`Every bed in the hold is taken. Somewhere past the far woods there is good land and nobody on it. One family could go and make a farmstead of their own, with a cart of seed and timber from the stores.${found.length?' Or the stores could send them off properly, with a crew to raise the roofs.':''}`
+      :`The stores are deep and the valley is wide. A family could ride out with a crew, carts of timber and stone and a season's food, and found a farmstead of their own. Each one founded costs more than the last: the good land is further off every time.`,
+    choices:cheap.concat(found,[{t:'Not now',d:'Nobody goes. You can ask again whenever you like.',fn(){G.cd.settle=0;return full?'The hold stays crowded and cosy. Mostly crowded.':'The carts stay in the yard, and the stores stay deep.'}}])};
 }
+/* Found a farmstead (colonies part 2, his pick Q3): Settle new land's late form, any time the hold can pay. G.fdN counts the ones founded so far; the first
+   costs 200 wood, 150 stone, 100 food and each further one half as much again (rounded to 10s). The crew rides out with the household (G.crew k 'found',
+   the one crew out), so it needs the crew's hands free, and 4 grown left at home besides the household. A notable family's household goes first
+   (fdFams) and the place takes its name ("Thatcher Farm"). */
+const fdCost=()=>{const m=1.5**(G.fdN||0),r=x=>Math.round(x*m/10)*10;return {wood:r(200),stone:r(150),food:r(100)}};
+const fdNote=g=>famOn()&&g.some(s=>!isChild(s)&&s.fm!=null&&famRow(famL(s.fm))&&(famL(s.fm).pw||0)>=1);
+const fdFams=()=>{const F=settleFams();return F.filter(fdNote).concat(F.filter(g=>!fdNote(g)))};
+const fdDef=g=>`${settleHead(g).name}'s farmstead`;
+// the notable line's name on the place, unless a place of yours has it already
+function fdName(g){if(!fdNote(g))return fdDef(g);const s=g.find(s=>!isChild(s)&&s.fm!=null&&famRow(famL(s.fm))&&(famL(s.fm).pw||0)>=1),nm=famFarmNm(famL(s.fm),g);return lands().some(l=>l.nm===nm)?fdDef(g):nm}
+const fdCrew=g=>crewCands().filter(s=>!g.includes(s)).slice(0,crewN());
+function fdWhy(g){if(!g)return 'No family can go';if(G.crew){const p=crewAt();return `The crew is ${p?'at '+p.nm:'away'}, home in ${nDays(crewDays())}`}
+  const c=fdCost(),n=crewN();if(G.wood<c.wood||G.stone<c.stone||G.food<c.food)return `Needs ${c.wood} wood, ${c.stone} stone and ${c.food} food`;
+  if(fdCrew(g).length<n||maudUp().filter(s=>!g.includes(s)).length-n<4)return `Needs ${n} grown free to go and 4 to stay home`;return ''}
+function foundGo(g){if(fdWhy(g)||!settleFams().includes(g)&&!settleFams().some(f=>f.length===g.length&&f.every(s=>g.includes(s))))return '';
+  const c=fdCost(),crew=fdCrew(g),nm=fdName(g),h=settleHead(g);G.fdN=(G.fdN||0)+1;settleGo(g,nm,c);
+  const l=lands()[lands().length-1],back=G.day+DPS;G.crew={lid:l.id,k:'found',ids:crew.map(s=>s.id),d:G.day,back,w:0,s:0};crewOff(crew,`Rides out with the crew to found ${l.nm}.`);
+  return `${g.length>1?`${h.name}'s family ride`:`${h.name} rides`} out with a crew of ${crew.length}, ${c.wood} wood, ${c.stone} stone, ${c.food} food and two hens, to found ${l.nm}. ${firstName(crew[0])} has the map, upside down. The crew is home in a season.`}
 const settleHead=g=>g.filter(s=>!isChild(s)).sort((a,b)=>a.born-b.born)[0];
-// a household leaves to clear a farmstead (10 food, 10 wood): the Settle new land card, and Raise them up's land rung (nm: the farmstead's name)
-function settleGo(g,nm){const h=settleHead(g),stay=G.settlers.filter(o=>!g.includes(o));
-    G.food-=10;G.wood-=10;G.settled=(G.settled||0)+g.length;rc('st');
-    for(const o of stay){if(g.some(s=>isKin(o,s)))addBuff(o,'Kin moved away',-3,8);else if(g.some(s=>getOp(o,s)>=40))addBuff(o,'A friend moved away',-2,6)}
-    landAdd(g,h,nm);
+// those left behind when g leave for good (a household settling, one who stays on the road for love): kin and friends miss them
+function kinGone(g){for(const o of G.settlers){if(g.includes(o))continue;if(g.some(s=>isKin(o,s)))addBuff(o,'Kin moved away',-3,8);else if(g.some(s=>getOp(o,s)>=40))addBuff(o,'A friend moved away',-2,6)}}
+// a household leaves to clear a farmstead: the Settle new land card (10 food, 10 wood), Raise them up's land rung (the same) and Found a farmstead
+// (foundGo, its rising cost). nm: the farmstead's name; cost {food, wood, stone}, 10 food and 10 wood when left out
+function settleGo(g,nm,cost){const h=settleHead(g),c=cost||{food:10,wood:10};
+    G.food-=c.food||0;G.wood-=c.wood||0;G.stone-=c.stone||0;G.settled=(G.settled||0)+g.length;rc('st');
+    kinGone(g);landAdd(g,h,nm);
     for(const s of g){life(s,g.length===1?'Left alone to settle new land, with a goat for company.':`Left with ${s===h?'the family':h.name+"'s family"} to settle new land.`);removeSettler(s,false,{wi:g})}
     const one=g.length===1;annal(one?`${h.name} leaves to settle new land.`:`${h.name}'s family leave to settle new land.`);
     return one?`${h.name} loads a cart with seed, timber, two hens and a goat with opinions, and sets off to clear land of ${hisW(h)} own. A bed stands empty, briefly.`:`${h.name}'s family load a cart with seed, timber, two hens and a goat with opinions, and set off to clear land of their own. ${g.length} beds stand empty, briefly.`}
@@ -11645,10 +11716,13 @@ function settleGo(g,nm){const h=settleHead(g),stay=G.settlers.filter(o=>!g.inclu
    About one letter every two years each (gift, news or plea; most free, a plea asks something), at most three a season, gathered with any
    war-end letters (warLetter in 07) and carts of spoils into one post card a season (evPost, kind Your lands or Letters, a soft card). */
 const lands=()=>G.lands||(G.lands=[]);
-const LANDPL=['Past the far woods','Up by the beck','Over the high moor','Down in the willow bottom','Beyond the old quarry','At the end of the drove road','Under Hob\'s Hill','Out by the standing stone'];
+const LANDPL=['Past the far woods','Up by the beck','Over the high moor','Down in the willow bottom','Beyond the old quarry','At the end of the drove road','Under Hob\'s Hill','Out by the standing stone','Down by the shingle shore','Out where the gulls nest'];
+// the land's kind (colonies, his pick "looks and letters"): sets the drawn picture's backdrop (landPic in 10); l.ld, worked out from l.pl for older places
+const LANDKIND={'Past the far woods':'forest','Up by the beck':'river','Over the high moor':'moor','Down in the willow bottom':'river','Beyond the old quarry':'hills','At the end of the drove road':'river','Under Hob\'s Hill':'hills','Out by the standing stone':'moor','Down by the shingle shore':'shore','Out where the gulls nest':'shore'};
+const landKind=l=>l.ld||LANDKIND[l.pl]||'river';
 function landAdd(g,h,nm){
-  const L=lands(),id=(G.landN=(G.landN||0)+1),used=L.map(l=>l.pl),pl=LANDPL.filter(p=>!used.includes(p));
-  L.push({id,nm:nm||`${h.name}'s farmstead`,n:g.length,d:G.day,hn:h.name,f:{id:h.id,sex:h.sex,born:h.born,lk:h.lk,traits:(h.traits||[]).slice(),col:h.col,cv:h.cv},pl:pick(pl.length?pl:LANDPL),ids:g.map(s=>s.id),lt:G.day,gv:0});
+  const L=lands(),id=(G.landN=(G.landN||0)+1),used=L.map(l=>l.pl),pl=LANDPL.filter(p=>!used.includes(p)),at=pick(pl.length?pl:LANDPL);
+  L.push({id,nm:nm||`${h.name}'s farmstead`,n:g.length,d:G.day,hn:h.name,f:{id:h.id,sex:h.sex,born:h.born,lk:h.lk,traits:(h.traits||[]).slice(),col:h.col,cv:h.cv},pl:at,ld:LANDKIND[at],ids:g.map(s=>s.id),lt:G.day,gv:0,...landFp(h)});// fp, fn: the founding family's standing and name, kept from the day it left (who built it: landLean)
 }
 const landFace=l=>Object.assign({mood:65,traits:[],parents:[],children:[]},l.f);
 // letters home, in the family's voice: [fits this farmstead, text]. {n} who writes, {a} the amount. A gift brings g, a plea asks c
@@ -11662,7 +11736,18 @@ const LANDGIFT=[
   [LN,(l,a)=>`We sold a calf at market for more than it was worth. Here is your share. The calf was very surprised. Your loving ${l.hn}.`,'gold'],
   [L1,(l,a)=>`Just me and the goat out here, and more turnips than the two of us can eat. Here are some. The goat chose them, so mind the bites. Love, ${l.hn}.`,'food'],
   [L1,(l,a)=>`I felled a great oak all on my own. It took a week and most of my words. Here is a cartload for your fires. Yours, ${l.hn}.`,'wood'],
-  [L1,(l,a)=>`I sold the goat's cheese at market. Here is your share. The goat thinks it should all be hers. Your loving ${l.hn}.`,'gold']];
+  [L1,(l,a)=>`I sold the goat's cheese at market. Here is your share. The goat thinks it should all be hers. Your loving ${l.hn}.`,'gold'],
+  // by the land's kind (colonies part 2, his pick "looks and letters"): shore and river send food, forest wood, hills stone, moor wool or food
+  [LN,(l,a)=>`The boats came in so full of herring we had to tread on them to get ashore. Here are some, salted. Mind the eyes. Love, ${l.hn}.`,'food','shore'],
+  [LN,(l,a)=>`A storm threw a whole cart of crabs up the shingle, and they were very cross about it. Here are the ones we could catch. Love, ${l.hn}.`,'food','shore'],
+  [LN,(l,a)=>`The woods out here go on for ever, and we have only cut a corner. Here is the corner. Yours, ${l.hn}.`,'wood','forest'],
+  [LN,(l,a)=>`An old beech came down in the wind and missed the cottage by a goat's length. The goat is fine. Here is the beech. Love, ${l.hn}.`,'wood','forest'],
+  [LN,(l,a)=>`We dug a new field and found more stone than soil, so here is the stone. The field is mostly a hole now. Love, ${l.hn}.`,'stone','hills'],
+  [LN,(l,a)=>`The old quarry face slid down in the thaw, all on its own, very helpfully. Here is a cartload, already broken. Yours, ${l.hn}.`,'stone','hills'],
+  [LN,(l,a)=>`The sheep have done well on the heather and look like clouds with legs. Here is their wool. They did not want to give it. Love, ${l.hn}.`,'wool','moor'],
+  [LN,(l,a)=>`Grouse eggs and moor honey, packed in heather so nothing breaks. Something will have broken. Love, ${l.hn}.`,'food','moor'],
+  [LN,(l,a)=>`The river gave us eels by the bucket this year. Here are some, smoked. They are still a little surprised. Love, ${l.hn}.`,'food','river'],
+  [LN,(l,a)=>`The meadow hay is in, and so are the geese, fat as abbots. Here is one goose. It knows. Love, ${l.hn}.`,'food','river']];
 const LANDNEWS=[
   [l=>l.n>=2&&G.day-l.d>=DPY,(l,a)=>`A baby! A girl, loud, with a good strong chin, God help her. We have named her after the hold, more or less. Love, ${l.hn}.`,1],
   [l=>l.n>=3&&G.day-l.d>=3*DPY,(l,a)=>`Our eldest has wed the miller's lad from over the hill. He is kind, and has a cart. Mostly a cart. Love, ${l.hn}.`,1],
@@ -11671,7 +11756,17 @@ const LANDNEWS=[
   [l=>LN(l)&&seasonIdx()<3,(l,a)=>`A bear came by in the night and ate all the honey. We have a new rule about honey. All well otherwise. Love, ${l.hn}.`,0],
   [l=>LN(l)&&seasonIdx()===3,(l,a)=>`Snowed in to the shutters. We are warm, we are fed, and we have played every game we know. Twice. Love, ${l.hn}.`,0],
   [L1,(l,a)=>`It is quiet out here, just me and the goat. The goat sends her regards. I made that up. She sends nothing. Yours, ${l.hn}.`,0],
-  [L1,(l,a)=>`I talk to the goat in the evenings. She never answers, which makes her the best listener in the valley. All well. Yours, ${l.hn}.`,0]];
+  [L1,(l,a)=>`I talk to the goat in the evenings. She never answers, which makes her the best listener in the valley. All well. Yours, ${l.hn}.`,0],
+  [LN,(l,a)=>`A seal came up the shingle and slept by our door all day. We have named him Bishop. He has not said yes. Love, ${l.hn}.`,0,'shore'],
+  [l=>LN(l)&&seasonIdx()<3,(l,a)=>`The gulls have learned which window is the bread window. We have moved the bread. They have moved too. Love, ${l.hn}.`,0,'shore'],
+  [LN,(l,a)=>`Something in the deep wood hoots all night, and nobody can say what. We have decided it is an owl. It is a very big owl. Love, ${l.hn}.`,0,'forest'],
+  [l=>LN(l)&&seasonIdx()===2,(l,a)=>`The whole wood has gone red and gold, and the pigs are fat on acorns. So are we, a little. Love, ${l.hn}.`,0,'forest'],
+  [LN,(l,a)=>`We found an old carving up on the crag, of a man with a very long nose. We think it is a saint. It may be the old miller. Love, ${l.hn}.`,0,'hills'],
+  [LN,(l,a)=>`You can see three valleys from the top of the hill, and on a clear day the smoke from your hall. We wave. Love, ${l.hn}.`,0,'hills'],
+  [LN,(l,a)=>`The mist came down on the moor so thick we lost a sheep for a week. She came back with a lamb, and no explanation. Love, ${l.hn}.`,0,'moor'],
+  [l=>LN(l)&&seasonIdx()===2,(l,a)=>`The heather is out, purple from here to the edge of the world, and the bees are drunk on it. All well. Love, ${l.hn}.`,0,'moor'],
+  [l=>LN(l)&&seasonIdx()<2,(l,a)=>`The river came up over the meadow in the night and went down by noon, leaving three fish in the kitchen. We ate them. Love, ${l.hn}.`,0,'river'],
+  [LN,(l,a)=>`We built a little bridge over the ford, and the cows refuse to use it. They walk through the water and look at us. Love, ${l.hn}.`,0,'river']];
 const LANDPLEA=[
   [LN,(l,a)=>`The rain got into the seed store and the seed got into the rats. Could you spare ${a} food to see us through? We will pay it back in turnips. Love, ${l.hn}.`,'food'],
   [LN,(l,a)=>`The wind took half our roof and put it in the duck pond. Could you spare ${a} wood? The ducks like the roof. We would like it back. Yours, ${l.hn}.`,'wood'],
@@ -11682,16 +11777,19 @@ const LANDPLEA=[
 // the old writer dies: their eldest (a new face, the family's surname) takes up the letters; os is the old writer's sex, read before the swap
 const LANDOLD=(l,o,os)=>`${o} has died, old and content, in ${os==='m'?'his':'her'} own bed, with the goat looking on. We buried ${os==='m'?'him':'her'} under the pear tree. I am ${os==='m'?'his':'her'} eldest, ${l.hn}, and I keep the letters now. Love, ${l.hn.split(" ")[0]}.`;
 // a letter that fits this farmstead and is not already waiting on the post card (k: the list's key), else one that fits, else any
-const landPick=(L,l,k)=>{const used=(G.post||[]).filter(p=>p.tp&&p.tp[0]===k).map(p=>p.tp[1]),ok=L.filter(x=>x[0](l)),fr=ok.filter(x=>!used.includes(L.indexOf(x))),x=pick(fr.length?fr:ok.length?ok:L);return [x,[k,L.indexOf(x)]]};
-const LANDAMT={food:[8,6],wood:[6,5],gold:[4,4]};// gifts: base + up to; pleas ask a little more
+// a line tagged with a land kind (x[3]) only fits a place of that kind; kd: half the time a gift or news line keeps to the land's own lines (colonies part 2)
+const landPick=(L,l,k,kd)=>{const used=(G.post||[]).filter(p=>p.tp&&p.tp[0]===k).map(p=>p.tp[1]),fit=L.filter(x=>x[0](l)&&(!x[3]||x[3]===landKind(l))),own=kd?fit.filter(x=>x[3]):[],ok=own.length?own:fit,fr=ok.filter(x=>!used.includes(L.indexOf(x))),x=pick(fr.length?fr:ok.length?ok:L);return [x,[k,L.indexOf(x)]]};
+const LANDAMT={food:[8,6],wood:[6,5],gold:[4,4],stone:[6,5],wool:[3,3]};// gifts: base + up to; pleas ask a little more
 function landLetter(l,plea){
   const fa=landFace(l);
   if(age(fa)>=70){const o=l.hn,os=l.f.sex,sur=/ /.test(o)?' '+o.split(' ').pop():'',c=mkSettler({age:28+R(12)});l.hn=c.name+sur;l.f={id:c.id,sex:c.sex,born:c.born,lk:c.lk,traits:c.traits.slice(),col:c.col,cv:c.cv};return {t:'news',lid:l.id,txt:LANDOLD(l,o,os)}}
   const r=rnd();
   if(plea&&r<.22){const [x,tp]=landPick(LANDPLEA,l,'p'),a=LANDAMT[x[2]][0]+2+R(LANDAMT[x[2]][1]);return {t:'plea',lid:l.id,tp,txt:x[1](l,a),c:{[x[2]]:a}}}
-  if(r<.6){const [x,tp]=landPick(LANDGIFT,l,'g'),a=LANDAMT[x[2]][0]+R(LANDAMT[x[2]][1]);return {t:'gift',lid:l.id,tp,txt:x[1](l,a),g:{[x[2]]:a}}}
-  const [x,tp]=landPick(LANDNEWS,l,'n');if(x[2]&&l.n<14)l.n+=x[2];return {t:'news',lid:l.id,tp,txt:x[1](l,0)};
+  if(r<.6){const [x,tp]=landPick(LANDGIFT,l,'g',chance(.5)),a=Math.round((LANDAMT[x[2]][0]+R(LANDAMT[x[2]][1]))*(clHas(l,'clmarket')?1.5:1));/* a Market: gifts half as big again */return {t:'gift',lid:l.id,tp,txt:x[1](l,a),g:{[x[2]]:a}}}
+  const [x,tp]=landPick(LANDNEWS,l,'n',chance(.5));if(x[2]&&l.n<14)l.n+=x[2];return {t:'news',lid:l.id,tp,txt:x[1](l,0)};
 }
+// a cool hold (loyalty under 40) signs off "Yours", not "Love" (who built it: a break-away seen coming)
+const landCool=(l,x)=>{if(x&&l.hold&&!l.free&&(l.loy==null?70:l.loy)<40&&x.txt)x.txt=x.txt.replace(/Love, /g,'Yours, ');return x};
 /* daughter holds (conquest part 4): after about eight years a thriving farmstead (4 souls or more, never left wanting) may grow into a hold of
    its own (l.hold the day, l.nm its new name, l.hh the house name it would take): a small food and wood tithe each New Year (landTithe, l.ty the
    year paid), a loyalty word (l.loy, l.dfs) settling lower as the years go by, higher for every plea you answered (gv). Broken, it breaks away
@@ -11699,8 +11797,12 @@ function landLetter(l,plea){
    l.att -40). A free farmstead still writes, and moves into the next burned seat as a full neighbour (vNew in 07, l.nb the row's id). */
 const LANDH=[['Little Ashford','Ashford'],['Brookend','Brookend'],['Low Tarrow','Tarrow'],['Nettlecombe','Nettlecombe'],['Whinmoor','Whinmoor'],['Copsey Green','Copsey'],['Hartsfold','Hartsfold'],['Kettlewick','Kettlewick']];
 const landOn=l=>l.nb==null;// still one of your lands (not moved into a neighbour's seat)
-const landTithe=l=>({food:Math.round(3+l.n*.5),wood:Math.round(2+l.n*.4)});
-function landAim(l){return clamp(62+clamp(l.gv||0,-4,4)*5-(G.day-l.hold)/DPY*1.3,0,100)}
+// a Mill makes the tithe a quarter bigger; a Market adds 2 gold (colonies)
+const landTithe=l=>{const m=(clHas(l,'clmill')?1.25:1)*(l.dt>Math.floor(G.day/DPY)?2:1),t={food:Math.round((3+l.n*.5)*m),wood:Math.round((2+l.n*.4)*m)};if(clHas(l,'clmarket'))t.gold=2;return t};
+const titheW=t=>`${t.food} food${t.gold?', ':' and '}${t.wood} wood${t.gold?` and ${t.gold} gold`:''}`;
+// a Chapel and a Hall each settle its loyalty 10 higher (colonies)
+// who built it: each building the place raised itself (clSelf) settles it CLPRIDE lower, and a Chapel or Hall it raised itself gives no +10 (proud, not grateful); crew-raised ones keep theirs
+function landAim(l){return clamp(62+clamp(l.gv||0,-4,4)*5-(G.day-l.hold)/DPY*1.3+(clHas(l,'clchapel')&&!(l.bs||{}).clchapel?10:0)+(clHas(l,'clhall')&&!(l.bs||{}).clhall?10:0)-clPride(l)*CLPRIDE+landLean(l),0,100)}
 function landGrow(l){const used=lands().map(x=>x.nm).concat((G.rivals||[]).map(x=>x.house)),f=LANDH.filter(p=>!used.includes(p[0])&&!used.includes(p[1])&&p[1]!==G.house),p=pick(f.length?f:LANDH);
   const old=l.nm;l.hold=G.day;l.nm=p[0];l.hh=p[1];l.loy=70;l.dfs=0;
   annal(`${old} grows into a daughter hold of House ${G.house}: ${l.nm}.`,'good');log(`${old} has grown into a hold of its own, ${l.nm}, and will send a tithe of food and wood each New Year.`,'good',true);
@@ -11709,18 +11811,23 @@ function landGrow(l){const used=lands().map(x=>x.nm).concat((G.rivals||[]).map(x
    landPanel; each choice once a year (l.ac {k: year}). Send a cart (food and wood; they like you more, gv +1, so a farmstead may grow into a hold
    up to two years sooner and likelier, and a daughter hold's loyalty settles higher); Ask for help (a farmstead sends food and wood back, gv -1);
    Call a family home (two of their grown children come to live in the hold, from 4 souls, with beds free). */
-const landYrs=l=>8-Math.min(2,Math.max(0,l.gv||0));
+// carts bring the hold up to two years sooner; each colony building one more, a Mill two (never sooner than 3 years)
+const landYrs=l=>Math.max(3,8-Math.min(2,Math.max(0,l.gv||0))-clN(l)-(clHas(l,'clmill')?1:0));
 const LANDCART={food:12,wood:8};
 const landHelp=l=>({food:4+Math.round(l.n*.6),wood:2+Math.round(l.n*.3)});
 const landDone=(l,k)=>(l.ac||{})[k]===Math.floor(G.day/DPY);
 function landPanel(l){
   const y=Math.floor((G.day-l.d)/DPY),hold=!!l.hold,left=Math.max(0,landYrs(l)-y),beds=housing()-G.settlers.length,hp=landHelp(l);
-  const note=hold?`${l.nm} pays its tithe each New Year. Carts and kind words keep it loyal; neglect makes it restless.`
+  const note=hold?`${l.nm} pays its tithe each New Year${l.dt>Math.floor(G.day/DPY)?`, twice over for ${l.dt-Math.floor(G.day/DPY)===1?'one more year':numW(l.dt-Math.floor(G.day/DPY))+' more years'}`:''}. ${clPride(l)?`It raised ${clPride(l)===1?'a building':numW(clPride(l))+' of its buildings'} itself and is proud of it, so it leans toward going its own way. Crews, carts, a chapel and a hall keep it close.`:'Carts and kind words keep it loyal; neglect makes it restless. It may raise buildings of its own and grow prouder for it; buildings your crews raise keep it grateful.'}${landLeanW(l)?' '+landLeanW(l):''}`
     :l.n<4?`Too few souls yet to grow into a hold. Families do come up the drove road, now and then.`
     :(l.gv||0)<0?`${l.hn} feels a little forgotten. A cart would mend that, and then it may grow into a hold.`
     :left>0?`It may grow into a hold of its own in about ${left===1?'a year':left+' years'}${(l.gv||0)<2?'. Carts make it sooner':''}.`:`It may grow into a hold of its own any New Year now${(l.gv||0)<2?'. Carts make it likelier':''}.`;
   const b=(k,t,d,why)=>{const no=landDone(l,k)?'Done this year':why;return `<button class="btn${no?'':' wax'}" data-act="landact" data-id="${l.id}" data-k="${k}"${no?' disabled':''}><span class="t">${t}<small>${no||d}</small></span></button>`};
-  let h=`<div class="parch card lpanel"><div class="sub">${note}</div><div class="btnrow">`;
+  let h=`<div class="parch card lpanel">${landPic(l)}<div class="sub clline">${clLine(l)}</div>${CLLEG}`;
+  {const c=G.crew,at=c&&c.lid===l.id,why=crewWhy(l);// colonies: the crew out here, and Send a crew (greyed with its reason)
+    if(at)h+=`<div class="clcrew">Your crew of ${c.ids.length} is here ${c.k==='found'?'clearing the land and raising the first roofs':'raising a '+crewWhat(c)}. Home in ${nDays(crewDays())}.</div>`;
+    else if(clN(l)<6)h+=`<button class="btn${why?'':' wax'}" data-act="crewpg" data-id="${l.id}"${why?' disabled':''}><span class="t">Send a crew<small>${why||`${capW(crewN())} hands for a season, to raise what you choose`}</small></span></button>`}
+  h+=`<div class="sub">${note}</div><div class="btnrow">`;
   h+=b('cart','Send a cart',`${LANDCART.food} food, ${LANDCART.wood} wood. They will remember it.`,G.food<LANDCART.food||G.wood<LANDCART.wood?`Needs ${LANDCART.food} food and ${LANDCART.wood} wood`:'');
   if(!hold)h+=b('help','Ask for help',`They send ${hp.food} food and ${hp.wood} wood. They will remember that too.`,'');
   if(!hold)h+=b('home','Call a family home','Two of their grown children come to live here.',l.n<4?'They are too few to spare anyone':beds<2?'Needs two free beds':'');
@@ -11738,13 +11845,13 @@ function landAct(id,k){
   return '';
 }
 function landSeason(){const L=lands(),ny=G.day%DPY<DPS,y=Math.floor(G.day/DPY);
-  for(const l of L){if(!landOn(l))continue;
+  for(const l of L){if(!landOn(l))continue;if(ny)clSelf(l,y);
     if(!l.hold&&!l.free&&ny&&l.gy!==y&&G.day-l.d>=landYrs(l)*DPY&&l.n>=4&&(l.gv||0)>=0){l.gy=y;if(chance(.35+.1*Math.min(2,l.gv||0)))landGrow(l);continue}
     if(!l.hold||l.free)continue;
-    if(ny&&l.ty!==y&&G.day-l.hold>=DPS){l.ty=y;const t=landTithe(l);G.food+=t.food;G.wood+=t.wood;log(`${l.nm} sends its tithe: ${t.food} food and ${t.wood} wood, and a turnip on top for luck.`,'good',true)}
+    if(ny&&l.ty!==y&&G.day-l.hold>=DPS){l.ty=y;const t=landTithe(l);G.food+=t.food;G.wood+=t.wood;G.gold+=t.gold||0;log(`${l.nm} sends its tithe: ${titheW(t)}, and a turnip on top for luck.`,'good',true)}
     l.loy=clamp((l.loy==null?70:l.loy)+(landAim(l)-(l.loy==null?70:l.loy))*.15+(rnd()*8-4)+rpLoy('l'),0,100);l.dfs=l.loy<25?(l.dfs||0)+1:0;
-    if(l.dfs>=2&&!G.pw&&G.lpend==null&&!(G.rivals||[]).some(x=>x.pend)&&!(G.tut>=0)){l.dfs=0;G.lpend=l.id;queueEvent(landCard())}}}
-const landStr=l=>3+l.n*.8;
+    if(l.dfs>=(clHas(l,'clhall')?3:2)&&!G.pw&&G.lpend==null&&!(G.rivals||[]).some(x=>x.pend)&&!(G.tut>=0)){l.dfs=0;G.lpend=l.id;queueEvent(landCard())}}}
+const landStr=l=>3+l.n*.8+(clHas(l,'clpal')?3:0);// a Palisade: +3 at its own gate (colonies)
 function landCard(){const l=lands().find(x=>x.id===G.lpend);if(!l||l.free||!l.hold){delete G.lpend;return null}const ev=evLandBreak(l);ev.cq=1;return ev}
 function evLandBreak(l){const gs=guardsFree(),n=gs.length,h=Math.ceil(n/2),my=pwStr(gs.slice().sort((a,b)=>pwMan(b)-pwMan(a)).slice(0,h),0,0),y=Math.max(1,Math.round((G.day-l.hold)/DPY));
   return {kind:'Your lands',title:`${l.nm} breaks away`,text:`A letter from ${l.hn}, very polite and very firm: ${l.nm} has paid its tithe for ${y===1?'a year':y+' years'}, and would now like to be its own master, thank you, with love. The goat has signed it too, in mud.`,
@@ -11756,13 +11863,186 @@ function landFree(l,fond){delete G.lpend;l.free=G.day;l.att=fond?40:-40;delete l
   annal(fond?`House ${G.house} lets ${l.nm} go its own way.`:`${l.nm} wins its freedom from House ${G.house}.`,fond?'story':'bad');
   return fond?`You write back wishing ${l.nm} well, and send a cheese. ${l.hn} writes back to say they will name the next goat after you.`
     :`${l.nm} is free, and cross about it. ${l.hn} writes one short letter, and does not sign it with love.`}
+/* who built it, losing the break-away (his words 2026-11-24: "they need serious consequences if they lose their independence war (like title/nobility stripped
+   or something)", then "Yes, all five"): a march you win (landHeel) disgraces the founding family (l.fp and l.fn gone; their line at home, l.fm, loses 15 favour
+   with a note and a story line), takes a finished town's title and banner (l.ttl and l.tw gone, l.tx: the card says so; the achievement stays), breaks their
+   pride (l.bs cleared: what they raised counts as yours), doubles the tithe for 5 years (l.dt, the year it ends; landTithe) and sends the writer off to tend
+   the goats (a new, humbler one: Content, the family's surname). */
+function landHeel(l){const y=Math.floor(G.day/DPY),fam=l.fn,town=!!l.ttl,T=town?clTown(l):'',o=l.hn,os=l.f&&l.f.sex,sur=/ /.test(o)?' '+o.split(' ').pop():'';
+  if(l.fm!=null&&famOn()){const L=famL(l.fm);if(famRow(L)){famNote(L.id,'rose',`Their kin at ${l.nm} rose against you`,-15);famStory(L,`Their kin at ${l.nm} rose against House ${G.house}, and lost.`)}}
+  delete l.fp;delete l.fn;if(town){delete l.ttl;delete l.tw;l.tx=1}l.bs={};l.dt=y+5;
+  const c=mkSettler({age:30+R(15)});c.traits=['content'];l.hn=c.name+sur;l.f={id:c.id,sex:c.sex,born:c.born,lk:c.lk,traits:['content'],col:c.col,cv:c.cv};
+  annal(`${l.nm} is brought to heel${town?`, and is ${T} no longer`:''}.`,'bad');
+  const lose=[fam?`${fam} lose their standing`:'',town?`the banner comes down and nobody calls it ${T} now`:'','what they built for themselves is yours',`the tithe is doubled for five years`].filter(x=>x);
+  postAdd({t:'news',lid:l.id,txt:`${o} has been sent to tend the goats on the high pasture, and I keep the letters now. We are very sorry about the pitchforks. The tithe will come, twice over. Yours most humbly, ${l.hn}.`});
+  return `The price of it: ${andW(lose)}. ${o.split(' ')[0]} is sent up the hill to tend the goats, and ${l.hn} writes the letters now, very humbly.`}
 function landMarch(l){delete G.lpend;const gs=guardsFree().sort((a,b)=>pwMan(b)-pwMan(a)),host=gs.slice(0,Math.ceil(gs.length/2));
   const my=pwStr(host,0,0)*(.6+rnd()*.8),th=landStr(l)*(.6+rnd()*.8),win=my>=th,hurt=[];
   for(const s of host){s.away=G.day+4;life(s,`Marches on ${l.nm}, which wanted to be free.`);if(chance(win?.08:.18)){injure(s,5+R(6),'war');hurt.push(s.name)}}
   const ht=hurt.length?` ${andW(hurt)} ${hurt.length>1?'come':'comes'} home with bruises and a grudge against pitchforks.`:'';
   if(win){l.loy=50;l.dfs=0;G.renown+=3;annal(`House ${G.house} brings ${l.nm} back to heel.`,'story');
-    return `Your guards march up the drove road. ${l.nm} turns out with pitchforks, thinks better of it, and puts the kettle on instead. The tithe will come again (+3 renown).${ht}`}
+    return `Your guards march up the drove road. ${l.nm} turns out with pitchforks, thinks better of it, and puts the kettle on instead. The tithe will come again (+3 renown).${ht} `+landHeel(l)}
   G.renown=Math.max(0,G.renown-3);return `Your guards march up the drove road, and come back down it a good deal faster, chased by pitchforks and the goat (-3 renown).${ht} `+landFree(l,0)}
+/* ---------- colonies part 1: crews raise buildings at your lands (2026-11-24, his plan; local .work/colonies/PLAN.md, his picks in decisions.md) ----------
+   l.bl {key: day built}: a farmstead raises any 3, a daughter hold all 6 (clMax). Keys carry a cl prefix so they never mix with G.built; shown names Mill,
+   Market, Chapel, Hall, Palisade, Muster yard (his call). Growth + (Mill: the hold comes 2 years sooner and the tithe is a quarter bigger; Market: gifts
+   half as big again, 2 gold in the tithe), Loyalty + (Chapel: landAim +10, a soul joins two years on; Hall: landAim +10, a break-away card needs 3 bad
+   seasons, not 2), Strength + (Palisade: +2 to your strength in wars with neighbours and +3 at its own gate, landStr; Muster yard: +3), clStr read in
+   pwMine (07) only, so never in a march on your own lands or against the exiles; no cap (his call). Any building also brings the hold a year sooner (landYrs).
+   G.crew {lid, k, ids, d sent, back, w wood, s stone paid, wl the war line said}: one crew out at a time, max(4, round(grown/8)) strong, for one season.
+   The cost is the only gate (his call), but a crew always leaves 4 grown at home. Maud picks the crew (crewCands: builders, quarriers, woodcutters first,
+   then the willing, those with a spouse or a small child last; never the ruler, heir, spouse, regent, a ward, a councillor, an agent, the pregnant,
+   sick, hurt or away); the player may Change any of them (the Send a crew page, crewPageHTML in 10). G.crew.back is the only clock: crewDay re-sets
+   s.away for the living each day (a mental break's 3 days must not bring them home early); a member made ruler or regent comes home at once; the place
+   going free or moving into a neighbour's seat sends them all home with the wood and stone (crewHome). A war at home: they stay out, with a line. */
+const CLB={clmill:{n:'Mill',k:'g',w:500,s:300,fx:'The farmstead grows into a hold sooner, and the tithe is bigger.'},
+  clmarket:{n:'Market',k:'g',w:400,s:350,fx:'Bigger gifts in its letters, and gold in the tithe.'},
+  clchapel:{n:'Chapel',k:'l',w:450,s:450,fx:'It stays loyal longer, and a soul comes to settle.'},
+  clhall:{n:'Hall',k:'l',w:600,s:450,fx:'It stays loyal longer, and is slow to break away.'},
+  clpal:{n:'Palisade',k:'s',w:700,s:300,fx:'More strength in your wars, and at its own gate.'},
+  clmuster:{n:'Muster yard',k:'s',w:500,s:400,fx:'More strength in your wars.'}};
+const CLKS=Object.keys(CLB),CLKW={g:'Growth +',l:'Loyalty +',s:'Strength +'},CLKD={g:'more folk, a bigger tithe',l:'less likely to break away',s:'soldiers for your wars'};
+const clBl=l=>l.bl||{},clHas=(l,k)=>clBl(l)[k]!=null,clN=l=>Object.keys(clBl(l)).length,clMax=l=>l.hold?6:3,clMine=l=>landOn(l)&&!l.free;
+const clOpen=l=>clMine(l)&&clN(l)<clMax(l)?CLKS.filter(k=>!clHas(l,k)):[];
+const clStr=()=>lands().filter(clMine).reduce((a,l)=>a+(clHas(l,'clpal')?2:0)+(clHas(l,'clmuster')?3:0),0);
+const crewN=()=>Math.max(4,Math.round(adults().length/8));
+const crewSeat=s=>Object.keys(COUNCIL).some(k=>{const c=councillor(k);return c&&c.id===s.id});
+function crewCan(s){const r=ruler(),h=r&&heirOf(r);return !s.ruler&&s!==h&&!(r&&r.spouse===s.id)&&!(G.regent&&G.regent.id===s.id)&&s.ward==null&&s.ta==null&&!s.preg&&!(s.hurt>G.day)&&!s.crus&&!crewSeat(s)}
+// a spouse at home or a child under 7: reluctant, picked last. Unwed and 16-35: glad to go
+const crewRel=s=>{const sp=s.spouse!=null&&byId(s.spouse);return !!(sp&&G.settlers.includes(sp))||livingKids(s).some(c=>G.settlers.includes(c)&&age(c)<7)};
+const crewWill=s=>!crewRel(s)&&age(s)>=16&&age(s)<=35,crewTrade=s=>['build','stone','wood'].includes(s.job);
+function crewCands(){return maudUp().filter(crewCan).sort((a,b)=>crewRel(a)-crewRel(b)||crewTrade(b)-crewTrade(a)||crewWill(b)-crewWill(a)||b.skills.build-a.skills.build||a.id-b.id)}
+const crewPick=()=>crewCands().slice(0,crewN());
+const crewAt=()=>G.crew?lands().find(l=>l.id===G.crew.lid)||null:null;
+const crewDays=()=>G.crew?Math.max(1,G.crew.back-G.day):0;
+const crewCheap=l=>clOpen(l).slice().sort((a,b)=>CLB[a].w+CLB[a].s-CLB[b].w-CLB[b].s)[0];
+const clAfford=k=>G.wood>=CLB[k].w&&G.stone>=CLB[k].s;
+// why Send a crew is greyed, or '' (the cost is the only gate, his call; hands: the crew, and 4 grown left at home)
+function crewWhy(l){
+  if(G.crew){const p=crewAt();return `Your crew is ${p?'at '+p.nm:'away'}, home in ${nDays(crewDays())}`}
+  if(!clMine(l))return 'Not yours to build on';
+  if(!clOpen(l).length)return clN(l)>=6?'Every building is up':'A farmstead raises three. The rest wait until it is a hold';
+  const n=crewN();if(crewCands().length<n||maudUp().length-n<4)return `Needs ${n} grown free to go and 4 to stay home`;
+  if(!clOpen(l).some(clAfford)){const k=crewCheap(l);return `Needs ${CLB[k].w} wood and ${CLB[k].s} stone for a ${CLB[k].n}`}
+  return ''}
+// the crew leaves (ids: the picked crew, as changed on the page; checked again at the tap, so a double tap sends nobody twice)
+function crewSend(lid,k,ids){const l=lands().find(x=>x.id===lid),b=CLB[k];
+  if(!l||!b||G.crew||crewWhy(l)||!clOpen(l).includes(k)||!clAfford(k))return '';
+  const n=crewN(),C=crewCands(),mine=[...new Set(ids||[])].map(byId).filter(s=>s&&C.includes(s)),g=mine.length===n?mine:C.slice(0,n);if(g.length<n)return '';
+  G.wood-=b.w;G.stone-=b.s;const back=G.day+DPS;G.crew={lid,k,ids:g.map(s=>s.id),d:G.day,back,w:b.w,s:b.s};
+  crewOff(g,`Rides out with the crew to raise a ${b.n.toLowerCase()} at ${l.nm}.`);
+  annal(`A crew of ${g.length} rides out to raise a ${b.n.toLowerCase()} at ${l.nm}.`);
+  return `${capW(g.length)} of your folk load the carts with ${b.w} wood and ${b.s} stone and set off for ${l.nm} to raise a ${b.n.toLowerCase()}. ${firstName(g[0])} has the plans, and has already lost them once. Home in a season.`}
+// they ride out (G.crew set): away until it is back; one sent with a spouse or a small child at home misses home all season, and the spouse grumbles (part 2)
+function crewOff(g,why){const back=G.crew.back;
+  for(const s of g){s.away=back;life(s,why);if(!crewRel(s))continue;addBuff(s,'Missed home',-6,DPS);const sp=s.spouse!=null&&byId(s.spouse);
+    if(sp&&G.settlers.includes(sp))addBuff(sp,sp.sex==='f'?'Husband away':'Wife away',-3,DPS)}}
+// what the crew is doing there, in words ('found': clearing a new farmstead)
+const crewWhat=c=>c.k==='found'?'farmstead':CLB[c.k].n.toLowerCase();
+// each day: the crew stays away until G.crew.back, whatever else set s.away; the ruler or regent comes home; the place gone or moved sends them all home
+function crewDay(){const c=G.crew;if(!c||!G||G.over)return;const l=crewAt();
+  if(!l||!clMine(l)){crewHome(l);return}
+  c.ids=c.ids.filter(id=>{const s=byId(id);if(!s||!G.settlers.includes(s))return false;
+    if(s.ruler||G.regent&&G.regent.id===s.id){s.away=G.day;const w=s.ruler?'rule':'see to the hold';life(s,`Leaves the crew at ${l.nm} to come home and ${w}.`);log(`${s.name} leaves the crew at ${l.nm} to come home and ${w}.`,'story',true);return false}
+    if(!(s.away>=c.back))s.away=c.back;return true});
+  if(G.pw&&!c.wl){c.wl=1;log(`Word of the war reaches the crew at ${l.nm} too late to get back in time. They dig in and finish the ${crewWhat(c)}.`,'bad',true)}
+  if(G.day>=c.back)crewDone(l)}
+// home on the day: the building is up (if every one of them was lost or called home, the folk of the place finish it)
+// part 2: the eldest leads (a notable family's member raises its standing, a deed name now and then, crewName); about 1 trip in 6 an unwed member stays for love (crewLove);
+// the place writes about it in the season's post (CLLET)
+function crewDone(l){const c=G.crew,fd=c.k==='found',b=CLB[c.k],w=crewWhat(c),g=c.ids.map(byId).filter(s=>s&&G.settlers.includes(s));G.crew=null;if(!fd)(l.bl=l.bl||{})[c.k]=G.day;
+  for(const s of g){if(!(s.away>c.back))s.away=G.day;life(s,fd?`Comes home from ${l.nm}, where the new roofs stand.`:`Comes home from ${l.nm}, where the ${w} stands.`)}
+  annal(fd?`${l.nm} is founded, its first roofs raised by the crew.`:`The ${w} at ${l.nm} is raised.`,'good');
+  const ld=crewLead(g),last=!fd&&clN(l)>=clMax(l),love=crewLove(l,g.filter(s=>s!==ld),w);
+  if(ld&&famOn()&&famRow(famL(ld.fm))&&(famL(ld.fm).pw||0)>=1){famNote(ld.fm,'crew',`${firstName(ld)} led the crew to ${l.nm}`,5);famStory(famL(ld.fm),`${firstName(ld)} led the crew that raised the ${w} at ${l.nm}.`)}
+  log((fd?`The crew is home from ${l.nm}, dusty and pleased with themselves: the farmstead is roofed, fenced and planted, and the goat has been shown round.`
+    :`The crew is home from ${l.nm}, dusty and pleased with themselves: the ${w} is up. ${CLKW[b.k]}: ${CLKD[b.k]}.`)+(love?' '+love:''),'good',true);
+  crewName(ld,l,w,last);if(!fd)rc('b');// a crew-raised building counts toward the Builder (part 3)
+  if(!fd&&clDone(l))clFinish(l,ld);else if(!love)postAdd({t:'news',lid:l.id,txt:CLLET[c.k](l,ld)})}
+/* colonies part 3, a finished place: a daughter hold with all six (clDone) is finished on the crew's return (clFinish): l.ttl the day, l.tw its word,
+   "the fair town of Brookend" (clTown); an annal (the Chronicle rates it), a log line, its letter in the season's post, the achievement 'town', a banner
+   in its picture (landPic) and "Fair town" on its House tab row. It never counts toward Lord of the Valley (his call 2026-11-24: three real seats).
+   A ruler who finishes two in one reign may be named the Town-Maker (rc('tm'), epithet in 02). */
+const CLTW=['fair','good','bonny','merry','proud'];
+const clDone=l=>!!l&&!!l.hold&&clN(l)>=6;
+const clTown=l=>`the ${l.tw||'fair'} town of ${l.nm}`;
+function clFinish(l,ld,own){if(l.ttl)return;l.ttl=G.day;l.tw=CLTW[famHash(l.id*13+(G.seed|0))%CLTW.length];if(!own)rc('tm');gainAch('town');// own: it raised its last building itself, so no Town-Maker credit
+  const T=clTown(l),r=ruler();
+  annal(`${l.nm} is finished, every roof and stake of it: ${T}.`,'good');
+  log(`Mill, market, chapel, hall, palisade and muster yard: ${l.nm} has them all now. Folk are calling it ${T}, and ${l.hn} has had a banner sewn to prove it.`,'story',true);
+  if(own){postAdd({t:'news',lid:l.id,txt:pick([`We are a town now, and we did the last of it ourselves, thank you very much. Folk call us ${T}. We have sewn a banner, and we sewed it ourselves too. Yours, ${l.hn}.`,
+    `The last roof went on without anyone's help, and a man from two valleys over called us ${T}. We gave him a pie we baked ourselves. Yours, ${l.hn}.`])});return}
+  postAdd({t:'news',lid:l.id,txt:pick([`We are a town! A proper one, with everything a town should have and a banner on a pole to say so. ${ld?firstName(ld)+' cried a little at the last nail. ':''}We are to be called ${T}, and we will not answer to anything less. Love, ${l.hn}.`,
+    `Every roof is on and every stake is in. A man came through from two valleys over and called us ${T}, so we gave him a pie, and now everyone says it. Our thanks to ${r?r.name:'you'} and the crews. Love, ${l.hn}.`])})}
+/* who built it (his pick 2026-11-24: "can the towns build stuff on their own, the crews just help them do it faster?"; a break-away should be "something you
+   could have prevented"): each New Year a farmstead or daughter hold of yours raises its cheapest missing building itself, 1 in CLSELFP, free to you (clSelf, from
+   its second year, never while a founding crew is there, never the one your crew is raising, within clMax with the crew's counted). It goes in l.bl like any
+   other (every effect applies) and in l.bs {key: 1}: each one settles a hold's loyalty CLPRIDE lower (landAim, clPride), so a place left to raise itself drifts
+   toward breaking away (landSeason, evLandBreak) while one built up by your crews stays close. Seen coming: the loyalty word on its House tab row, "They raised
+   ... themselves" on its card (clLine), a proud note on its panel, and its letters signed "Yours" instead of "Love" once it is under 40 (landCool). A place that
+   raises its own last building is still finished (clFinish own: title, banner, achievement) but earns no Town-Maker credit. Numbers his pick A (2026-11-24): 10 a building, a self-raised Chapel or Hall gives no +10. */
+const CLSELFP=4,CLPRIDE=10;
+// the founding family (his idea 2026-11-24: "a stronger or powerful family ... would be more likely to seek independence, particularly if they're ambitious"):
+// a place founded by a Strong line settles 8 lower, a Rising one 4 (l.fp, its standing on the day it left: landFp), an Ambitious head 6 lower,
+// a Content head 4 higher (l.f, so a new writer after the old one dies brings their own); a proud place (landLean < 0) raises its own 1 in 3 a year, not 1 in 4
+// read at founding (landAdd), since a household that leaves takes the line's size with it: fp its standing then (1 Rising, 2 Strong), fn its name
+function landFp(h){const L=famOn()?famOf(h):null;return famRow(L)&&L.pw?{fp:L.pw,fn:famName(L),fm:L.id}:{}}
+const landLean=l=>{const t=(l.f&&l.f.traits)||[];return -(l.fp>=2?8:l.fp===1?4:0)-(t.includes('ambitious')?6:0)+(t.includes('content')?4:0)};
+// the panel's words for it ('' when nothing leans)
+function landLeanW(l){const pw=l.fp||0,t=(l.f&&l.f.traits)||[],fn=l.hn.split(' ')[0],am=t.includes('ambitious'),ct=t.includes('content');
+  const fam=pw&&l.fn?`${l.fn[0].toUpperCase()+l.fn.slice(1)}, who founded it, are ${pw>=2?'a strong family':'a rising family'}`:'';
+  if(fam&&am)return `${fam}, and ${fn} is ambitious: they would like a say of their own.`;if(fam)return `${fam}, and would like a say of their own.`;
+  if(am)return `${fn} is ambitious, and would like a say of their own.`;if(ct)return `${fn} is content, and in no hurry to go anywhere.`;return ''}
+const clPride=l=>Object.keys(l.bs||{}).filter(k=>clHas(l,k)).length;
+const CLSLET={clmill:'a mill',clmarket:'a market',clchapel:'a chapel',clhall:'a hall',clpal:'a palisade',clmuster:'a muster yard'};
+function clSelf(l,y){if(!clMine(l)||l.sy===y||G.day-l.d<DPY)return;l.sy=y;const c=G.crew&&G.crew.lid===l.id?G.crew.k:null;if(c==='found')return;
+  const ks=clOpen(l).filter(k=>k!==c);if(!ks.length||clN(l)+(c?1:0)>=clMax(l)||!chance(1/(landLean(l)<0?CLSELFP-1:CLSELFP)))return;
+  const k=ks.slice().sort((a,b)=>CLB[a].w+CLB[a].s-CLB[b].w-CLB[b].s)[0],b=CLB[k];(l.bl=l.bl||{})[k]=G.day;(l.bs=l.bs||{})[k]=1;
+  annal(`${l.nm} raises ${CLSLET[k]} of its own.`,'story');log(`${l.nm} has raised ${CLSLET[k]} all by itself, and is very proud of it. ${CLKW[b.k]}: ${CLKD[b.k]}.`,'story',true);
+  if(clDone(l)&&!c){clFinish(l,null,1);return}
+  postAdd({t:'news',lid:l.id,txt:pick([`We raised ${CLSLET[k]} ourselves, thank you very much. Nobody had to send us anything. We are not saying that pointedly. Yours, ${l.hn}.`,
+    `You will be pleased to hear we have ${CLSLET[k]} now. We built it with our own hands and our own timber, and we will be telling people so for years. Yours, ${l.hn}.`,
+    `Big news: ${CLSLET[k]}, raised by us, for us. It leans a little. It is our lean. Yours, ${l.hn}.`])})}
+// Maud's quiet line (his Q8: never a pop-up or a toast, and she never sends a crew): on her Work strip while the stores are over her full mark
+// (maudPl, 06) and no crew is out; the place nearest finished first, its cheapest building the stores can pay for
+function maudCrewLn(){if(!G||G.crew||G.over||G.tut>=0||!maudFull())return '';
+  for(const l of lands().filter(x=>!crewWhy(x)).sort((a,b)=>clN(b)-clN(a)||a.id-b.id)){const k=clOpen(l).filter(clAfford).sort((a,b)=>CLB[a].w+CLB[a].s-CLB[b].w-CLB[b].s)[0];
+    if(k)return `The stores are full; a crew could raise a ${CLB[k].n} at ${l.nm}.`}
+  return ''}
+// who led: the eldest of those who came home
+const crewLead=g=>g.slice().sort((a,b)=>a.born-b.born||a.id-b.id)[0]||null;
+// the crew's deed name (his pick): the leader of the crew that raises the last a place has room for always, any other trip 1 in 8 (a fixed roll by the day, like famRoll4)
+function crewName(s,l,w,last){if(!s||!(last||famHash(G.day*37+(G.seed|0)+l.id)%8===0))return '';const t=famDeed(s,'crew',`${last?'last ':''}${w} at ${l.nm}`);if(t)log(t.trim(),'good');return t}
+// love on the road: about 1 trip in 6, one unwed grown member (never of the blood) stays to wed someone at the place: +1 soul, a wedding letter, kin miss them
+const CLWED={m:['the miller\'s daughter','a widow with a fine orchard','the girl who keeps the bees','a shepherdess with a laugh you can hear across the valley'],f:['the smith\'s son','a widower with a good roof','the lad who keeps the bees','a shepherd who sings to his sheep, badly']};
+function crewLove(l,g,w){if(!chance(1/6))return '';const s=pick(g.filter(s=>!isChild(s)&&s.spouse==null&&!bloodOf(s)&&age(s)<=45&&s.ward==null));if(!s)return '';
+  const m=s.sex==='m',who=pick(CLWED[s.sex]),fn=firstName(s);
+  life(s,`Stays on at ${l.nm} after the crew goes home, to wed ${who}.`);kinGone([s]);l.n++;(l.ids=l.ids||[]).push(s.id);removeSettler(s,false,{why:'left'});
+  annal(`${s.name} stays at ${l.nm} for love.`,'story');
+  postAdd({t:'news',lid:l.id,txt:pick([`A wedding! ${fn} came with your crew to raise the ${w}, and has wed ${who}, so ${m?'he':'she'} is ours now. We will send ${m?'him':'her'} back to visit at harvest, if ${m?'he':'she'} can be spared. Love, ${l.hn}.`,
+    `You may have noticed you are one short. ${fn} has stayed to wed ${who}. It was the ${w} that did it: all that lifting, and somebody watching. Love, ${l.hn}.`])});
+  return `${fn} is not with them: ${m?'he':'she'} has stayed at ${l.nm} to wed ${who}.`}
+// the place's letter about what the crew raised, in the season's post ({l} the place, s who led)
+const CLLET={
+  found:(l,s)=>`We are here, and so are the roofs, thanks to ${s?firstName(s)+' and ':''}your crew. The hens have taken the best corner. Love, ${l.hn}.`,
+  clmill:(l,s)=>`The mill turns! The first sack of flour came out grey and lumpy, the second rather better. ${s?firstName(s)+' says':'Your crew said'} it is meant to sound like that. Love, ${l.hn}.`,
+  clmarket:(l,s)=>`We have a market now, with a cross and a pie stall and a man who sells string. Folk come from two valleys over to look at the string. Love, ${l.hn}.`,
+  clchapel:(l,s)=>`The chapel bell rang for the first time on Sunday. Everyone came, even the goat, who was asked to leave. Love, ${l.hn}.`,
+  clhall:(l,s)=>`We have a hall now, with a long table and a fire you could roast an ox on. We have not tried. Yet. Love, ${l.hn}.`,
+  clpal:(l,s)=>`The palisade is up, every stake of it sharp. Nobody will get in without asking nicely. The goat got in. Love, ${l.hn}.`,
+  clmuster:(l,s)=>`The muster yard is done, and the lads drill in it every evening, mostly at the girls. Love, ${l.hn}.`};
+// the card's line under the picture (his pick C): what is up, what is going up, what is left
+function clLine(l){const up=CLKS.filter(k=>clHas(l,k)).map(k=>CLB[k].n),own=CLKS.filter(k=>clHas(l,k)&&(l.bs||{})[k]).map(k=>CLB[k].n.toLowerCase()),ow=own.length?` They raised the ${andW(own)} themselves.`:'',c=G.crew&&G.crew.lid===l.id&&G.crew.k!=='found'?G.crew.k:null,left=clOpen(l).filter(k=>k!==c).map(k=>CLB[k].n);
+  let t=(up.length?`${andW(up)} ${up.length>1?'are':'is'} up`:'Nothing raised here yet')+(c?`; the ${CLB[c].n} is going up now`:'')+'.';
+  const room=clMax(l)-clN(l)-(c?1:0);
+  if(clN(l)>=6)return (l.ttl?`${andW(up)} are up, and folk call it ${clTown(l)}.`:l.tx?t+' Every building is up, but it lost its title when it rose against you.':t+' Every building is up.')+ow;
+  if(room<=0)return t+ow+(l.hold?'':' The other three wait until it is a hold.');
+  return t+ow+(l.hold?` Still to raise: ${andW(left)}.`:` Room for ${numW(room)} more while it is a farmstead: ${left.length>1?left.slice(0,-1).join(', ')+' or '+left[left.length-1]:left.join('')}.`)}
+const CLLEG=`<div class="clleg">${['g','l','s'].map(k=>`<span class="ck${k}"><b>${CLKW[k]}</b> ${CLKD[k]}</span>`).join('')}</div>`;
+// the place went free or moved: the carts come back full
+function crewHome(l){const c=G.crew;G.crew=null;G.wood+=c.w||0;G.stone+=c.s||0;const nm=l?l.nm:'the farmstead';
+  for(const id of c.ids){const s=byId(id);if(s&&G.settlers.includes(s)&&!(s.away>c.back)){s.away=G.day+1;life(s,`Comes home early from ${nm}, the carts still full.`)}}
+  log(`${nm[0].toUpperCase()+nm.slice(1)} is not yours to build on now, so the crew turns the carts round and brings the ${c.w} wood and ${c.s} stone home.`,'info',true)}
 function postAdd(x){if(!G||!x)return;const p=G.post||(G.post=[]);if(x.lid!=null){const f=p.filter(y=>y.lid!=null);if(f.length>=3){const o=f.find(y=>y.t!=="plea")||f[0];p.splice(p.indexOf(o),1)}}/* at most three farmsteads on a card: a new one pushes out the oldest */p.push(x);while(p.length>8)p.shift()}
 const postWaits=()=>[G.modal].concat(G.queue||[]).some(e=>e&&e.isPost)||LATER.some(x=>x[2]===G&&x[1]&&x[1].isPost);
 // each season: farmsteads may write (one in about eight seasons each, a year apart at least), and the post card comes if anything waits
@@ -11770,9 +12050,10 @@ function postSeason(){
   try{
     if(!G||G.over)return;const L=lands();landSeason();
     if(G.day%DPY<DPS)for(const l of L)if(landOn(l)&&G.day-l.d>=2*DPY&&l.n<(l.hold?24:12)&&chance(l.hold?.4:.2))l.n++;// families grow a little, holds a little more
+    if(G.day%DPY<DPS)for(const l of L)if(clMine(l)&&clHas(l,'clchapel')&&!l.cj&&G.day-l.bl.clchapel>=2*DPY&&l.n<30){l.cj=1;l.n++;log(`A soul comes to settle at ${l.nm}, drawn by the new chapel bell.`,'good')}// a Chapel: one more soul, two years on (colonies)
     const room=3-(G.post||[]).filter(x=>x.lid!=null).length,w=L.filter(l=>landOn(l)&&G.day-(l.lt||l.d)>=DPY&&chance(.25)).sort(()=>rnd()-.5).slice(0,Math.max(0,room));// at most three farmsteads on a card, a new hold's letter counted
     let plea=!(G.post||[]).some(x=>x.t==='plea');
-    for(const l of w){l.lt=G.day;const x=landLetter(l,plea);if(x.t==='plea')plea=false;postAdd(x)}
+    for(const l of w){l.lt=G.day;const x=landCool(l,landLetter(l,plea));if(x.t==='plea')plea=false;postAdd(x)}
     if(!(G.post||[]).length||postWaits()||G.tut>=0)return;
     queueEvent(evPost());
   }catch(e){VERR=e}
@@ -11794,7 +12075,7 @@ function evPost(){
   const gT=Object.keys(g).length?' +'+postRes(g).replace(/, /g,', +')+'.':'';
   const kin=()=>{const ids=farm.flatMap(x=>lf(x.lid).ids||[]);for(const o of G.settlers)if(ids.includes(o.spouse)||o.parents.some(p=>ids.includes(p))||(o.children||[]).some(c=>ids.includes(c)))addBuff(o,'A letter from kin',4,8)};
   const done=()=>{G.post=(G.post||[]).filter(x=>!it.includes(x));kin();for(const x of war){const rv=rivals()[x.ri];if(rv&&rv.house===x.h)rv.vl={t:x.txt,d:x.d,k:x.k,mood:x.mood,mar:x.mar,mm:x.mm}}
-    let t='';if(g.food)t+=gainFood(g.food);if(g.wood)G.wood+=g.wood;if(g.gold)G.gold+=g.gold;return t};
+    let t='';if(g.food)t+=gainFood(g.food);if(g.wood)G.wood+=g.wood;if(g.gold)G.gold+=g.gold;if(g.stone)G.stone+=g.stone;if(g.wool)G.wool=(G.wool||0)+g.wool;return t};
   const ch=[];
   if(pl){const lab={food:'food',wood:'wood',gold:'gold'}[pk];
     ch.push({t:`Send ${pland.hn} what they ask`,d:`${pa} ${lab}. +1 renown: word gets about.${gT}`,dis:G[pk]<pa,why:`Needs ${pa} ${lab}`,fn(){const t=done();G[pk]=Math.max(0,G[pk]-pa);G.renown+=1;pland.gv=(pland.gv||0)+1;return `A cart goes out past the far woods with ${pa} ${lab} and a note in Maud's best hand.`+t}});
@@ -11848,7 +12129,13 @@ const ACTS={
     const t=troublemaker();addGrudge(t,'banished');memPush({k:'banished',sid:t.id,name:t.name,sex:t.sex,traits:t.traits.slice(),d:G.day});removeSettler(t,false,{why:'heartbroken'});// their kin may carry it on (memPass)
     G.settlers.forEach(o=>{if(isKin(o,t))addBuff(o,'Kin banished',-8,10);else addBuff(o,'Peace restored',3,8)});
     G.renown-=1;annal(`${t.name} is banished from the hold.`,'bad');return `${t.name} is escorted to the road with a bundle and a warning. The hold exhales.`}},
-  settle:{n:'Settle new land',d:'Every bed is taken. A family leaves to make a farmstead of their own (10 food, 10 wood).',cd:DPS,need:()=>G.settlers.length<housing()?'There is room enough':!settleFams().length?'No family can go':G.food<10||G.wood<10?'Needs 10 food and 10 wood':'',fn(){queueEvent(evSettle());return 'Word goes round that there is land to be had past the far woods.'}},
+  // Settle new land (every bed taken: 10 food, 10 wood) and its late form Found a farmstead (beds to spare: the rising cost and the crew), one act (colonies part 2)
+  settle:{get n(){return G&&G.settlers.length<housing()?'Found a farmstead':'Settle new land'},cd:DPS,
+    get d(){if(!G||G.settlers.length>=housing())return 'Every bed is taken. A family leaves to make a farmstead of their own (10 food, 10 wood).';const c=fdCost();return `A family rides out with a crew to found a farmstead (${c.wood} wood, ${c.stone} stone, ${c.food} food).`},
+    need(){const F=settleFams();
+      if(G.settlers.length>=housing())return !F.length?'No family can go':(G.food<10||G.wood<10)&&fdWhy(fdFams()[0])?'Needs 10 food and 10 wood':'';
+      const c=fdCost();if(!F.length||G.wood<c.wood/2||G.stone<c.stone/2)return 'There is room enough';return fdWhy(fdFams()[0])},
+    fn(){queueEvent(evSettle());return G.settlers.length<housing()?'Word goes round that the hold means to found a farmstead, and the carters start looking busy.':'Word goes round that there is land to be had past the far woods.'}},
   feast:{n:'Hold a feast',d:'20 food, 4 gold. Everyone cheers and your name spreads.',cd:14,need:()=>G.food<20?'Needs 20 food':G.gold<4?'Needs 4 gold':'',fn(){G.food-=20;G.gold-=4;allBuff('Feast',10,6);G.renown+=3;return pick(['The long tables come out. By midnight someone is singing on one.','A pig, two barrels and a fiddler. Nobody remembers the end of the evening.','The hall roars till dawn. The dogs eat better than they have all year.'])}},
   sell:{n:'Sell goods',get d(){const p=sellPlan();if(p.g<1)return 'Sell what the hold can spare for gold.';return G.built.market?`The cart takes ${sellList(p)} to market for ${p.g} gold.`:`A pedlar would give ${p.g} gold for ${sellList(p)}. A market pays better.`},cd:8,need:()=>sellPlan().g<1?'Nothing spare to sell':'',fn(){
     const p=sellPlan(),l=sellList(p);for(const k of SELLK)G[k]-=p.n[k];G.gold+=p.g;auPlay('coin');
@@ -12503,7 +12790,8 @@ function spyHTML(){const sm=smOf(),r=ruler(),A=rivals().map((rv,i)=>[rv,i,agOf(i
    - the hold from the front: the neighbours' pictures (HPROW, hpCot in the house style, the land: hpCrag, hpWood, hpRiver; hpWorks; life: hpWar, hpSnow; nbLook, nbLookAt, nbLookG and nbSty for newcomers (rv.gen), nbFolk, nbSnap; a burned seat hpAsh), holdPic (dusk with p.dk, style p.st, land p.ld, life p.lf, war p.war), holdSnap; nbPageHTML with Declare war (pwPageHTML); nbCrop (the round picture on a neighbour row) and a neighbour's page (ATTL, NBHX, NBCI, openNb, nbSide their side of it, nbPageHTML; the bond on it: loyBar, nbBondHTML; a burned seat's page ashPageHTML; Declare independence on your overlord's page)
    - the share card (after legacy): shareSVG, shareBlob, openShare (the picture with the hold code, for itch.io comments)
    - the start screen: the title page (renderStartPic, stCardHTML, stIconsHTML, stWarnHTML: a browser that will not keep the hold, the houses that were: pastAdd, stPastHTML), the sigil maker, the founder page, startPage, renderDiffs, showStart
-   - Families of the Hold (Notable families part B): FAMALL, FAMCOL, famPic, famCol, FAMPW, FAMFL, famChip, famLine, famRowHTML, FAMMAUD2, famListHTML, famTree, famPageHTML, FAMPG, famDemHTML, famRaiseHTML (part D: a waiting demand, Raise them up), famCardLine (the person card's "of the Brannocks")
+   - colonies part 1: the drawn place and the Send a crew page (CLS, CLART, clArt, CLPOS, LANDBK, landPic, CRW, crewFix, crewSwap, crewPageHTML; acts crewpg, crewsw, crewgo; BI.crew)
+   - Families of the Hold (Notable families part B): FAMALL, FAMCOL, famPic, famHomePic (FHPIC), famCol, FAMPW, FAMFL, famChip, famLine, famRowHTML, FAMMAUD2, famListHTML, famTree, famPageHTML, FAMPG, famDemHTML, famRaiseHTML (part D: a waiting demand, Raise them up), famCardLine (the person card's "of the Brannocks")
    - input; map zoom gestures; tap a building: bldAt, openBinfo, sheets
    - the first-game guide (told by Sister Maud): TUT, tutStep, and lessons told when things first matter (LESSONS, lessonOn; House notes: noteOn, houseNote); the season report: seasonReport, daily
    - boot (placeMap: on a computer screen the map moves to #stage on the left)
@@ -12777,7 +13065,7 @@ function alerts(){
   if(!md&&G.proj&&!G.settlers.some(s=>active(s,'build')))a.push(['warn','A project is waiting, but no one is set to Build.','j:build']);
   if(!G.proj){const bn=G.settlers.filter(s=>active(s,'build')).length,sh=nextShort();
     if(nq().length&&sh)a.push(['warn',`Next up, the ${nextBName(nq()[0])} waits for ${sh}.`,'build']);
-    else if(bn&&!md&&!nq().length)a.push(['info',`${bn>1?'Your builders have':'Your builder has'} nothing to build. Pick something on the Build tab.`,'build'])}
+    else if(bn&&!md&&!nq().length)a.push(buildLeft()?['info',`${bn>1?'Your builders have':'Your builder has'} nothing to build. Pick something on the Build tab.`,'build']:['info',`Nothing is left to build. ${bn>1?'Your builders could':'Your builder could'} take up other work.`,'j:build'])}
   {const ex=G.settlers.filter(s=>active(s,'farm')).length-wpTotal(),more=G.built.field<BUILD.field.max;
     if(ex>=2)a.push(['warn',`${ex} farmers have no place to work, so they grow only a third as much. ${more?`A field plot costs ${bcost('field').wood} wood.`:'Every place is taken: other work would suit them better.'}`,more?bldFix('field'):'f:farm'])}
   if(pop>=housing()){const nw=bldFix('hut'),up=!nw&&upFix('hut'),l=lv('hut'),full=G.built.hut>=BUILD.hut.max,maxed=full&&l>=2;
@@ -13072,7 +13360,8 @@ function peopleHTML(common){
 // Maud sees to the work (part 2, mock-up A): a slim strip at the top of the Work view, her face, her latest line and the On/Off switch (maudOn, 06-day.js)
 function maudStrip(){const on=!!G.maud,ln=G.maudLn&&G.maudLn.t;
   const sub=on?(G.tut>=0?'She starts once the guide is done.':ln&&G.day-G.maudLn.d<DPS*2?ln:'She sorts the jobs at the turn of each season.'):'Tap On and Maud sets the jobs for you.';
-  return `<div class="mzA${on?'':' off'}">${maudPic(40,'sigh')}<div class="tx"><b>${on?'Maud sees to the work':'Let Maud see to the work'}</b><i>${sub}</i></div><button class="tog${on?' on':''}" data-act="maudtog" role="switch" aria-checked="${on}" aria-label="Let Maud see to the work">${on?'On':'Off'}</button></div>`}
+  const cl=maudCrewLn();// colonies part 3: one quiet line when the stores are full and no crew is out
+  return `<div class="mzA${on?'':' off'}">${maudPic(40,'sigh')}<div class="tx"><b>${on?'Maud sees to the work':'Let Maud see to the work'}</b><i>${sub}</i>${cl?`<i class="mzc">${cl}</i>`:''}</div><button class="tog${on?' on':''}" data-act="maudtog" role="switch" aria-checked="${on}" aria-label="Let Maud see to the work">${on?'On':'Off'}</button></div>`}
 function workHTML(common,goTo){
   const big=G.settlers.length>=BIGHOLD,r=ruler();
   // someone moved out of a folded group has nothing under your finger to keep still: they go straight to their new group
@@ -13118,6 +13407,8 @@ function upgHTML(t){
 }
 let BMORE=false;const BFIRST=['field','hut','granary'];
 const bFolded=t=>G.day<DPY&&!G.rank&&!BMORE&&!BFIRST.includes(t)&&bState(t)==='open';
+// anything the Build tab could start now or later (its "Nothing left to build" note shows when this is false); the Hold tab's idle-builder note asks it too
+const buildLeft=()=>Object.keys(BUILD).some(t=>bState(t)==='open'||upOpen(t))||!!upLater();
 function renderBuild(){
   if(view==='build')bSeen(1);
   let h=`<div class="sub">Food store ${fmt(G.food)} of ${foodCap()}. ${adults().length} adults.</div>`;
@@ -13133,7 +13424,7 @@ function renderBuild(){
   else if(grp.open.length)h+='<div class="dcat">Build new</div>'+cats(grp.open);
   if(grp.done.length)h+=`<div class="dcat">Built</div><div class="parch card bicons">${grp.done.map(t=>`<button class="bicon" data-act="bshow" data-k="${t}" aria-label="${BUILD[t].n}">${picImg(t,null,56,46,"ipic")}<small>${GREAT.includes(t)?gwCap(t):BUILD[t].n}</small></button>`).join('')}</div>`;
   if(grp.lock.length)h+=`<button class="dcat dfold" data-act="bfold">Not yet (${grp.lock.length})<span class="chev">${UI.bl?'⌄':'›'}</span></button>`+(UI.bl?grp.lock.map(t=>bRow(t,'lock')).join(''):'');
-  if(!grp.open.length&&!ups.length&&!more)h+=`<div class="parch card"><div class="sub">Nothing left to build or upgrade for now. ${G.built.hall?'Spare gold can buy splendour in the Lord\'s Hall.':'A great hall would open the Lord\'s Hall, where spare gold buys splendour.'}</div>${G.built.hall?'<button class="btn" data-act="gofix" data-k="hall">Visit the Lord\'s Hall</button>':''}</div>`;
+  if(!buildLeft())h+=`<div class="parch card"><div class="sub">Nothing left to build or upgrade for now. ${G.built.hall?'Spare gold can buy splendour in the Lord\'s Hall.':'A great hall would open the Lord\'s Hall, where spare gold buys splendour.'}</div>${G.built.hall?'<button class="btn" data-act="gofix" data-k="hall">Visit the Lord\'s Hall</button>':''}</div>`;
   $('#v-build').innerHTML=h;
 }
 // open: can be built (maybe short on goods); done: as many as allowed; lock: requirement not met
@@ -13376,11 +13667,13 @@ function annalsCard(){
 }
 const SKULL='<svg class="skull" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="12.5" fill="#2a241c" stroke="#c9bfa8" stroke-width="1.2"/><path d="M13 5.5c-4.2 0-6.8 2.8-6.8 6.4 0 2.2 1 3.6 2.4 4.4v2.6h8.8v-2.6c1.4-.8 2.4-2.2 2.4-4.4 0-3.6-2.6-6.4-6.8-6.4z" fill="#e8e0cc"/><circle cx="10.4" cy="12.2" r="1.7" fill="#2a241c"/><circle cx="15.6" cy="12.2" r="1.7" fill="#2a241c"/><path d="M13 14.4l-1 1.8h2z" fill="#2a241c"/><path d="M11 18.9v-1.6M13 18.9v-1.6M15 18.9v-1.6" stroke="#2a241c" stroke-width=".7"/></svg>';
 // a face on an event card, tapped: who they are, in a line or two (a hold of seventy has a few Agneses)
+// a name in the note: tap it and the note turns to that person (only folk still in the hold)
+const whoNm=p=>G.settlers.includes(p)?`<span class="whotap" data-act="whonote" data-id="${p.id}" role="button" tabindex="0">${p.name}</span>`:p.name;
 function whoNote(s){
   const r=ruler(),sp=byId(s.spouse),ps=parsOf(s).map(byId).filter(Boolean),kids=s.children.map(byId).filter(Boolean),he=s.sex==='m'?'He':'She';
-  const role=s.ruler?'the ruler':r&&r.spouse===s.id?`${r.name}'s ${s.sex==='m'?'husband':'wife'}`:r&&heirOf(r)===s?'the heir':isChild(s)?(age(s)<1?'a babe in arms':'a child'):s.job==='rest'?'resting':aN(jobTitle(s).toLowerCase()||'worker');
-  const fam=[sp?`wed to ${sp.name}`:'',ps.length?`child of ${ps.map(p=>p.name).join(' and ')}`:'',kids.length?`${kids.length} child${kids.length>1?'ren':''} here`:''].filter(Boolean).join(', ');
-  const op=r&&!s.ruler?getOp(s,r):0,feel=s.ruler||!r?'':op<=-50?` ${he} hates ${r.name}.`:op<=-20?` ${he} resents ${r.name}.`:op>=50?` ${he} is loyal to ${r.name}.`:'';
+  const role=s.ruler?'the ruler':r&&r.spouse===s.id?`${whoNm(r)}'s ${s.sex==='m'?'husband':'wife'}`:r&&heirOf(r)===s?'the heir':isChild(s)?(age(s)<1?'a babe in arms':'a child'):s.job==='rest'?'resting':aN(jobTitle(s).toLowerCase()||'worker');
+  const fam=[sp&&!(r&&r.spouse===s.id)?`wed to ${whoNm(sp)}`:'',ps.length?`child of ${ps.map(whoNm).join(' and ')}`:'',kids.length?`${kids.length} child${kids.length>1?'ren':''} here`:''].filter(Boolean).join(', ');
+  const op=r&&!s.ruler?getOp(s,r):0,feel=s.ruler||!r?'':op<=-50?` ${he} hates ${whoNm(r)}.`:op<=-20?` ${he} resents ${whoNm(r)}.`:op>=50?` ${he} is loyal to ${whoNm(r)}.`:'';
   const md=s.mood<35?' Unhappy.':s.mood>=75?' Content.':'';
   return `<b>${s.name}</b>, ${age(s)<1?'':age(s)+', '}${role}.${fam?' '+fam[0].toUpperCase()+fam.slice(1)+'.':''} ${trTxt(s)[0].toUpperCase()+trTxt(s).slice(1)}.${feel}${md}`;
 }
@@ -13896,6 +14189,9 @@ document.addEventListener('click',e=>{
   else if(a==='upg'){if(!upWhy(t.dataset.b)&&!BI)sealFx(t);startUpgrade(t.dataset.b);refresh();if(BI)$('#binfo').innerHTML=binfoHTML()}
   else if(a==='nextb'){const u=!!t.dataset.u,was=inQ(t.dataset.b,u)>=0;setNext(t.dataset.b,u);const i=inQ(t.dataset.b,u),n=nq()[i];if(!was&&n)toast(i===0?`Next up: ${qName(n)}. It starts when this work is done.`:`${qName(n)} is ${i+1}${['st','nd','rd'][i]||'th'} in line.`);refresh();if(BI)$('#binfo').innerHTML=binfoHTML()}
   else if(a==='lando'){const id=+t.dataset.id;LANDO=LANDO===id?null:id;refresh()}
+  else if(a==='crewpg'){auPlay('tap');CRW=null;openBinfo({crew:+t.dataset.id})}
+  else if(a==='crewsw'){crewSwap(+t.dataset.id);$('#binfo').innerHTML=binfoHTML()}
+  else if(a==='crewgo'){const r=BI&&BI.crew!=null&&CRW?crewSend(BI.crew,t.dataset.k,CRW.ids):'';CRW=null;closeBinfo();if(r){log(r,'good');toast(r);SND.seal()}}
   else if(a==='landact'){const r=landAct(+t.dataset.id,t.dataset.k);if(r){log(r,'good');toast(r);SND.seal()}refresh()}
   else if(a==='nextclr'){if(t.dataset.i!=null)nq().splice(+t.dataset.i,1);else G.nq=[];refresh()}
   else if(a==='goal'){GOALO=!GOALO;if(GOALO)tally1('goal-tap');refresh()}
@@ -14114,6 +14410,91 @@ function famPic(cols){const n=cols.length,w=360,step=Math.min(80,(w-40)/n),x0=(w
       +`<rect x="${x+17}" y="${y+12}" width="10" height="16" fill="#5a3a20"/><line x1="${x+40}" y1="${y-22}" x2="${x+40}" y2="${y-48}" stroke="#4a3520" stroke-width="2"/><path d="M${x+40} ${y-48} L${x+62} ${y-43} L${x+40} ${y-37}Z" fill="${c}"/>`});
   return h+`<circle cx="320" cy="28" r="12" fill="#f4d66a"/></svg>`}
 const famCol=L=>FAMCOL[L.id%FAMCOL.length];
+/* ---------- colonies: the drawn place (landPic, his pick C) and the Send a crew page (crewPageHTML); rules in 09-rule.js ----------
+   One picture per place: its land's backdrop (landKind: shore, forest, hills, moor, river), the farmstead's cottage (two and a wall once a hold), six fixed
+   spots, built ones painted, the one the crew is raising half drawn with the crew at work, the rest a faint outline. clArt draws one building in 60x52. */
+// the six are small line drawings (his picked mock-up), not the map's building art (bPic): an unbuilt one must show as a faint outline, and the Muster yard has no map building
+const CLS='#4a3520';
+const CLART={
+  clmill:c=>`<rect x="18" y="22" width="24" height="26" fill="${c?'#d8c08a':'none'}" stroke="${CLS}"/><path d="M15 22 L30 10 L45 22Z" fill="${c?'#a8823e':'none'}" stroke="${CLS}"/><g stroke="${CLS}" stroke-width="2"><line x1="30" y1="16" x2="30" y2="0"/><line x1="30" y1="16" x2="46" y2="16"/><line x1="30" y1="16" x2="30" y2="32"/><line x1="30" y1="16" x2="14" y2="16"/></g><rect x="27" y="36" width="7" height="12" fill="${c?'#5a3a20':'none'}" stroke="${CLS}"/>`,
+  clmarket:c=>`<rect x="8" y="26" width="44" height="22" fill="${c?'#d8c08a':'none'}" stroke="${CLS}"/><path d="M5 26 L12 14 H48 L55 26Z" fill="${c?'#b43a27':'none'}" stroke="${CLS}"/><path d="M12 14 L16 26 M22 14 L24 26 M30 14 L30 26 M38 14 L36 26 M48 14 L44 26" stroke="${c?'#ecdcb2':CLS}"/><circle cx="20" cy="38" r="4" fill="${c?'#9a7a2a':'none'}" stroke="${CLS}"/><circle cx="32" cy="38" r="4" fill="${c?'#3d6b2e':'none'}" stroke="${CLS}"/>`,
+  clchapel:c=>`<rect x="16" y="24" width="28" height="24" fill="${c?'#cfc6b0':'none'}" stroke="${CLS}"/><path d="M13 24 L30 12 L47 24Z" fill="${c?'#6a5a4a':'none'}" stroke="${CLS}"/><line x1="30" y1="12" x2="30" y2="2" stroke="${CLS}" stroke-width="2"/><line x1="26" y1="5" x2="34" y2="5" stroke="${CLS}" stroke-width="2"/><path d="M26 48 V38 A4 4 0 0 1 34 38 V48" fill="${c?'#5a3a20':'none'}" stroke="${CLS}"/>`,
+  clhall:c=>`<rect x="6" y="26" width="48" height="22" fill="${c?'#d8c08a':'none'}" stroke="${CLS}"/><path d="M3 26 L30 10 L57 26Z" fill="${c?'#8a5a2a':'none'}" stroke="${CLS}"/><rect x="25" y="34" width="10" height="14" fill="${c?'#5a3a20':'none'}" stroke="${CLS}"/><line x1="44" y1="13" x2="44" y2="0" stroke="${CLS}"/><path d="M44 0 L54 3 L44 6Z" fill="${c?'#8e2b1d':'none'}" stroke="${c?'none':CLS}"/>`,
+  clpal:c=>[6,13,20,27,34,41,48].map(x=>`<path d="M${x} 48 V20 L${x+3} 14 L${x+6} 20 V48Z" fill="${c?'#9a6a38':'none'}" stroke="${CLS}"/>`).join('')+`<line x1="4" y1="28" x2="56" y2="28" stroke="${CLS}" stroke-width="2"/>`,
+  clmuster:c=>`<line x1="10" y1="48" x2="10" y2="12" stroke="${CLS}" stroke-width="2"/><path d="M10 12 L26 16 L10 20Z" fill="${c?'#2b4a8a':'none'}" stroke="${CLS}"/><circle cx="38" cy="30" r="11" fill="${c?'#e8dcc0':'none'}" stroke="${CLS}"/><circle cx="38" cy="30" r="6" fill="${c?'#b43a27':'none'}" stroke="${CLS}"/><circle cx="38" cy="30" r="2" fill="${c?'#e8dcc0':CLS}"/><line x1="38" y1="41" x2="38" y2="48" stroke="${CLS}"/>`};
+const clArt=(k,w)=>`<svg viewBox="-2 -4 64 56" width="${w}" height="${Math.round(w*56/64)}" aria-hidden="true" style="display:block">${CLART[k](1)}</svg>`;
+const CLPOS={clmill:[22,50],clmarket:[112,56],clchapel:[268,44],clhall:[30,100],clpal:[218,98],clmuster:[296,92]};
+// the backdrop by the land's kind: [far hill colour, near grass colour, what stands behind]
+const LANDBK={
+  // shore (his pick A, 2026-11-24): a calm bay in two blues from the horizon to a frothy edge, green headlands either side, a boat and a gull
+  shore:['#6f8f3e','#d9c48c',`<rect x="0" y="60" width="360" height="28" fill="#4f86a3"/><rect x="0" y="74" width="360" height="14" fill="#6fa6bd"/><path d="M0 66 Q40 52 90 60 T150 66 V70 H0Z" fill="#6f8f3e"/><path d="M250 64 Q300 50 360 56 V70 H250Z" fill="#5f7f36"/>`+`<g stroke="#e8f2f4" stroke-width="2" fill="none" stroke-linecap="round"><path d="M170 70 h14"/><path d="M60 78 h16"/><path d="M200 80 h12"/><path d="M300 76 h14"/></g>`+`<path d="M0 86 Q90 90 180 85 T360 86 V170 H0Z" fill="#d9c48c"/><path d="M0 86 Q90 90 180 85 T360 86" stroke="#f4efe0" stroke-width="3" fill="none"/><path d="M200 72 h22 l-4 5 h-14Z" fill="#6a4525"/><line x1="211" y1="72" x2="211" y2="59" stroke="#4a3520"/><path d="M211 59 L221 70 H211Z" fill="#ecdcb2"/><path d="M300 38 q4 -3 8 0 q4 -3 8 0" stroke="#4a3520" fill="none"/>`],
+  forest:['#4f6f2c','#6f8f3e',[8,40,72,150,184,214,330,352].map((x,i)=>`<path d="M${x-11} ${86-i%2*6} L${x} ${56-i%3*6} L${x+11} ${86-i%2*6}Z" fill="#2f4f22"/>`).join('')],
+  hills:['#9a9484','#7d9a4a',`<path d="M150 88 L190 46 L214 64 L240 36 L280 80Z" fill="#8a8474" stroke="#6a6454"/><path d="M232 44 l8 -8 l6 7" stroke="#e8e2d2" stroke-width="3" fill="none"/>`],
+  moor:['#8a6a7a','#8a8a4a',`<path d="M0 84 Q100 70 200 82 T360 80" stroke="#6a4a5a" stroke-width="5" fill="none"/>`+[[150,128],[166,132],[330,140]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="6" ry="4" fill="#f0ead8" stroke="#4a3520"/><circle cx="${x+6}" cy="${y-2}" r="2" fill="#4a3520"/>`).join('')],
+  river:['#7d9a4a','#6f9040',`<path d="M300 170 Q260 140 300 120 T290 84" stroke="#6a9ab8" stroke-width="9" fill="none"/>`+[[250,110],[340,100]].map(([x,y])=>`<path d="M${x} ${y} q-10 10 -14 22 M${x} ${y} q0 12 0 22 M${x} ${y} q10 10 14 22" stroke="#5f7d36" stroke-width="3" fill="none"/><line x1="${x}" y1="${y}" x2="${x}" y2="${y+24}" stroke="#6a4525" stroke-width="2"/>`).join('')]};
+function landPic(l,bare){const kd=LANDBK[landKind(l)]||LANDBK.river,c=G.crew&&G.crew.lid===l.id?G.crew.k:null;
+  let v=`<svg class="${bare?'':'lpicb'}" viewBox="0 0 360 170" width="100%" role="img" aria-label="${l.nm}"><defs><linearGradient id="clsk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd4e0"/><stop offset="1" stop-color="#efe3c2"/></linearGradient></defs>`
+    +`<rect width="360" height="170" fill="url(#clsk)"/><circle cx="325" cy="22" r="11" fill="#f4d66a"/><path d="M0 92 Q90 64 180 84 T360 78 V170 H0Z" fill="${kd[0]}"/>${kd[2]}<path d="M0 128 Q120 110 240 124 T360 118 V170 H0Z" fill="${kd[1]}"/><path d="M-5 168 Q120 140 180 150 T365 132" stroke="#c7ab72" stroke-width="7" fill="none"/>`;
+  const cot=(x,y)=>`<g transform="translate(${x} ${y})"><rect width="34" height="20" fill="#d8c08a" stroke="${CLS}"/><path d="M-4 0 L17 -14 L38 0Z" fill="#a8823e" stroke="${CLS}"/><rect x="13" y="8" width="8" height="12" fill="#5a3a20"/></g>`;
+  v+=cot(186,118);if(l.hold)v+=cot(150,128)+`<path d="M140 150 h100" stroke="#8a6a3a" stroke-width="3" stroke-dasharray="4 2"/>`;
+  // a farmstead being founded (G.crew k 'found'): a second roof half up beside the first, the crew at work under it (colonies part 2)
+  if(c==='found')v+=`<g transform="translate(140 124)" opacity=".7"><path d="M0 20 V0 M34 20 V0 M-4 0 L17 -14 L38 0 M0 10 H34" stroke="#6a4525" stroke-width="1.5" fill="none"/></g><g transform="translate(140 158)">`+[[4,'#6a4525'],[20,'#3d6b2e'],[40,'#2b4a8a']].map(([px,col])=>`<circle cx="${px}" cy="-10" r="3" fill="#e8c8a0" stroke="${CLS}"/><rect x="${px-3}" y="-7" width="6" height="8" fill="${col}"/>`).join('')+`</g>`;
+  for(const k of CLKS){const [x,y]=CLPOS[k],b=clHas(l,k),g=k===c;
+    v+=`<g transform="translate(${x} ${y})"${b?'':g?' opacity=".6"':' stroke-dasharray="3 3" opacity=".45"'}>${CLART[k](b||g)}${g?`<path d="M2 48 V18 M58 48 V18 M0 30 H60 M0 18 H60" stroke="#6a4525" stroke-width="1.5"/>`:''}</g>`;
+    if(g)v+=`<g transform="translate(${x+6} ${y+52})">`+[[4,'#6a4525'],[20,'#3d6b2e'],[40,'#2b4a8a']].map(([px,col])=>`<circle cx="${px}" cy="-10" r="3" fill="#e8c8a0" stroke="${CLS}"/><rect x="${px-3}" y="-7" width="6" height="8" fill="${col}"/>`).join('')+`<line x1="26" y1="-14" x2="32" y2="-4" stroke="${CLS}" stroke-width="2"/></g>`}
+  // a finished place (colonies part 3, clFinish): the house's banner on a tall pole by the cottages, and its title on a ribbon across the sky
+  if(l.ttl){const hc=houseCol(),T=clTown(l);
+    v+=`<path d="M204 118 V58" stroke="#5a3a20" stroke-width="2.5"/><circle cx="204" cy="57" r="2.5" fill="#d9b24a"/><path d="M205 60 H238 L230 70 L238 80 H205Z" fill="${hc}" stroke="${CLS}"/><path d="M205 63 H232" stroke="#d9b24a" stroke-width="1.2"/>`
+      +`<g transform="translate(180 17)"><path d="M-118 -11 H118 L110 0 L118 11 H-118 L-110 0Z" fill="#f3e6c4" stroke="#8a6a3a"/><text y="4" text-anchor="middle" font-size="12" font-family="serif" font-style="italic" fill="#5a3a20">${T[0].toUpperCase()+T.slice(1)}</text></g>`}
+  return v+'</svg>'}
+// Send a crew (his pick "C with list"): what is left to raise, each with its picture, kind and cost; Maud's crew with a Change each; Not now.
+// CRW {lid, ids, no}: the crew on the page (no: those swapped out, so a second Change brings someone new); checked again on Send (crewSend)
+let CRW=null;
+function crewFix(lid){const C=crewCands(),n=crewN();if(!CRW||CRW.lid!==lid)CRW={lid,ids:[],no:[]};
+  CRW.ids=CRW.ids.filter(id=>C.some(s=>s.id===id)).slice(0,n);for(const s of C){if(CRW.ids.length>=n)break;if(!CRW.ids.includes(s.id)&&!CRW.no.includes(s.id))CRW.ids.push(s.id)}
+  for(const s of C){if(CRW.ids.length>=n)break;if(!CRW.ids.includes(s.id))CRW.ids.push(s.id)}return C}
+function crewSwap(id){if(!CRW)return;const C=crewCands(),nx=C.find(s=>!CRW.ids.includes(s.id)&&!CRW.no.includes(s.id))||C.find(s=>!CRW.ids.includes(s.id)&&s.id!==id);
+  if(!nx)return;CRW.no.push(id);CRW.ids=CRW.ids.map(x=>x===id?nx.id:x)}
+function crewPageHTML(lid){const l=lands().find(x=>x.id===lid),why=l?crewWhy(l):'Not yours to build on';
+  const pg=b=>illumPage({kind:l?l.nm:'Your lands',title:'Send a crew',seal:`<span class="waxseal">${ic('build',24)}</span>`,pic:l?landPic(l,1):'',body:b,noClose:1,
+    maud:['smile',`I have picked the ones the hold can spare, and told the rest it is not personal. It is a little personal.`]});
+  if(why)return pg(`<div class="sub">${why}.</div><button class="btn wax" data-act="biclose">Close</button>`);
+  const C=crewFix(lid),n=crewN(),spare=C.length>n;
+  let h=`<div class="sub">What shall the crew raise at ${l.nm}? They will be gone a season, and the hold will manage without them, more or less.</div>`+illumH('What to raise');
+  for(const k of clOpen(l)){const b=CLB[k],ok=clAfford(k);
+    h+=`<button class="btn${ok?' wax':''} clpk" data-act="crewgo" data-k="${k}"${ok?'':' disabled'}><span class="pp">${clArt(k,40)}</span><span class="t">${b.n} <em class="ck${b.k}">${CLKW[b.k]}</em><small>${b.w} wood, ${b.s} stone. ${ok?b.fx:'Not enough in the stores yet.'}</small></span></button>`}
+  h+=illumH('The crew')+`<div class="sub">Maud has picked ${numW(n)} hands. Change any of them for the next one free.</div>`;
+  for(const id of CRW.ids){const s=byId(id);if(!s)continue;
+    h+=`<div class="prow crw">${portrait(s,34)}<div><b>${s.name}</b><small>${jobTitle(s)||'Resting'}${crewRel(s)?' · would rather stay home':crewWill(s)?' · glad to go':''}</small></div><button class="btn sm" data-act="crewsw" data-id="${s.id}"${spare?'':' disabled'}>Change</button></div>`}
+  return pg(h+'<button class="btn" data-act="biclose">Not now</button>')}
+// the header as he asked (2026-11-24, "show that family's head's house"; the floating pennants looked random): the head's own home
+// in its map art (sign, tools and all) on this season's hill, the family's pennant on a pole planted by the door; on the list page
+// the homes of the top three families. The hall when the head lives there. Kept as a picture (FHPIC); famPic when there is no canvas.
+const FHPIC={};
+function famHomePic(Ls){
+  const hs=Ls.map(L=>{const h=famHead(L);if(!h)return null;const p=households().of.get(h.id);return p?{p,c:famCol(L)}:null}).filter(Boolean).slice(0,3);
+  if(!hs.length)return famPic(Ls.slice(0,4).map(famCol).concat(Ls.length?[]:FAMCOL.slice(0,4)));
+  const si=seasonIdx(),k=[si,lv('hut'),hstyI(),G.built.keep,G.built.palace,G.built.hall,homeKey()].concat(hs.map(o=>o.p.hall?'H'+o.c:o.p.x+','+o.p.y+o.c)).join('|');
+  if(FHPIC[k])return FHPIC[k];
+  const W=360,H=150;let u='';
+  try{const cv=document.createElement('canvas');cv.width=W*2;cv.height=H*2;const c=cv.getContext('2d');c.scale(2,2);
+    const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#bcd4e0');g.addColorStop(1,'#efe3c2');c.fillStyle=g;c.fillRect(0,0,W,H);
+    c.fillStyle='#f4d66a';c.beginPath();c.arc(326,26,12,0,7);c.fill();
+    c.fillStyle=PAL.dark[si];c.beginPath();c.moveTo(0,104);c.quadraticCurveTo(90,74,180,96);c.quadraticCurveTo(270,118,360,90);c.lineTo(360,H);c.lineTo(0,H);c.fill();
+    c.fillStyle=PAL.base[si];c.beginPath();c.moveTo(0,124);c.quadraticCurveTo(120,106,240,120);c.quadraticCurveTo(300,127,360,114);c.lineTo(360,H);c.lineTo(0,H);c.fill();
+    const n=hs.length,s=n===1?2.1:n===2?1.8:1.5,step=W/n;
+    hs.forEach((o,i)=>{const cx=step*(i+.5),gy=H-8,big=o.p.hall?PICBIG[G.built.palace?'palace':G.built.keep?'keep':'hall']:1,z=s/big*(o.p.hall?1.15:1);
+      // the hall's art stands on its bottom tile and rises above it (as on the map and in bPic), so it is scaled down by its size
+      c.save();c.translate(cx-TS*z/2,gy-TS*z);c.scale(z,z);
+      TERR=true;try{if(o.p.hall){const f=G.built.palace?drawPalace:G.built.keep?drawKeep:drawHall;f(c,0,0,si,G.built.hall>0)}else drawHut(c,0,0,si,o.p.x,o.p.y)}finally{TERR=false}
+      c.restore();
+      // the pennant on a pole by the door
+      const px=cx+(o.p.hall?TS*z*big*.5+2:TS*s/2-6),top=gy-TS*s*(o.p.hall?.8:1)-6;
+      c.strokeStyle='#4a3520';c.lineWidth=2;c.beginPath();c.moveTo(px,gy-4);c.lineTo(px,top);c.stroke();
+      c.fillStyle=o.c;c.beginPath();c.moveTo(px,top);c.lineTo(px+22,top+5);c.lineTo(px,top+11);c.closePath();c.fill();
+      c.fillStyle='#e0b954';c.beginPath();c.arc(px,top-1,2,0,7);c.fill()});
+    u=cv.toDataURL?cv.toDataURL():''}catch(e){u='';TERR=false}
+  return FHPIC[k]=u?`<img src="${u}" alt="" width="${W}" height="${H}" style="display:block;width:100%;height:auto">`:famPic(Ls.slice(0,4).map(famCol))}
 const FAMPW=['','Rising','Strong'],FAMFL={fav:'Favour',quiet:'Quiet',grudge:'Grudge',gather:'Gathering'};
 const famChip=id=>{const f=famGathering(id)?'gather':famFeel(id);return `<span class="fmchip ${f}">${FAMFL[f]}</span>`};
 // a few words on the family: how many, what most of them do, a seat, folk away at a farmstead
@@ -14137,7 +14518,7 @@ function famListHTML(){const Ls=Object.values(famS().L).filter(L=>famRow(L)&&fam
   if(!Ls.length)h+='<div class="sub">No families yet. Give it a wedding or two.</div>';
   const s=Ls.find(L=>L.pw===2)||Ls.find(L=>L.pw===1),g=Ls.find(L=>famFeel(L.id)==='grudge');
   const m=s?`${famNm(s)} ${s.pw===2?'are the power in the hold, after you. I say "after".':'are on the rise. Every family thinks it is, but they really are.'}`:g?`${famNm(g)} are keeping a list. I have seen it. You are on it.`:'Nobody here is grand yet. Give them a generation.';
-  return illumPage({kind:'The folk of House '+G.house,title:'Families of the Hold',pic:famPic(Ls.slice(0,4).map(famCol).concat(Ls.length?[]:FAMCOL.slice(0,4))),body:h,maud:['smile',m]})}
+  return illumPage({kind:'The folk of House '+G.house,title:'Families of the Hold',pic:famHomePic(Ls),body:h,maud:['smile',m]})}
 // the small tree: the last three generations of the living and the dead roster, a wife or husband married in beside their spouse
 function famTree(L){const live=famLive(L.id),K=new Map();for(const x of L.dead)K.set(x.id,{id:x.id,n:x.n,sx:x.sx,b:x.b,dd:x.dd,p:x.p||[],lk:x.lk});for(const s of live)K.set(s.id,{id:s.id,s,b:s.born,p:parsOf(s)});
   const dep=new Map(),D=(x,g)=>{if(dep.has(x.id))return dep.get(x.id);if(g>12)return 0;const ps=x.p.map(i=>K.get(i)).filter(Boolean),v=ps.length?1+Math.max(...ps.map(p=>D(p,g+1))):0;dep.set(x.id,v);return v};
@@ -14163,7 +14544,7 @@ function famPageHTML(id){const L=famL(id);if(!famRow(L)||!famLive(id).length){FA
     +btn('honour','Honour their dead',(()=>{const d=famUnhon(L);return d?`${famHonCost()} food. A cup raised to ${d.n.split(' ')[0]}.`:''})())
     +famDemHTML(L)+famRaiseHTML(L)
     +`<button class="btn" data-act="fams">All the families</button>`;
-  return illumPage({kind:'A family of the hold',title:famNm(L),pic:famPic([famCol(L)]),body:b,maud:[f==='grudge'?'sigh':'smile',n===1&&!famFsN(L)?'A lone soul is not a family yet. Give it time, and a wedding.':FAMMAUD2[pw+f]]})}
+  return illumPage({kind:'A family of the hold',title:famNm(L),pic:famHomePic([L]),body:b,maud:[f==='grudge'?'sigh':'smile',n===1&&!famFsN(L)?'A lone soul is not a family yet. Give it time, and a wedding.':FAMMAUD2[pw+f]]})}
 let FAMPG=null;
 // part D: a demand waiting on their page (Grant it, Refuse), and Raise them up: one greyed button with the reason, or the four rungs
 function famDemHTML(L){const d=L.dm;if(!d)return '';const D=FAMDEM[d.k],b=(k,t,sub)=>{const w=famActWhy(L.id,k);return `<button class="btn sm${k==='dyes'?' wax':''}" data-act="famact" data-id="${L.id}" data-k="${k}"${w?' disabled':''}><span class="t">${t}<small>${w||sub}</small></span></button>`};
@@ -14187,6 +14568,7 @@ function binfoHTML(){
   if(BI.past)return pastHTML(BI.past);
   if(BI.nb!=null)return nbPageHTML(BI.nb);
   if(BI.crus)return crusRollHTML();
+  if(BI.crew!=null)return crewPageHTML(BI.crew);
   const o=BI,t=o.t,p=G.proj,site=p&&!p.up&&p.x===o.x&&p.y===o.y&&p.type===t&&!(G.built[t]>0&&BUILD[t].max===1);
   let n,fx;
   if(t==='hall'&&!G.built.hall){n='Longhouse';fx='The first home of your house. A Great Hall can replace it once the hold has 8 people.'}
