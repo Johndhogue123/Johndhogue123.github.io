@@ -1461,7 +1461,7 @@ function addSettler(s,fromEdge,how){
   if(fromEdge){s.x=0;s.y=HY+R(3)-1}
   // some grown newcomers come of a family in one trade already (a second generation, if they keep at it)
   if(!s.tl&&!s.parents.length&&!isChild(s)&&chance(.3))s.tl={j:jobFor(bestSkill(s)),n:2,o:1};
-  if(G)famJoin(s);G.settlers.push(s);G.peak=Math.max(G.peak,G.settlers.length);if(G.maud&&!isChild(s)&&!s.ruler)s.mnew=1;// Maud places them tomorrow, after any card has set their job (06-day.js maudNew)
+  if(G)famJoin(s);if(G&&G.fdGap>0&&!(s.age<1))G.fdGap--;/* a newcomer (not a newborn) makes up one who left to found a farmstead (09 foundGo) */G.settlers.push(s);G.peak=Math.max(G.peak,G.settlers.length);if(G.maud&&!isChild(s)&&!s.ruler)s.mnew=1;// Maud places them tomorrow, after any card has set their job (06-day.js maudNew)
   for(const o of G.settlers){if(o!==s){o.op[s.id]=(o.op[s.id]||0)+R(7)-2;s.op[o.id]=(s.op[o.id]||0)+R(7)-2}}
 }
 // a ruler who leaves by any road other than kill() (which handles it) still passes the seat on
@@ -11696,7 +11696,7 @@ function fdWhy(g){if(!g)return 'No family can go';if(G.crew){const p=crewAt();re
   const c=fdCost(),n=crewN();if(G.wood<c.wood||G.stone<c.stone||G.food<c.food)return `Needs ${c.wood} wood, ${c.stone} stone and ${c.food} food`;
   if(fdCrew(g).length<n||maudUp().filter(s=>!g.includes(s)).length-n<4)return `Needs ${n} grown free to go and 4 to stay home`;return ''}
 function foundGo(g){if(fdWhy(g)||!settleFams().includes(g)&&!settleFams().some(f=>f.length===g.length&&f.every(s=>g.includes(s))))return '';
-  const c=fdCost(),crew=fdCrew(g),nm=fdName(g),h=settleHead(g);G.fdN=(G.fdN||0)+1;settleGo(g,nm,c);
+  const c=fdCost(),crew=fdCrew(g),nm=fdName(g),h=settleHead(g);G.fdN=(G.fdN||0)+1;G.fdGap=(G.fdGap||0)+Math.round(g.length*FDGAPX);/* folk gone to found, not yet made up at home: fdDraw brings folk to their beds */settleGo(g,nm,c);
   const l=lands()[lands().length-1],back=G.day+DPS;G.crew={lid:l.id,k:'found',ids:crew.map(s=>s.id),d:G.day,back,w:0,s:0};crewOff(crew,`Rides out with the crew to found ${l.nm}.`);
   return `${g.length>1?`${h.name}'s family ride`:`${h.name} rides`} out with a crew of ${crew.length}, ${c.wood} wood, ${c.stone} stone, ${c.food} food and two hens, to found ${l.nm}. ${firstName(crew[0])} has the map, upside down. The crew is home in a season.`}
 const settleHead=g=>g.filter(s=>!isChild(s)).sort((a,b)=>a.born-b.born)[0];
@@ -12045,10 +12045,20 @@ function crewHome(l){const c=G.crew;G.crew=null;G.wood+=c.w||0;G.stone+=c.s||0;c
   log(`${nm[0].toUpperCase()+nm.slice(1)} is not yours to build on now, so the crew turns the carts round and brings the ${c.w} wood and ${c.s} stone home.`,'info',true)}
 function postAdd(x){if(!G||!x)return;const p=G.post||(G.post=[]);if(x.lid!=null){const f=p.filter(y=>y.lid!=null);if(f.length>=3){const o=f.find(y=>y.t!=="plea")||f[0];p.splice(p.indexOf(o),1)}}/* at most three farmsteads on a card: a new one pushes out the oldest */p.push(x);while(p.length>8)p.shift()}
 const postWaits=()=>[G.modal].concat(G.queue||[]).some(e=>e&&e.isPost)||LATER.some(x=>x[2]===G&&x[1]&&x[1].isPost);
+/* beds left by founders (G.fdGap, set in foundGo, made up one by one in addSettler) fill again: each season, while two or more beds are free, half the time
+   two folk walk in, a news line and no card (late in the game cards come so thick that newcomer cards seldom get a turn). Beds full: the gap is forgotten. */
+const FDDRAWP=.75,FDGAPX=1.5,FDDRAWT=[
+  (w,p,pl)=>`Word of ${p} has got about. ${w} ${pl?'walk':'walks'} in asking for the beds the settlers left, and ${pl?'promise':'promises'} not to snore.`,
+  (w,p,pl)=>`${w} ${pl?'turn':'turns'} up at the gate. Folk at the market said there was room since the families left for ${p}, and the beds are surely still warm.`,
+  (w,p,pl)=>`${w} ${pl?'arrive':'arrives'} with a bundle on a stick. Someone in the next valley said ${p} had left room here, which sounded very like an invitation.`];
+function fdDraw(){if(!(G.fdGap>0))return;const free=housing()-G.settlers.length;if(free<1){G.fdGap=0;return}if(free<2||!chance(FDDRAWP))return;
+  const L=lands().filter(landOn),l=L.length?pick(L):null,p=l?l.nm:'your farmsteads',n=Math.min(free-1,3,G.fdGap),who=[];
+  for(let i=0;i<n;i++){const s=mkSettler({sex:chance(.5)?'m':'f',age:16+R(14)});s.job=jobFor(bestSkill(s));addSettler(s,true,`Heard on the road that ${p} had left beds empty here, and came to fill one.`);who.push(s.name)}
+  log(pick(FDDRAWT)(who.join(' and '),p,n>1),'good')}
 // each season: farmsteads may write (one in about eight seasons each, a year apart at least), and the post card comes if anything waits
 function postSeason(){
   try{
-    if(!G||G.over)return;const L=lands();landSeason();
+    if(!G||G.over)return;const L=lands();landSeason();fdDraw();
     if(G.day%DPY<DPS)for(const l of L)if(landOn(l)&&G.day-l.d>=2*DPY&&l.n<(l.hold?24:12)&&chance(l.hold?.4:.2))l.n++;// families grow a little, holds a little more
     if(G.day%DPY<DPS)for(const l of L)if(clMine(l)&&clHas(l,'clchapel')&&!l.cj&&G.day-l.bl.clchapel>=2*DPY&&l.n<30){l.cj=1;l.n++;log(`A soul comes to settle at ${l.nm}, drawn by the new chapel bell.`,'good')}// a Chapel: one more soul, two years on (colonies)
     const room=3-(G.post||[]).filter(x=>x.lid!=null).length,w=L.filter(l=>landOn(l)&&G.day-(l.lt||l.d)>=DPY&&chance(.25)).sort(()=>rnd()-.5).slice(0,Math.max(0,room));// at most three farmsteads on a card, a new hold's letter counted
