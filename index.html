@@ -12850,7 +12850,8 @@ function spyHTML(){const sm=smOf(),r=ruler(),A=rivals().map((rv,i)=>[rv,i,agOf(i
    - the hold from the front: the neighbours' pictures (HPROW, hpCot in the house style, the land: hpCrag, hpWood, hpRiver; hpWorks; life: hpWar, hpSnow; nbLook, nbLookAt, nbLookG and nbSty for newcomers (rv.gen), nbFolk, nbSnap; a burned seat hpAsh), holdPic (dusk with p.dk, style p.st, land p.ld, life p.lf, war p.war), holdSnap; nbPageHTML with Declare war (pwPageHTML); nbCrop (the round picture on a neighbour row) and a neighbour's page (ATTL, NBHX, NBCI, openNb, nbSide their side of it, nbPageHTML; the bond on it: loyBar, nbBondHTML; a burned seat's page ashPageHTML; Declare independence on your overlord's page)
    - the share card (after legacy): shareSVG, shareBlob, openShare (the picture with the hold code, for itch.io comments)
    - the start screen: the title page (renderStartPic, stCardHTML, stIconsHTML, stWarnHTML: a browser that will not keep the hold, the houses that were: pastAdd, stPastHTML), the sigil maker, the founder page, startPage, renderDiffs, showStart
-   - colonies part 1: the drawn place and the Send a crew page (CLS, CLART, clArt, CLPOS, LANDBK, landPic, CRW, crewFix, crewSwap, crewPageHTML; acts crewpg, crewsw, crewgo; BI.crew)
+   - the House tab pages' header pictures (hpFolk, HPC, hpFlag, hpTorch, hpWin, hpFloor, HPREL, hpRelic, hpLook, hpCast, hpChand, hpRug, hpCouncil, hpThrone, hpCourt, hpKnight, hpHost, hpRat, hpDungeon, HPDEF, hpTree, hpBarrel, hpTent, hpImg, HPBG, HPSC, hpScene), after landPic
+   - colonies part 1: the drawn place and the Send a crew page (CLS, CLMAP, clArt, clWall, CLPOS, clLane, clImg, clPlot, clCrew, clTufts, PALP, LANDBK, landPic, CRW, crewFix, crewSwap, crewPageHTML; acts crewpg, crewsw, crewgo; BI.crew)
    - Families of the Hold (Notable families part B): FAMALL, FAMCOL, famPic, famHomePic (FHPIC), famCol, FAMPW, FAMFL, famChip, famLine, famRowHTML, FAMMAUD2, famListHTML, famTree, famPageHTML, FAMPG, famDemHTML, famRaiseHTML (part D: a waiting demand, Raise them up), famCardLine (the person card's "of the Brannocks")
    - input; map zoom gestures; tap a building: bldAt, openBinfo, sheets
    - the first-game guide (told by Sister Maud): TUT, tutStep, and lessons told when things first matter (LESSONS, lessonOn; House notes: noteOn, houseNote); the season report: seasonReport, daily
@@ -13506,11 +13507,11 @@ function upLater(){const ts=Object.keys(UPG).filter(t=>G.built[t]&&lv(t)<UPG[t].
 const lvTag=t=>UPG[t]&&G.built[t]&&lv(t)?`<i class="lvtag l${lv(t)}">${ULV[lv(t)]}</i>`:'';
 // the building's own map art on a patch of this season's ground, kept as a picture so the daily redraw is cheap
 const BPIC={};
-// dy: move the building down by that share of the height (the House tab's seat tile: the hall, keep and palace draw above their footprint)
-function bPic(t,L,w,h,dy){
-  const si=seasonIdx(),k=[t,L,si,w,h,G.built.cathedral?1:0,houseCol(),dy||0].join('|');if(k in BPIC)return BPIC[k];
+// dy: move the building down by that share of the height (the House tab's seat tile: the hall, keep and palace draw above their footprint); bare: no ground patch (landPic)
+function bPic(t,L,w,h,dy,bare){
+  const si=seasonIdx(),k=[t,L,si,w,h,G.built.cathedral?1:0,houseCol(),dy||0,bare?1:0].join('|');if(k in BPIC)return BPIC[k];
   let u='';try{const cv=document.createElement('canvas');cv.width=w*2;cv.height=h*2;const c=cv.getContext('2d');c.scale(2,2);
-    const g=c.createRadialGradient(w/2,h*.72,4,w/2,h*.72,w*.5);g.addColorStop(0,PAL.light[si]);g.addColorStop(.55,PAL.base[si]);g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.fillRect(0,0,w,h);
+    const g=c.createRadialGradient(w/2,h*.72,4,w/2,h*.72,w*.5);g.addColorStop(0,PAL.light[si]);g.addColorStop(.55,PAL.base[si]);g.addColorStop(1,'rgba(0,0,0,0)');if(!bare){c.fillStyle=g;c.fillRect(0,0,w,h)}
     const big=PICBIG[t]||1,s=h/TS*.92/big;c.translate(w/2-TS*s*(PICX[t]||.5),h-TS*s*big-2+(dy||0)*h);c.scale(s,s);
     const old=G.lv[t];if(L!=null)G.lv[t]=L;const l=L!=null?L:(UPG[t]?lv(t):0);
     try{if(t==='palisade')picWall(c,l);else if(t==='gwall'){for(const x of [2,15,41,54])curtSeg(c,x,52,x);curtTower(c,28,52,1)}else if(t==='statue')drawStatue(c,TS/2,TS*PICBIG.statue-6,si);else if(t==='harbour')drawHarbour(c,0,TS*(PICBIG.harbour-1)-4,si,0,0);else{const f=SITEFN()[t==='chapel'&&G.built.cathedral?'cathedral':t];if(f)f(c,0,0,si,0,0);
@@ -13676,9 +13677,10 @@ function greatState(t){const b=BUILD[t];if(G.built[t])return gwCap(t)+(G.gwn&&G.
    cards the tab used to show. Parts not open yet wait in one Later line. Rules: docs/screens.md The House tab. */
 const HPPIC={};
 // a crusader for the Crusades tile: the map's knight in a white surcoat with the red cross, on this season's ground (cached)
-function crusPic(w,h){const si=seasonIdx(),k=si+'|'+w;if(HPPIC[k])return HPPIC[k];let u='';
+// bare: no ground patch (hpScene)
+function crusPic(w,h,bare){const si=seasonIdx(),k=si+'|'+w+'|'+h+(bare?'|b':'');if(HPPIC[k])return HPPIC[k];let u='';
   try{const cv=document.createElement('canvas');cv.width=w*2;cv.height=h*2;const c=cv.getContext('2d');c.scale(2,2);
-    const g=c.createRadialGradient(w/2,h*.72,4,w/2,h*.72,w*.5);g.addColorStop(0,PAL.light[si]);g.addColorStop(.55,PAL.base[si]);g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.fillRect(0,0,w,h);
+    const g=c.createRadialGradient(w/2,h*.72,4,w/2,h*.72,w*.5);g.addColorStop(0,PAL.light[si]);g.addColorStop(.55,PAL.base[si]);g.addColorStop(1,'rgba(0,0,0,0)');if(!bare){c.fillStyle=g;c.fillRect(0,0,w,h)}
     const s=h/52*1.5;c.translate(w/2,h-6);c.scale(s,s);drawKnight(c,0,0,1,0,0,'#f2ecdc');
     c.fillStyle='#b3261e';c.fillRect(-.7,-21.2,1.4,6.2);c.fillRect(-2.2,-19.4,4.4,1.4);
     u=cv.toDataURL?cv.toDataURL():''}catch(e){u=''}
@@ -13697,28 +13699,28 @@ const lawsW=()=>{const o=Object.keys(LAWS).filter(k=>law(k)!==1).map(k=>(LAWS[k]
 const HPT=[
   {k:'crown',sec:'Rule',n:'Crown & repute',on:()=>1,pic:()=>hpArt('tower'),
     st:()=>{const L=crownLevel(crownThreats());return [CROWNL[L.i][0],L.i>=2?'bad':L.i===0?'good':'']},
-    title:'Crown and repute',pic2:()=>bldScene('tower',0),maud:['sigh','A crown sits easier on a head the hold likes. I have written that down for the next one too.'],body:()=>rpHTML()+crownHTML()},
+    title:'Crown and repute',pic2:()=>hpScene('crown'),maud:['sigh','A crown sits easier on a head the hold likes. I have written that down for the next one too.'],body:()=>rpHTML()+crownHTML()},
   {k:'laws',sec:'Rule',n:'Laws',on:()=>1,note:'laws',pic:()=>hpArt('library'),st:()=>[lawsW(),''],
-    title:'Laws of the hold',pic2:()=>bldScene('library',0),maud:['smile','Five laws, and every one of them argued over at supper. I keep the minutes. Nobody reads them.'],body:()=>houseNote('laws')+lawsHTML()},
+    title:'Laws of the hold',pic2:()=>hpScene('laws'),maud:['smile','Five laws, and every one of them argued over at supper. I keep the minutes. Nobody reads them.'],body:()=>houseNote('laws')+lawsHTML()},
   {k:'council',sec:'Rule',n:'Council',on:()=>hpCn().length>0,later:'a council, once four grown-ups besides the ruler live here',note:'council',pic:()=>hpFaces(hpCn()),
     st:()=>{const n=hpCn().length,cross=hpCn().filter(s=>getOp(s,ruler())<=-20).length;return [cross?`${cross} cross with you`:`${n} seat${n>1?'s':''} filled`,cross?'bad':'']},
-    title:'The council',pic2:()=>bldScene('guildhall',0),maud:['smile','Four advisers and one table. The spymaster sits with his back to the wall, which tells you everything.'],body:()=>houseNote('council')+councilHTML()+spyHTML()},
+    title:'The council',pic2:()=>hpScene('council'),maud:['smile','Four advisers and one table. The spymaster sits with his back to the wall, which tells you everything.'],body:()=>houseNote('council')+councilHTML()+spyHTML()},
   {k:'heir',sec:'Rule',n:'Heir & matches',on:()=>1,note:'heir',pic:()=>{const h=heirOf(ruler())||bloodHeir(ruler());return h?portrait(h,46):hpArt('hut')},
     st:()=>{const r=ruler(),h=heirOf(r)||bloodHeir(r);return h?[`${firstName(h)}, ${age(h)<1?'a babe':age(h)}`,'']:['No heir','bad']},
-    title:'Heir and matches',pic2:()=>{const u=bPic('hall',null,340,130,.42);return u?`<span class="bscn s${seasonIdx()}"><img src="${u}" alt=""></span>`:''},maud:['smile','An heir, a spare and a sensible match. Two out of three is usual.'],body:()=>houseNote('heir')+heirHTML()+matchHTML()},
+    title:'Heir and matches',pic2:()=>hpScene('heir'),maud:['smile','An heir, a spare and a sensible match. Two out of three is usual.'],body:()=>houseNote('heir')+heirHTML()+matchHTML()},
   {k:'crus',sec:'Rule',n:'Crusades',on:()=>G.rank>=2||!!G.crus||!!G.crusN,later:'calls to crusade, once you are a Barony',pic:()=>{const u=crusPic(64,52);return u?`<img src="${u}" alt="" width="64" height="52">`:ic('cross',30)},
     st:()=>G.crus?['The host is away','good']:[G.day>=(G.crusCd||0)?'A call may come':'All quiet',''],
-    title:'Crusades',pic2:()=>{const u=crusPic(170,65);return u?`<span class="bscn s${seasonIdx()}"><img src="${u}" alt=""></span>`:''},maud:['sigh','They march off singing and come back limping, with a relic and a tan. Every time.'],
+    title:'Crusades',pic2:()=>hpScene('crus'),maud:['sigh','They march off singing and come back limping, with a relic and a tan. Every time.'],
     body:()=>crusadeHTML()||'<div class="sub">No call to crusade has come yet. It will, once the King remembers you.</div>'},
   {k:'cellar',sec:'Rule',n:'The Cellar',on:()=>prisoners().length>0,pic:()=>hpArt('dungeon'),st:()=>{const n=prisoners().length;return [`${n} to judge`,'bad',n]},
-    title:'The Cellar',pic2:()=>bldScene('dungeon',0),maud:['sigh','They eat half rations and complain at full volume.'],body:()=>cellarHTML()},
+    title:'The Cellar',pic2:()=>hpScene('cellar'),maud:['sigh','They eat half rations and complain at full volume.'],body:()=>cellarHTML()},
   {k:'nb',sec:'Court',n:'Neighbours',on:()=>rivals().length>0,note:'rivals',pic:()=>{const i=hpNb();return i>=0?hpCrop(holdPic(Object.assign(nbSnap(i),{lf:0}))):hpArt('palisade')},
     st:()=>{const R=rivals(),w=R.filter(r=>r.war||r.pend).length,h=R.filter(r=>r.att<=-50).length;return w?['At war','bad']:h?[`${h} hostile`,'bad']:[R.some(r=>r.att>=50)?'Friends nearby':'At peace','']},
     title:'Neighbours',pic2:()=>{const i=hpNb();return i>=0?holdPic(Object.assign(nbSnap(i),{lf:0})):''},maud:['smile','Three houses, three opinions of us, and all of them wrong in different ways.'],
     body:()=>{G.rk=1;return houseNote('rivals')+rivalsHTML()}},
   {k:'hall',sec:'Court',n:'Lord’s Hall',on:()=>!!G.built.hall,later:'the Lord’s Hall, once you build a great hall',note:'hall',pic:()=>hpArt(hpSeat(),84,56),
     st:()=>{const K=Object.keys(SPL),d=K.filter(k=>splWhy(k)==='Done').length;return [d<K.length?`${d} of ${K.length} done`:'All splendid',d<K.length?'':'good']},
-    title:'The Lord’s Hall',pic2:()=>{const u=bPic(hpSeat(),null,340,130,.42);return u?`<span class="bscn s${seasonIdx()}"><img src="${u}" alt=""></span>`:''},maud:['smile','Peacocks. We are spending gold on peacocks. I have said nothing, in writing.'],body:()=>houseNote('hall')+lordsHallHTML()},
+    title:'The Lord’s Hall',pic2:()=>hpScene('hall'),maud:['smile','Peacocks. We are spending gold on peacocks. I have said nothing, in writing.'],body:()=>houseNote('hall')+lordsHallHTML()},
   {k:'lands',sec:'Court',n:'Your lands',on:()=>hpLands().length>0||!!G.crew||G.day>=DPY&&!ACTS.settle.need()||rivals().some(r=>r.held),later:'your lands, once a family goes out to settle',
     pic:()=>{const l=hpLandNow();return l?`<span class="hpl">${landPic(l,1)}</span>`:hpArt('hut')},
     st:()=>{const n=hpLands().length;return G.crew?['Crew out','good']:hpLands().some(l=>l.hold&&!l.free&&(l.loy==null?70:l.loy)<25)?['Restless','bad']:[n?`${n} place${n>1?'s':''}`:'Found one','']},
@@ -13726,7 +13728,7 @@ const HPT=[
   {k:'blood',sec:'Story',n:'Bloodline',on:()=>1,pic:()=>{const r=ruler(),sp=byId(r.spouse);return hpFaces([r,sp].filter(Boolean))},st:()=>['Family tree',''],
     title:'Bloodline',pic2:()=>holdPic(holdSnap()),maud:['smile','Every name on the tree, spelled right, which is more than the family manages.'],body:()=>bloodHTML()},
   {k:'legacy',sec:'Story',n:'Legacy & Annals',on:()=>1,pic:()=>hpArt('statue'),st:()=>[fmt(legacy()),''],
-    title:'Legacy and Annals',pic2:()=>bldScene('statue',null),maud:['smile','The great moments of the house. I have left out the one with the goose.'],body:()=>legacyHTML()},
+    title:'Legacy and Annals',pic2:()=>hpScene('legacy'),maud:['smile','The great moments of the house. I have left out the one with the goose.'],body:()=>legacyHTML()},
   {k:'set',sec:'Story',n:'Settings',on:()=>1,pic:()=>`<span class="medal hpm">${ic('gear',24)}</span>`,st:()=>['Sound, saves',''],title:'Settings',body:()=>setHTML()}];
 const hpOf=k=>HPT.find(p=>p.k===k);
 // the waiting House lesson's tile (its id is the tile's note)
@@ -14534,41 +14536,270 @@ function famPic(cols){const n=cols.length,w=360,step=Math.min(80,(w-40)/n),x0=(w
 const famCol=L=>FAMCOL[L.id%FAMCOL.length];
 /* ---------- colonies: the drawn place (landPic, his pick C) and the Send a crew page (crewPageHTML); rules in 09-rule.js ----------
    One picture per place: its land's backdrop (landKind: shore, forest, hills, moor, river), the farmstead's cottage (two and a wall once a hold), six fixed
-   spots, built ones painted, the one the crew is raising half drawn with the crew at work, the rest a faint outline. clArt draws one building in 60x52. */
-// the six are small line drawings (his picked mock-up), not the map's building art (bPic): an unbuilt one must show as a faint outline, and the Muster yard has no map building
+   spots in three rows on the ground, built ones in the map's own art (bPic), the one the crew is raising faded in scaffolding with the crew at work, the rest a staked plot
+   of bare earth (redrawn 2026-11-25). Everything in this season's colours. clArt draws one building for the Send a crew list. */
+// the six and the cottages use the map's own building art (bPic, bare: no ground patch; his call 2026-11-25 "the buildings to look like other buildings in the game"),
+// standing on the ground in three rows (back, middle, front) so nearer ones are bigger. CLMAP: which map building draws each.
 const CLS='#4a3520';
-const CLART={
-  clmill:c=>`<rect x="18" y="22" width="24" height="26" fill="${c?'#d8c08a':'none'}" stroke="${CLS}"/><path d="M15 22 L30 10 L45 22Z" fill="${c?'#a8823e':'none'}" stroke="${CLS}"/><g stroke="${CLS}" stroke-width="2"><line x1="30" y1="16" x2="30" y2="0"/><line x1="30" y1="16" x2="46" y2="16"/><line x1="30" y1="16" x2="30" y2="32"/><line x1="30" y1="16" x2="14" y2="16"/></g><rect x="27" y="36" width="7" height="12" fill="${c?'#5a3a20':'none'}" stroke="${CLS}"/>`,
-  clmarket:c=>`<rect x="8" y="26" width="44" height="22" fill="${c?'#d8c08a':'none'}" stroke="${CLS}"/><path d="M5 26 L12 14 H48 L55 26Z" fill="${c?'#b43a27':'none'}" stroke="${CLS}"/><path d="M12 14 L16 26 M22 14 L24 26 M30 14 L30 26 M38 14 L36 26 M48 14 L44 26" stroke="${c?'#ecdcb2':CLS}"/><circle cx="20" cy="38" r="4" fill="${c?'#9a7a2a':'none'}" stroke="${CLS}"/><circle cx="32" cy="38" r="4" fill="${c?'#3d6b2e':'none'}" stroke="${CLS}"/>`,
-  clchapel:c=>`<rect x="16" y="24" width="28" height="24" fill="${c?'#cfc6b0':'none'}" stroke="${CLS}"/><path d="M13 24 L30 12 L47 24Z" fill="${c?'#6a5a4a':'none'}" stroke="${CLS}"/><line x1="30" y1="12" x2="30" y2="2" stroke="${CLS}" stroke-width="2"/><line x1="26" y1="5" x2="34" y2="5" stroke="${CLS}" stroke-width="2"/><path d="M26 48 V38 A4 4 0 0 1 34 38 V48" fill="${c?'#5a3a20':'none'}" stroke="${CLS}"/>`,
-  clhall:c=>`<rect x="6" y="26" width="48" height="22" fill="${c?'#d8c08a':'none'}" stroke="${CLS}"/><path d="M3 26 L30 10 L57 26Z" fill="${c?'#8a5a2a':'none'}" stroke="${CLS}"/><rect x="25" y="34" width="10" height="14" fill="${c?'#5a3a20':'none'}" stroke="${CLS}"/><line x1="44" y1="13" x2="44" y2="0" stroke="${CLS}"/><path d="M44 0 L54 3 L44 6Z" fill="${c?'#8e2b1d':'none'}" stroke="${c?'none':CLS}"/>`,
-  clpal:c=>[6,13,20,27,34,41,48].map(x=>`<path d="M${x} 48 V20 L${x+3} 14 L${x+6} 20 V48Z" fill="${c?'#9a6a38':'none'}" stroke="${CLS}"/>`).join('')+`<line x1="4" y1="28" x2="56" y2="28" stroke="${CLS}" stroke-width="2"/>`,
-  clmuster:c=>`<line x1="10" y1="48" x2="10" y2="12" stroke="${CLS}" stroke-width="2"/><path d="M10 12 L26 16 L10 20Z" fill="${c?'#2b4a8a':'none'}" stroke="${CLS}"/><circle cx="38" cy="30" r="11" fill="${c?'#e8dcc0':'none'}" stroke="${CLS}"/><circle cx="38" cy="30" r="6" fill="${c?'#b43a27':'none'}" stroke="${CLS}"/><circle cx="38" cy="30" r="2" fill="${c?'#e8dcc0':CLS}"/><line x1="38" y1="41" x2="38" y2="48" stroke="${CLS}"/>`};
-const clArt=(k,w)=>`<svg viewBox="-2 -4 64 56" width="${w}" height="${Math.round(w*56/64)}" aria-hidden="true" style="display:block">${CLART[k](1)}</svg>`;
-const CLPOS={clmill:[22,50],clmarket:[112,56],clchapel:[268,44],clhall:[30,100],clpal:[218,98],clmuster:[296,92]};
-// the backdrop by the land's kind: [far hill colour, near grass colour, what stands behind]
+const CLMAP={clmill:'mill',clmarket:'market',clchapel:'chapel',clhall:'hall',clpal:'palisade',clmuster:'barracks'};
+// the palisade as a stretch of wall (his ask 2026-11-25: "look like a wall instead of a few pieces of wood"): the map's stakes (stake, gatePost in 04) side by side
+// on a rail, a gate with gold-knobbed posts in the middle; its foot on the ground line at (x,y), h tall, about 2.2h wide
+const clWall=(x,y,h,op)=>{const k=h/46,st=[];for(let i=-6;i<=6;i++){if(Math.abs(i)<2)continue;const sx=i*8.5,by=Math.abs(i)*.6;st.push(`<path d="M${sx-4.5} ${by} V${by-22} L${sx} ${by-30} L${sx+4.5} ${by-22} V${by}Z" fill="#7a5632" stroke="#3b2614" stroke-width="1.2"/><rect x="${sx-4.5}" y="${by-22}" width="3" height="22" fill="rgba(255,230,180,.22)"/>`)}
+  return `<g transform="translate(${x} ${y}) scale(${k})"${op?` opacity="${op}"`:''}><ellipse cx="0" cy="2" rx="58" ry="5" fill="rgba(18,28,10,.25)"/>${st.join('')}<path d="M-56 -10 H-13 M13 -10 H56" stroke="#4a2f1a" stroke-width="2.5"/><rect x="-9" y="-30" width="18" height="30" fill="#3b2614"/><path d="M-9 0 L-15 -4 V-30 L-9 -30Z" fill="#8a6238" stroke="#3b2614"/>`
+    +[-13,13].map(gx=>`<rect x="${gx-5}" y="-42" width="10" height="42" fill="#5a3a20" stroke="#2a190c" stroke-width="1.4"/><circle cx="${gx}" cy="-44" r="3" fill="#e0b954"/>`).join('')+'</g>'};
+const clArt=(k,w)=>{if(k==='clpal')return `<svg viewBox="-62 -50 124 58" width="${w}" height="${Math.round(w*.8)}" aria-hidden="true" style="display:block">${clWall(0,0,46)}</svg>`;const h=Math.round(w*.8),u=bPic(CLMAP[k],0,w,h,0,1);return u?`<img src="${u}" alt="" width="${w}" height="${h}" style="display:block">`:ic('build',w*.6)};
+// [x middle, y ground line, height]: back row small, front row big (the hall is big on the map too, so it gets more height)
+const CLPOS={clchapel:[42,108,48],clmill:[306,106,50],clhall:[124,134,66],clmarket:[150,164,56],clpal:[52,166,40],clmuster:[312,164,58]};
+// one map building in the picture: its foot on the ground line at (x,y), h tall; op: faded (the one the crew is raising)
+const clImg=(t,x,y,h,op)=>{const w=Math.round(h*1.25),u=bPic(t,0,w,h,0,1);return u?`<image href="${u}" x="${x-w/2}" y="${y-h*.94}" width="${w}" height="${h}"${op?` opacity="${op}"`:''}/>`:''};
+// an empty spot: a patch of bare earth with four stakes and a rope; s scales it with its row
+const clPlot=(x,y,s)=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="0" cy="-3" rx="16" ry="5" fill="#9a7a4a" opacity=".75"/><g stroke="#6a4525" stroke-width="1.4"><path d="M-13 -2 V-10 M13 -2 V-10 M-7 -6 V-13 M7 -6 V-13"/></g><path d="M-13 -9 L-7 -12 L7 -12 L13 -9" stroke="#d8c8a0" stroke-width=".8" fill="none"/></g>`;
+const clCrew=(x,y)=>`<g transform="translate(${x} ${y})">`+[[-16,'#6a4525'],[0,'#3d6b2e'],[16,'#2b4a8a']].map(([px,col])=>`<circle cx="${px}" cy="-11" r="3" fill="#e8c8a0" stroke="${CLS}"/><rect x="${px-3}" y="-8" width="6" height="8" fill="${col}"/>`).join('')+`<line x1="2" y1="-15" x2="8" y2="-5" stroke="${CLS}" stroke-width="2"/></g>`;
+// grass tufts and a few flowers on the near ground (none in winter snow)
+const clTufts=g=>`<g stroke="${g[1]}" stroke-width="1.4" fill="none">`+[[18,128],[96,104],[140,122],[180,150],[268,118],[350,132],[104,160],[246,166],[10,150],[332,112]].map(([x,y])=>`<path d="M${x-3} ${y} l2 -5 l1 5 l2 -6 l1 6"/>`).join('')+'</g>'+(seasonIdx()===3?'':[[30,140,'#f2d76a'],[176,128,'#e05a6a'],[284,154,'#c9b6ec'],[350,150,'#f2d76a'],[96,148,'#fbf6ea']].map(([x,y,c])=>`<circle cx="${x}" cy="${y}" r="1.6" fill="${c}"/>`).join(''));
+// the far woods' pines, in this season's shades
+const PALP=i=>PAL.pine[seasonIdx()][i%3];
+// the backdrop by the land's kind (his note 2026-11-25: "the backgrounds make sense/look nice like the beach revamp"), in this season's colours (PAL, as the map):
+// each draws what stands far off, behind the ground the buildings stand on. g: [grass, dark grass, light grass, path]
 const LANDBK={
-  // shore (his pick A, 2026-11-24): a calm bay in two blues from the horizon to a frothy edge, green headlands either side, a boat and a gull
-  shore:['#6f8f3e','#d9c48c',`<rect x="0" y="60" width="360" height="28" fill="#4f86a3"/><rect x="0" y="74" width="360" height="14" fill="#6fa6bd"/><path d="M0 66 Q40 52 90 60 T150 66 V70 H0Z" fill="#6f8f3e"/><path d="M250 64 Q300 50 360 56 V70 H250Z" fill="#5f7f36"/>`+`<g stroke="#e8f2f4" stroke-width="2" fill="none" stroke-linecap="round"><path d="M170 70 h14"/><path d="M60 78 h16"/><path d="M200 80 h12"/><path d="M300 76 h14"/></g>`+`<path d="M0 86 Q90 90 180 85 T360 86 V170 H0Z" fill="#d9c48c"/><path d="M0 86 Q90 90 180 85 T360 86" stroke="#f4efe0" stroke-width="3" fill="none"/><path d="M200 72 h22 l-4 5 h-14Z" fill="#6a4525"/><line x1="211" y1="72" x2="211" y2="59" stroke="#4a3520"/><path d="M211 59 L221 70 H211Z" fill="#ecdcb2"/><path d="M300 38 q4 -3 8 0 q4 -3 8 0" stroke="#4a3520" fill="none"/>`],
-  forest:['#4f6f2c','#6f8f3e',[8,40,72,150,184,214,330,352].map((x,i)=>`<path d="M${x-11} ${86-i%2*6} L${x} ${56-i%3*6} L${x+11} ${86-i%2*6}Z" fill="#2f4f22"/>`).join('')],
-  hills:['#9a9484','#7d9a4a',`<path d="M150 88 L190 46 L214 64 L240 36 L280 80Z" fill="#8a8474" stroke="#6a6454"/><path d="M232 44 l8 -8 l6 7" stroke="#e8e2d2" stroke-width="3" fill="none"/>`],
-  moor:['#8a6a7a','#8a8a4a',`<path d="M0 84 Q100 70 200 82 T360 80" stroke="#6a4a5a" stroke-width="5" fill="none"/>`+[[150,128],[166,132],[330,140]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="6" ry="4" fill="#f0ead8" stroke="#4a3520"/><circle cx="${x+6}" cy="${y-2}" r="2" fill="#4a3520"/>`).join('')],
-  river:['#7d9a4a','#6f9040',`<path d="M300 170 Q260 140 300 120 T290 84" stroke="#6a9ab8" stroke-width="9" fill="none"/>`+[[250,110],[340,100]].map(([x,y])=>`<path d="M${x} ${y} q-10 10 -14 22 M${x} ${y} q0 12 0 22 M${x} ${y} q10 10 14 22" stroke="#5f7d36" stroke-width="3" fill="none"/><line x1="${x}" y1="${y}" x2="${x}" y2="${y+24}" stroke="#6a4525" stroke-width="2"/>`).join('')]};
-function landPic(l,bare){const kd=LANDBK[landKind(l)]||LANDBK.river,c=G.crew&&G.crew.lid===l.id?G.crew.k:null;
-  let v=`<svg class="${bare?'':'lpicb'}" viewBox="0 0 360 170" width="100%" role="img" aria-label="${l.nm}"><defs><linearGradient id="clsk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd4e0"/><stop offset="1" stop-color="#efe3c2"/></linearGradient></defs>`
-    +`<rect width="360" height="170" fill="url(#clsk)"/><circle cx="325" cy="22" r="11" fill="#f4d66a"/><path d="M0 92 Q90 64 180 84 T360 78 V170 H0Z" fill="${kd[0]}"/>${kd[2]}<path d="M0 128 Q120 110 240 124 T360 118 V170 H0Z" fill="${kd[1]}"/><path d="M-5 168 Q120 140 180 150 T365 132" stroke="#c7ab72" stroke-width="7" fill="none"/>`;
-  const cot=(x,y)=>`<g transform="translate(${x} ${y})"><rect width="34" height="20" fill="#d8c08a" stroke="${CLS}"/><path d="M-4 0 L17 -14 L38 0Z" fill="#a8823e" stroke="${CLS}"/><rect x="13" y="8" width="8" height="12" fill="#5a3a20"/></g>`;
-  v+=cot(186,118);if(l.hold)v+=cot(150,128)+`<path d="M140 150 h100" stroke="#8a6a3a" stroke-width="3" stroke-dasharray="4 2"/>`;
-  // a farmstead being founded (G.crew k 'found'): a second roof half up beside the first, the crew at work under it (colonies part 2)
-  if(c==='found')v+=`<g transform="translate(140 124)" opacity=".7"><path d="M0 20 V0 M34 20 V0 M-4 0 L17 -14 L38 0 M0 10 H34" stroke="#6a4525" stroke-width="1.5" fill="none"/></g><g transform="translate(140 158)">`+[[4,'#6a4525'],[20,'#3d6b2e'],[40,'#2b4a8a']].map(([px,col])=>`<circle cx="${px}" cy="-10" r="3" fill="#e8c8a0" stroke="${CLS}"/><rect x="${px-3}" y="-7" width="6" height="8" fill="${col}"/>`).join('')+`</g>`;
-  for(const k of CLKS){const [x,y]=CLPOS[k],b=clHas(l,k),g=k===c;
-    v+=`<g transform="translate(${x} ${y})"${b?'':g?' opacity=".6"':' stroke-dasharray="3 3" opacity=".45"'}>${CLART[k](b||g)}${g?`<path d="M2 48 V18 M58 48 V18 M0 30 H60 M0 18 H60" stroke="#6a4525" stroke-width="1.5"/>`:''}</g>`;
-    if(g)v+=`<g transform="translate(${x+6} ${y+52})">`+[[4,'#6a4525'],[20,'#3d6b2e'],[40,'#2b4a8a']].map(([px,col])=>`<circle cx="${px}" cy="-10" r="3" fill="#e8c8a0" stroke="${CLS}"/><rect x="${px-3}" y="-7" width="6" height="8" fill="${col}"/>`).join('')+`<line x1="26" y1="-14" x2="32" y2="-4" stroke="${CLS}" stroke-width="2"/></g>`}
+  // shore (his pick A, 2026-11-24): a calm bay to the horizon, headlands either side, a boat, a gull, a sandy beach, then the grass the hold stands on
+  shore:g=>`<rect x="0" y="58" width="360" height="30" fill="#4f86a3"/><rect x="0" y="72" width="360" height="16" fill="#6fa6bd"/><path d="M0 64 Q40 50 90 58 T150 64 V70 H0Z" fill="${g[1]}"/><path d="M250 62 Q300 48 360 54 V70 H250Z" fill="${g[1]}"/>`
+    +`<g stroke="#e8f2f4" stroke-width="2" fill="none" stroke-linecap="round"><path d="M170 68 h14"/><path d="M60 76 h16"/><path d="M215 80 h12"/><path d="M300 74 h14"/></g>`
+    +`<path d="M200 70 h22 l-4 5 h-14Z" fill="#6a4525"/><line x1="211" y1="70" x2="211" y2="57" stroke="#4a3520"/><path d="M211 57 L221 68 H211Z" fill="#ecdcb2"/><path d="M262 36 q4 -3 8 0 q4 -3 8 0" stroke="#4a3520" fill="none"/>`
+    +`<path d="M0 86 Q90 90 180 85 T360 86 V104 H0Z" fill="#dcc890"/><path d="M0 86 Q90 90 180 85 T360 86" stroke="#f4efe0" stroke-width="3" fill="none"/><path d="M0 98 Q100 92 200 97 T360 94 V170 H0Z" fill="${g[0]}"/>`
+    +`<g stroke="${g[1]}" stroke-width="1.5" fill="none"><path d="M22 97 l3 -7 l2 7 M232 96 l3 -8 l3 8 M340 95 l2 -6 l3 6"/></g>`,
+  // forest: blue far woods, then a dark wall of pines along the hill, a few big trees standing at the edges of the clearing
+  forest:g=>`<path d="M0 74 Q60 60 130 70 T260 64 T360 70 V90 H0Z" fill="#7f9aa0" opacity=".7"/>`
+    +[...Array(27)].map((_,i)=>{const x=i*14+(i%3)*3,t=70-(i*7%11);return `<path d="M${x-9} 96 L${x} ${t} L${x+9} 96Z" fill="${PALP(i)}"/>`}).join('')
+    +`<path d="M0 92 Q90 86 180 92 T360 88 V170 H0Z" fill="${g[0]}"/>`
+    +[[6,150,1.5],[352,148,1.6],[338,108,1],[18,110,1.1]].map(([x,y,s])=>`<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="2" cy="0" rx="9" ry="2.5" fill="rgba(18,28,10,.25)"/><rect x="-1.5" y="-8" width="3" height="8" fill="#5a3a20"/><path d="M-10 -6 L0 -34 L10 -6Z" fill="${PALP(0)}"/><path d="M-8 -16 L0 -38 L8 -16Z" fill="${PALP(2)}"/></g>`).join(''),
+  // hills: a blue mountain far off with snow, green rolling hills in front of it, drystone walls on them
+  hills:g=>`<path d="M150 82 L200 34 L222 52 L252 26 L300 80Z" fill="#8b98a8"/><path d="M190 44 l10 -10 l8 9 l-8 -3Z M244 34 l8 -8 l8 10 l-8 -4Z" fill="#eef2f4"/>`
+    +`<path d="M0 80 Q70 58 150 74 T300 70 T360 74 V100 H0Z" fill="${g[2]}"/><path d="M0 92 Q80 76 170 88 T360 82 V170 H0Z" fill="${g[1]}"/>`
+    +`<g stroke="#9a9484" stroke-width="2" fill="none" stroke-dasharray="3 1.5"><path d="M20 80 Q60 70 110 78"/><path d="M230 76 Q280 68 340 74"/><path d="M120 92 Q170 86 220 90"/></g>`
+    +`<path d="M0 100 Q100 92 200 99 T360 95 V170 H0Z" fill="${g[0]}"/>`,
+  // moor: a long purple heather ridge with grey tors, a lone wind-bent tree, sheep on the grass
+  moor:g=>`<g fill="#8f8c84" stroke="#66635c"><path d="M58 82 L64 66 L74 60 L86 62 L92 70 L98 82Z"/><path d="M236 80 L242 62 L254 56 L266 60 L272 70 L278 80Z"/></g><path d="M66 66 l8 -4 M246 62 l8 -4" stroke="#b4b0a6" stroke-width="2"/>`
+    +`<path d="M0 78 Q90 64 180 74 T360 70 V100 H0Z" fill="#8a6a86"/><path d="M0 84 Q100 74 200 82 T360 80" stroke="#a283a0" stroke-width="5" fill="none"/>`
+    +`<path d="M0 96 Q100 88 200 95 T360 92 V170 H0Z" fill="${g[0]}"/><g stroke="#a283a0" stroke-width="3" stroke-linecap="round"><path d="M14 104 h6 M228 100 h7 M346 106 h5"/></g>`
+    +`<path d="M352 98 Q350 80 342 70 M348 84 q-10 -6 -18 -6 M346 78 q-8 -10 -16 -10" stroke="#5a3a20" stroke-width="2" fill="none"/><ellipse cx="338" cy="70" rx="12" ry="5" fill="${g[1]}"/>`
+    +[[236,132],[250,136],[20,128]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="6" ry="4" fill="#f0ead8" stroke="#4a3520"/><circle cx="${x+6}" cy="${y-2}" r="2" fill="#4a3520"/>`).join(''),
+  // river: a river winding from the far hills across the fields to the front, reeds on its banks
+  river:g=>`<path d="M0 82 Q90 60 180 76 T360 70 V100 H0Z" fill="${g[2]}"/><path d="M0 94 Q100 84 200 92 T360 88 V170 H0Z" fill="${g[0]}"/>`
+    +`<path d="M-4 90 Q60 84 120 92 T240 90 T364 94 V101 Q300 98 240 99 T120 101 T-4 98Z" fill="#6a9ab8"/><path d="M40 92 h10 M150 95 h12 M270 95 h10" stroke="#cfe4ee" stroke-width="1.5"/>`
+    +`<g stroke="${g[1]}" stroke-width="1.5"><path d="M20 104 v-7 M23 104 v-9 M178 105 v-8 M181 105 v-6 M340 106 v-8 M343 106 v-6"/></g>`};
+// the lanes (his ask 2026-11-25: "connected to the other buildings or varied slightly so they don't all look exactly the same"): the main lane comes in from the
+// front at a place of its own (by the place's id) and bends up to the cottage door; a narrower branch runs to each building (the back two rows from the cottages, the front row from a fork on the lane) that stands or is
+// going up (narrower still to the back row, as it is farther off). Each lane is drawn twice, a dark edge under the path colour.
+function clLane(l,g,c){const r=n=>(l.id*n+7)%97/97,x0=120+Math.round(r(37)*150),bx=Math.round((r(53)-.5)*50),jx=Math.round(x0*.4+206*.6),jy=152+Math.round(r(71)*6);
+  const ln=[[`M${x0} 174 Q${(x0+jx)/2+bx} ${(174+jy)/2} ${jx} ${jy} T206 136`,10]];if(l.hold)ln.push([`M${jx} ${jy} Q238 ${jy-2} 252 142`,7]);
+  for(const k of CLKS){if(!clHas(l,k)&&k!==c)continue;const [x,y]=CLPOS[k],far=y<120,ex=k==='clpal'?x+14:x,[ox,oy]=y<150?[206+(ex>206?14:-14),137]:[jx,jy];
+    ln.push([`M${ox} ${oy} Q${Math.round((ox+ex)/2+(r(k.length*11)-.5)*24)} ${Math.round((oy+y)/2+(far?6:3))} ${ex} ${y+1}`,far?4:5])}
+  return ln.map(([d,w])=>`<path d="${d}" stroke="${g[1]}" stroke-width="${w+3}" fill="none" stroke-linecap="round" opacity=".5"/>`).join('')+ln.map(([d,w])=>`<path d="${d}" stroke="${g[3]}" stroke-width="${w}" fill="none" stroke-linecap="round"/>`).join('')}
+function landPic(l,bare){const si=seasonIdx(),g=[PAL.base[si],PAL.dark[si],PAL.light[si],PAL.path[si]],kd=LANDBK[landKind(l)]||LANDBK.river,c=G.crew&&G.crew.lid===l.id?G.crew.k:null;
+  let v=`<svg class="${bare?'':'lpicb'}" viewBox="0 0 360 170" width="100%" role="img" aria-label="${l.nm}"><defs><linearGradient id="clsk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${si===3?'#c8d2da':'#a9c8dc'}"/><stop offset="1" stop-color="#efe3c2"/></linearGradient></defs>`
+    +`<rect width="360" height="170" fill="url(#clsk)"/><circle cx="325" cy="22" r="11" fill="#f4d66a"/><g fill="#fbf6ea" opacity=".85"><ellipse cx="70" cy="26" rx="22" ry="6"/><ellipse cx="86" cy="22" rx="14" ry="6"/><ellipse cx="200" cy="36" rx="18" ry="4.5"/></g>${kd(g)}`
+    // the lanes (clLane): from the front up to the cottages, a branch to each building that stands or is going up
+    +clLane(l,g,c)+clTufts(g);
+  // what stands in the picture, sorted back to front so nearer things cover farther ones
+  const it=[[134,()=>clImg('hut',206,134,54)]];if(l.hold)it.push([140,()=>clImg('hut',252,140,54)]);
+  // a farmstead being founded (G.crew k 'found'): a second cottage half up beside the first, the crew at work by it (colonies part 2)
+  if(c==='found')it.push([140,()=>clImg('hut',252,140,54,.5)+`<path d="M232 140 V100 M272 140 V100 M228 118 H276 M228 104 H276" stroke="#6a4525" stroke-width="1.5"/>`+clCrew(252,156)]);
+  for(const k of CLKS){const [x,y,h]=CLPOS[k],b=clHas(l,k),gg=k===c;
+    const im=(o)=>k==='clpal'?clWall(x,y,h,o):clImg(CLMAP[k],x,y,h,o);
+    it.push([y,()=>b?im():gg?im(.5)+`<path d="M${x-h*.5} ${y} V${y-h*.75} M${x+h*.5} ${y} V${y-h*.75} M${x-h*.6} ${y-h*.35} H${x+h*.6} M${x-h*.6} ${y-h*.7} H${x+h*.6}" stroke="#6a4525" stroke-width="1.5"/>`+clCrew(x,Math.min(y+10,166)):clPlot(x,y,h/40)])}
+  it.sort((a,b)=>a[0]-b[0]);for(const [,f] of it)v+=f();
   // a finished place (colonies part 3, clFinish): the house's banner on a tall pole by the cottages, and its title on a ribbon across the sky
   if(l.ttl){const hc=houseCol(),T=clTown(l);
-    v+=`<path d="M204 118 V58" stroke="#5a3a20" stroke-width="2.5"/><circle cx="204" cy="57" r="2.5" fill="#d9b24a"/><path d="M205 60 H238 L230 70 L238 80 H205Z" fill="${hc}" stroke="${CLS}"/><path d="M205 63 H232" stroke="#d9b24a" stroke-width="1.2"/>`
+    v+=`<path d="M222 140 V74" stroke="#5a3a20" stroke-width="2.5"/><circle cx="222" cy="73" r="2.5" fill="#d9b24a"/><path d="M223 76 H256 L248 86 L256 96 H223Z" fill="${hc}" stroke="${CLS}"/><path d="M223 79 H250" stroke="#d9b24a" stroke-width="1.2"/>`
       +`<g transform="translate(180 17)"><path d="M-118 -11 H118 L110 0 L118 11 H-118 L-110 0Z" fill="#f3e6c4" stroke="#8a6a3a"/><text y="4" text-anchor="middle" font-size="12" font-family="serif" font-style="italic" fill="#5a3a20">${T[0].toUpperCase()+T.slice(1)}</text></g>`}
   return v+'</svg>'}
+/* ---------- the House tab pages' header pictures (hpScene, his ask 2026-11-25: "apply some TLC like this to the other header images"; then "we need some
+   variance in these"): each page its own small scene, the way landPic draws a farmstead. A setting (HPBG: hills, a castle hill, a town, an orchard, the road,
+   a yard at dusk, a paved square) behind, then the page's own picture (HPSC: a map building via bPic, or a scene of its own) with folk and things that fit.
+   Neighbours, Bloodline and Your lands draw their own. */
+// who stands in the pictures (his ask 2026-11-25: "use real folk"): hpLook reads a person's skin, hair (greying from 42, as snapFolk), beard, sex, child and
+// tunic (their job's cloak; the ruler the house colour); hpCast(i) the i-th of the hold's folk, the same ones all year (not the ruler, not away), null when
+// the hold is too small
+const hpLook=p=>{const a=p.born!=null?age(p):30,ch=p.born!=null&&isChild(p),q=p.id!=null||p.lk!=null?p:{lk:p.lk,id:(p.name||'x').length*7},h=hairOf(q)||HAIR[1];return {sk:skinOf(q)||SKIN[1],bd0:beardOf(q),hr:a>=42?mixHex(h,'#d2cfc6',clamp((a-42)/18,0,1)):h,f:p.sex==='f',bd:p.sex!=='f'&&!ch&&beardOf(q),ch,c:p.ruler?houseCol():ch?'#8a6a36':(CLOAK[p.job]||'#7a6a52')}};
+const hpCast=i=>{const y=Math.floor(G.day/DPY),L=G.settlers.filter(s=>!s.ruler&&!away(s)&&age(s)>=2).sort((a,b)=>((a.id*2654435761+y*97)>>>0)%1009-((b.id*2654435761+y*97)>>>0)%1009);return L.length>i?L[i]:null};
+// a small person: x,y the feet; c the tunic (null: the person's own); up: arms raised (cheering); i a stranger's look, or which of the cast; s the size;
+// p who (a settler, or null for a stranger; left out: hpCast(i))
+const hpFolk=(x,y,c,up,i,s,p)=>{const au=p===undefined;if(au)p=hpCast(i);const L=p?hpLook(p):null,k=(s||1)*(L&&L.ch?.78:1),sk=L?L.sk:SKIN[i%5],hr=L?L.hr:HAIR[(i*3+1)%6],lh=L?L.f:i%3===1;c=L&&(au||c==null)?L.c:(c||HPC[i%7]);const ln='rgba(50,30,15,.55)',arm=up?['M-3.6 -9.4 Q-6 -13 -6.8 -17.5','M3.6 -9.4 Q6 -13 6.8 -17.5']:['M-3.8 -9.2 Q-5.2 -6 -4.8 -3.6','M3.8 -9.2 Q5.2 -6 4.8 -3.6'],hd=up?[[-6.8,-17.8],[6.8,-17.8]]:[[-4.8,-3.3],[4.8,-3.3]];
+  return `<g transform="translate(${x} ${y}) scale(${k})"><ellipse cx="0" cy="0" rx="5.5" ry="1.6" fill="rgba(18,28,10,.3)"/><path d="M-2.4 -.4 V-3 M2.4 -.4 V-3" stroke="#3b2a1e" stroke-width="1.9" stroke-linecap="round"/>`
+    +arm.map(p=>`<path d="${p}" stroke="${c}" stroke-width="2.3" stroke-linecap="round" fill="none"/>`).join('')+hd.map(([hx,hy])=>`<circle cx="${hx}" cy="${hy}" r="1.1" fill="${sk}"/>`).join('')
+    +`<path d="M-4.6 -2 Q-5 -7 -4.2 -9.5 Q-2.5 -11.2 0 -11.2 Q2.5 -11.2 4.2 -9.5 Q5 -7 4.6 -2 Q0 -.6 -4.6 -2Z" fill="${c}" stroke="${ln}" stroke-width=".45"/><path d="M0 -11.2 Q2.5 -11.2 4.2 -9.5 Q5 -7 4.6 -2 Q2 -1.2 0 -1.3Z" fill="rgba(0,0,0,.16)"/><path d="M-4.7 -5.2 Q0 -4.4 4.7 -5.2" stroke="rgba(40,25,10,.55)" stroke-width=".9" fill="none"/>`
+    +(lh?`<path d="M-3.5 -13.5 Q-4.4 -9.5 -2.4 -8.8 L-2.2 -12Z M3.5 -13.5 Q4.4 -9.5 2.4 -8.8 L2.2 -12Z" fill="${hr}"/>`:'')
+    +`<circle cx="0" cy="-13.6" r="3.2" fill="${sk}" stroke="${ln}" stroke-width=".4"/><path d="M1 -11 A3.2 3.2 0 0 0 3.1 -14.4 Q2.2 -12 1 -11Z" fill="rgba(0,0,0,.1)"/><path d="M-3.4 -14 Q-3 -17.6 0 -17.4 Q3 -17.6 3.4 -14 Q1.6 -15.8 -3.4 -14Z" fill="${hr}"/>`+(L&&L.bd?`<path d="M-2.8 -12.6 Q0 -8.2 2.8 -12.6 Q0 -11 -2.8 -12.6Z" fill="${hr}"/>`:'')+'</g>'};
+const HPC=['#5f7f3a','#8a5a2a','#2b4a8a','#8e2b1d','#c9a24a','#6c7a80','#7a4a8a'];
+const hpFlag=(x,y,h,c)=>`<path d="M${x} ${y} V${y-h}" stroke="#5a3a20" stroke-width="2"/><circle cx="${x}" cy="${y-h-1}" r="2" fill="#d9b24a"/><path d="M${x+1} ${y-h+2} H${x+22} L${x+16} ${y-h+9} L${x+22} ${y-h+16} H${x+1}Z" fill="${c}" stroke="${CLS}"/>`;
+const hpTree=(x,y,s)=>{const L=PAL.leaf[seasonIdx()],c=[[0,-24,10,1],[-8,-18,8,0],[8,-19,8,1],[-4,-30,7,2],[5,-29,7,0],[0,-16,8,1]];return `<g transform="translate(${x} ${y}) scale(${s})"><ellipse cx="3" cy="0" rx="14" ry="3.2" fill="rgba(18,28,10,.28)"/><path d="M-2.4 0 Q-1.6 -8 -2 -16 H2 Q1.6 -8 2.6 0Z" fill="#5a3a20"/><path d="M.6 0 Q1 -8 .6 -16 H2 Q1.6 -8 2.6 0Z" fill="rgba(0,0,0,.2)"/>`+c.map(([cx,cy,rr,i])=>`<circle cx="${cx}" cy="${cy}" r="${rr}" fill="${L[i]}"/>`).join('')+`<path d="M2 -14 Q12 -16 11 -24 Q8 -14 2 -14Z" fill="rgba(0,0,0,.14)"/><circle cx="-5" cy="-30" r="3" fill="#fff" opacity=".18"/></g>`};
+const hpBarrel=(x,y)=>`<g transform="translate(${x} ${y})"><rect x="-6" y="-14" width="12" height="14" rx="3" fill="#9a6a3a" stroke="#4a3220"/><path d="M-6 -10 H6 M-6 -4 H6" stroke="#4a3220"/></g>`;
+const hpTent=(x,y,s,c)=>`<g transform="translate(${x} ${y}) scale(${s})"><path d="M-14 0 L0 -20 L14 0Z" fill="#efe6cf" stroke="#8a7a5a"/><path d="M0 -20 L-3 0 H3Z" fill="#8a7a5a"/><path d="M0 -20 V-28" stroke="#5a3a20"/><path d="M0 -28 L8 -26 L0 -24Z" fill="${c}"/></g>`;
+// level 0 art (the upgrade foundations read as pallets in a scene)
+const hpImg=(t,x,y,h,dy,wf)=>{const w=Math.round(h*(wf||1.6)),u=bPic(t,0,w,h,dy||0,1);return u?`<image href="${u}" x="${x-w/2}" y="${y-h*.94}" width="${w}" height="${h}"/>`:''};
+// the settings behind: sky colours [top, bottom] and what stands far off (g: [grass, dark grass, light grass, path])
+const HPBG={
+  hills:{sky:['#a9c8dc','#efe3c2'],far:g=>`<path d="M0 72 Q60 54 130 66 T260 58 T360 66 V96 H0Z" fill="#8ea6ae" opacity=".7"/><path d="M0 84 Q90 64 180 78 T360 74 V110 H0Z" fill="${g[2]}"/>`+[14,34,318,338,352].map((x,i)=>`<path d="M${x-8} ${88-i%2*3} L${x} ${64-i%3*4} L${x+8} ${88-i%2*3}Z" fill="${PALP(i)}"/>`).join('')},
+  // a castle on its hill behind (the seat, small), the house's bunting strung across the front
+  castle:{sky:['#9cc2e0','#f2e6c6'],far:g=>`<path d="M0 80 Q60 66 120 74 T240 70 T360 76 V110 H0Z" fill="${g[2]}"/><path d="M110 92 Q180 46 250 92Z" fill="${g[1]}"/>`+hpImg(hpSeat(),180,72,46,.42,2.6)},
+  // a town: a row of houses close together behind
+  town:{sky:['#b0cce0','#f0e2c0'],far:g=>`<path d="M0 84 Q90 70 180 80 T360 76 V110 H0Z" fill="${g[2]}"/>`+[30,66,102,258,294,330].map((x,i)=>hpImg('hut',x,98-i%2*3,34,0,1.4)).join('')},
+  // an orchard: round trees on the hill instead of pines
+  orchard:{sky:['#a6cce4','#f4ead0'],far:g=>`<path d="M0 78 Q90 60 180 74 T360 70 V110 H0Z" fill="${g[2]}"/>`+[20,52,300,334].map((x,i)=>hpTree(x,92-i%2*4,.8)).join('')},
+  // the road out: a road winding to the far hills, where the host camps
+  road:{sky:['#a0c4e0','#f2e2bc'],far:g=>`<path d="M0 70 Q70 50 150 62 T300 54 T360 60 V96 H0Z" fill="#8ea6ae" opacity=".75"/><path d="M0 84 Q90 66 180 78 T360 74 V110 H0Z" fill="${g[2]}"/><path d="M178 80 Q170 90 186 100 T160 150 H220 Q232 120 200 104 T186 80Z" fill="${g[3]}" opacity=".9"/>`},
+  // the march (the Crusades): a red-gold sky, a big low sun, purple hills far off, the road running to them
+  march:{sky:['#c8583a','#f6d49a'],far:g=>`<circle cx="250" cy="74" r="40" fill="#fbe08a" opacity=".35"/><circle cx="250" cy="74" r="24" fill="#fbe6a0"/><g fill="#fbf0d0" opacity=".5"><ellipse cx="70" cy="30" rx="40" ry="5"/><ellipse cx="280" cy="36" rx="36" ry="4"/></g><path d="M0 76 Q60 58 140 70 T300 60 T360 66 V100 H0Z" fill="#7a5a7a" opacity=".8"/><path d="M0 86 Q90 70 180 80 T360 76 V110 H0Z" fill="${g[1]}"/>`},
+  // dusk: a low orange sky, a lamp lit
+  dusk:{sky:['#5a5a86','#e8a868'],far:g=>`<circle cx="60" cy="30" r="10" fill="#f4e2b0" opacity=".8"/><path d="M0 80 Q90 64 180 76 T360 72 V110 H0Z" fill="${g[1]}"/>`+[300,330,352].map((x,i)=>`<path d="M${x-8} ${86-i%2*3} L${x} ${62-i%3*4} L${x+8} ${86-i%2*3}Z" fill="${PALP(i)}" opacity=".85"/>`).join('')},
+  // a paved square
+  plaza:{sky:['#a9c8dc','#efe3c2'],far:g=>`<path d="M0 84 Q90 68 180 78 T360 74 V110 H0Z" fill="${g[2]}"/>`+[40,320].map(x=>hpImg('hut',x,100,36,0,1.4)).join('')}};
+// each page: bg its setting, and draw(g,hc) its picture (main building, folk, things)
+const HPSC={
+  // crown and repute: the throne room (hpThrone); the laws: the courtroom (hpCourt)
+  crown:{inside:1,draw:(g,hc)=>hpThrone(hc)},
+  laws:{inside:1,draw:(g,hc)=>hpCourt(hc)},
+  // the council: the council chamber (hpCouncil)
+  council:{inside:1,draw:(g,hc)=>hpCouncil(hc)},
+  // heir and matches: the hall in an orchard, a tree with a child on the swing, another on a wooden horse
+  heir:{bg:'orchard',draw:g=>hpImg('hall',172,138,104,.42)+(()=>{const h=heirOf(ruler()),grown=h&&!isChild(h),sp=grown&&byId(h.spouse);return `<g transform="translate(104 136)"><path d="M-16 0 V-30 Q0 -48 16 -30 V0" stroke="#6a4525" stroke-width="2.2" fill="none"/>${[...Array(13)].map((_,i)=>{const t=i/12,a=Math.PI*(1-t),x=Math.cos(a)*16,y=t<.15||t>.85?-30+(1-Math.min(t,1-t)/.15)*20:-30-Math.sin(a)*14;return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.6" fill="${PAL.leaf[seasonIdx()][1]}"/><circle cx="${(x+1).toFixed(1)}" cy="${(y-1).toFixed(1)}" r="1.3" fill="${seasonIdx()===3?'#f4f8fa':['#e05a6a','#f2a0b0','#fbf6ea'][i%3]}"/>`}).join('')}</g>`+(grown?hpFolk(sp?96:104,136,null,0,1,1.3,h)+(sp?hpFolk(112,136,null,0,2,1.3,sp):''):'')})()+hpTree(296,138,1.5)+`<path d="M290 106 V124 M302 106 V124" stroke="#6a4525" stroke-width="1"/><rect x="288" y="123" width="16" height="3" fill="#8a5a2a"/>`+(()=>{const K=G.settlers.filter(x=>isChild(x)&&!away(x)),h=heirOf(ruler());return hpFolk(296,123,'#c9a24a',1,2,1,h&&isChild(h)?h:K[0]||null)})()
+    +`<g transform="translate(54 140)"><path d="M-8 -6 H6 L10 -14 L13 -12 L9 -4 V-2 H-8Z" fill="#b8863e" stroke="#4a2f1a"/><circle cx="-5" cy="0" r="2.5" fill="#5a3a20"/><circle cx="5" cy="0" r="2.5" fill="#5a3a20"/><path d="M10 -14 l-3 -2" stroke="#b3261e" stroke-width="2"/></g>`+(()=>{const K=G.settlers.filter(x=>isChild(x)&&!away(x)),h=heirOf(ruler()),k=K.filter(x=>x!==h)[0];return hpFolk(52,134,'#2b4a8a',1,4,1,k||null)})()},
+  // crusades: the knight on the road out, the host's tents on the far hill
+  // crusades: the knight at the gallop on the road out (hpKnight), the host marching off behind him to the camp on the far hill, at sunset
+  crus:{bg:'march',draw:g=>hpTent(300,86,1,'#b3261e')+hpTent(324,90,.8,'#f2ecdc')+hpTent(342,88,.9,'#b3261e')+hpHost()+`<g transform="translate(118 144) scale(1.15)">${hpKnight()}</g>`+hpFolk(330,148,'#8a5a2a',1,3,1.2)+hpFolk(346,150,'#5f7f3a',1,1,1.2)},
+  // the cellar: the dungeon inside (hpDungeon)
+  cellar:{inside:1,draw:()=>hpDungeon()},
+  // the Lord's Hall: the seat on its rise, the house's banners, cottages around it
+  hall:{bg:'hills',draw:(g,hc)=>[44,320].map(x=>hpImg('hut',x,104,36,0,1.4)).join('')+hpImg('hut',84,114,40,0,1.4)+hpImg('hut',278,114,40,0,1.4)+`<path d="M150 152 Q170 140 180 134" stroke="${g[3]}" stroke-width="14" fill="none" stroke-linecap="round"/>`+hpImg(hpSeat(),180,138,112,.42,2.6)+hpFlag(98,140,40,hc)+hpFlag(250,140,40,hc)+hpFolk(156,146,'#2b4a8a',0,1,1.2)+hpFolk(206,148,'#8a5a2a',0,4,1.2)+hpFolk(222,144,'#5f7f3a',1,2,1.1)},
+  // legacy: the statue on a paved square, flower beds, trees, and folk come to look
+  legacy:{bg:'plaza',draw:g=>`<ellipse cx="180" cy="136" rx="110" ry="14" fill="#c8bca0" stroke="#a89a7a"/><path d="M90 134 H270 M110 140 H250 M140 129 H220" stroke="#b0a486" stroke-width=".8"/>`+hpTree(76,138,1.3)+hpTree(286,138,1.3)
+    +(seasonIdx()===3?'':[[128,138],[232,138]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="14" ry="4" fill="#6a4a2a"/>`+[-8,-3,2,7].map((dx,i)=>`<circle cx="${x+dx}" cy="${y-2}" r="2" fill="${['#e05a6a','#f2d76a','#c9b6ec','#fbf6ea'][i]}"/>`).join('')).join(''))
+    +hpImg('statue',180,138,128)+[[176,52,1],[188,96,-1],[166,98,1]].map(([x,y,d])=>`<g transform="translate(${x} ${y}) scale(${d} 1)"><ellipse cx="0" cy="-2" rx="3.2" ry="2.2" fill="#8a8e96"/><circle cx="2.6" cy="-4" r="1.5" fill="#7a7e86"/><path d="M4 -4 l1.4 .4" stroke="#c88a3a"/></g>`).join('')+hpFolk(150,148,'#2b4a8a',0,2,1.25)+hpFolk(214,150,'#c9a24a',1,5,1.25)}};
+// indoors (his ask 2026-11-25: "can the crown & repute one look like a Throne Room & the Courthouse look like...well the inside of a courthouse"):
+// a stone or timber back wall, a flagstone floor, light from tall windows, torches (hpWall, hpTorch); hpScene skips the sky and grass for these
+const hpTorch=(x,y)=>`<g transform="translate(${x} ${y})"><rect x="-1.5" y="0" width="3" height="10" fill="#5a3a20"/><path d="M-3 0 H3 L2 -2 H-2Z" fill="#3b2614"/><path d="M0 -12 Q5 -5 2 -2 H-2 Q-5 -5 0 -12Z" fill="#f4a43a"/><path d="M0 -8 Q2 -4 1 -2 H-1 Q-2 -4 0 -8Z" fill="#fbe08a"/><circle cx="0" cy="-5" r="34" fill="url(#hptg)"/></g>`;
+const hpWin=(x,y,w,h)=>`<path d="M${x} ${y+h} V${y+w/2} A${w/2} ${w/2} 0 0 1 ${x+w} ${y+w/2} V${y+h}Z" fill="#cfe2ee" stroke="#5a5048" stroke-width="2"/><path d="M${x+w/2} ${y} V${y+h} M${x} ${y+h*.6} H${x+w}" stroke="#5a5048" stroke-width="1.2"/>`;
+// the floor: flagstones going back to the wall at y0
+const hpFloor=(y0,c1,c2)=>`<rect x="0" y="${y0}" width="360" height="${150-y0}" fill="${c1}"/>`+[0,1,2,3].map(i=>{const y=y0+(150-y0)*(i*i+1)/17;return `<path d="M0 ${y} H360" stroke="${c2}" stroke-width=".8"/>`}).join('')+[-4,-3,-2,-1,0,1,2,3,4].map(i=>`<path d="M${180+i*34} ${y0} L${180+i*70} 150" stroke="${c2}" stroke-width=".8"/>`).join('');
+// a relic on its stand (his ask 2026-11-25, from the CK3 court: "you can add the relics/items you get in there"): a stone pedestal with a soft glow, and on it
+// by turn a gold casket, a jewelled cross, a chalice, and a saint's knucklebone under glass
+const HPREL=[
+  `<rect x="-6" y="-8" width="12" height="7" fill="#d9b24a" stroke="#8a6a1a" stroke-width=".6"/><path d="M-7 -8 L0 -12 L7 -8Z" fill="#e8c24a" stroke="#8a6a1a" stroke-width=".6"/><path d="M0 -7 V-2 M-2 -5 H2" stroke="#b3261e" stroke-width="1"/>`,
+  `<path d="M0 -1 V-14 M-4 -10 H4" stroke="#e8c24a" stroke-width="2.2"/><circle cx="0" cy="-10" r="1.2" fill="#3a7ab8"/>`,
+  `<path d="M-4 -12 H4 Q4 -6 0 -6 Q-4 -6 -4 -12Z M0 -6 V-2 M-3 -1 H3" fill="#e8c24a" stroke="#8a6a1a" stroke-width=".7"/>`,
+  `<path d="M-5 -1 V-11 Q0 -15 5 -11 V-1Z" fill="#dfeef4" opacity=".7" stroke="#8a8a86" stroke-width=".6"/><path d="M-2 -5 Q0 -8 2 -5" stroke="#f2ecdc" stroke-width="2" stroke-linecap="round"/>`];
+const hpRelic=(x,y,i)=>`<g transform="translate(${x} ${y})"><circle cx="0" cy="-22" r="10" fill="#fbe08a" opacity=".25"/><rect x="-5" y="-14" width="10" height="14" fill="#9a9284" stroke="#5a5048"/><rect x="-7" y="-16" width="14" height="3" fill="#aaa294" stroke="#5a5048"/><rect x="-7" y="-1" width="14" height="2" fill="#aaa294"/><g transform="translate(0 -16)">${HPREL[i%4]}</g></g>`;
+// the throne room: stone walls, tall windows, banners in the house colour, a red carpet to the dais, the ruler crowned on the throne, courtiers either side
+// who cheer as hard as your repute is good (one more cheering for each good word on the three scales), and the relics brought home (G.relics) on stands, four at most
+// a hanging chandelier (after the CK3 courts he shared): a chain, an iron ring, candles with their glow; x,y the ring, w its half-width
+const hpChand=(x,y,w)=>`<path d="M${x} 0 V${y-6} M${x} ${y-6} L${x-w} ${y} M${x} ${y-6} L${x+w} ${y}" stroke="#3a3028" stroke-width="1"/><ellipse cx="${x}" cy="${y}" rx="${w}" ry="${w*.28}" fill="none" stroke="#3a3028" stroke-width="2"/>`
+  +[-1,-.5,0,.5,1].map(t=>{const cx=x+t*w*.9,cy=y+(1-Math.abs(t))*w*.2;return `<rect x="${cx-1.2}" y="${cy-6}" width="2.4" height="6" fill="#f4efe2"/><path d="M${cx} ${cy-11} Q${cx+2.4} ${cy-8} ${cx} ${cy-6} Q${cx-2.4} ${cy-8} ${cx} ${cy-11}Z" fill="#fbd06a"/>`}).join('')+`<circle cx="${x}" cy="${y-6}" r="${w*2}" fill="url(#hptg)"/>`;
+// a rug in perspective down the middle of a hall (after the CK3 courts): red with a gold border and a row of diamonds; y0 its far end
+const hpRug=(y0)=>{const P=t=>[180-16-t*30,y0+t*(150-y0)];let v=`<path d="M164 ${y0} H196 L226 150 H134Z" fill="#9a2a22"/><path d="M167 ${y0+3} H193 L220 148 H140Z" fill="none" stroke="#d9b24a" stroke-width="1.2"/><path d="M170 ${y0+6} H190 L214 146 H146Z" fill="none" stroke="#5a1410" stroke-width=".8"/>`;
+  for(const t of [.12,.34,.6,.86]){const y=y0+t*(150-y0),h=4+t*7,w=3+t*6;v+=`<path d="M180 ${y-h} L${180+w} ${y} L180 ${y+h} L${180-w} ${y}Z" fill="#d9b24a" opacity=".85"/><path d="M180 ${y-h/2} L${180+w/2} ${y} L180 ${y+h/2} L${180-w/2} ${y}Z" fill="#5a1410"/>`}return v};
+// the council chamber (his note: "we need some variance"): timber and plaster walls, a painted map of the valley, a chandelier, the long table with a map
+// and candles on it, the ruler at its head, and the four councillors down its sides, the spymaster with his back to the wall as Maud says
+function hpCouncil(hc){const r=ruler(),C=['steward','marshal','chaplain','spymaster'].map(councillor);
+  let v=`<rect width="360" height="150" fill="#e6d6b4"/>`+[0,60,120,240,300,360].map(x=>`<path d="M${x} 0 V100" stroke="#4a2f1a" stroke-width="5"/>`).join('')+`<path d="M0 8 H360 M0 98 H360" stroke="#4a2f1a" stroke-width="5"/><path d="M0 60 L30 30 L60 60 M300 60 L330 30 L360 60" stroke="#4a2f1a" stroke-width="3" fill="none"/>`
+    +`<rect x="128" y="16" width="104" height="58" fill="#8a6a3a"/><rect x="132" y="20" width="96" height="50" fill="#b8c88a"/><path d="M132 50 Q160 40 180 52 T228 44" stroke="#5a8ab0" stroke-width="3" fill="none"/>${[[150,32],[196,30],[212,58],[158,62]].map(([x,y],i)=>`<path d="M${x-4} ${y+3} L${x} ${y-4} L${x+4} ${y+3}Z" fill="${i?'#8a6a3a':hc}"/>`).join('')}<path d="M140 28 l6 4 M220 24 l-4 6" stroke="#5f7d36" stroke-width="2"/>`
+    +hpWin(22,26,22,44)+hpWin(316,26,22,44)+hpTorch(84,58)+hpTorch(276,58)
+    +hpFloor(98,'#9a8a70','#7e6e56')+hpChand(180,30,22)
+    // the ruler's high chair at the head of the table, and the ruler
+    +`<path d="M168 98 V64 Q180 56 192 64 V98Z" fill="#6a3418" stroke="#3b2614"/>`+hpFolk(180,100,null,0,0,1.5,r||null)
+    // the councillors at the far side, then the table over their laps, then the near two
+    +hpFolk(140,108,null,0,1,1.4,C[0]||null)+hpFolk(220,108,null,0,2,1.4,C[2]||null)
+    +`<path d="M128 96 H232 L262 132 H98Z" fill="#7a4a24" stroke="#3b2614"/><path d="M98 132 H262 V138 H98Z" fill="#5a3418"/><path d="M146 104 H214 L222 122 H138Z" fill="#efe0b8" stroke="#8a6a3a" stroke-width=".6"/><path d="M150 116 Q170 108 186 116 T214 110" stroke="#5a8ab0" stroke-width="1.6" fill="none"/>${[[162,110],[196,112],[176,118]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="1.6" fill="#b3261e"/>`).join('')}`
+    +[[118,100],[242,100]].map(([x,y])=>`<rect x="${x-1.5}" y="${y-8}" width="3" height="8" fill="#f4efe2"/><path d="M${x} ${y-13} Q${x+2.4} ${y-10} ${x} ${y-8} Q${x-2.4} ${y-10} ${x} ${y-13}Z" fill="#fbd06a"/><circle cx="${x}" cy="${y-10}" r="14" fill="url(#hptg)"/>`).join('')
+    +hpFolk(96,148,null,0,3,1.6,C[1]||null)+`<g>${hpFolk(272,148,'#3a3440',0,4,1.6,C[3]||null)}</g><path d="M266 126 Q272 116 278 126 L277 130 H267Z" fill="#3a3440" opacity=".9"/>`;
+  return v}
+function hpThrone(hc){const R=rp(),n=RPS.reduce((a,k)=>a+rpBand(k,R),0),r=ruler(),rc=r&&r.sex==='f'?'#7a3a8a':'#8e2b1d';
+  let v=`<rect width="360" height="150" fill="#8c8478"/>`+[...Array(9)].map((_,j)=>[...Array(12)].map((_,i)=>`<rect x="${i*32-(j%2)*16}" y="${j*12}" width="32" height="12" fill="none" stroke="#7a7266" stroke-width=".8"/>`).join('')).join('')
+    +hpWin(36,14,26,56)+hpWin(298,14,26,56)+`<path d="M36 70 L10 150 H90 L62 70Z M298 70 L270 150 H350 L324 70Z" fill="url(#hpsh)"/>`
+    +[110,250].map(x=>`<rect x="${x-14}" y="8" width="28" height="62" fill="${hc}" stroke="#3b2614"/><path d="M${x-14} 70 L${x} 80 L${x+14} 70" fill="${hc}" stroke="#3b2614"/><rect x="${x-14}" y="8" width="28" height="4" fill="#d9b24a"/><circle cx="${x}" cy="36" r="7" fill="#d9b24a"/><path d="M${x-4} 34 L${x-4} 39 L${x+4} 39 L${x+4} 34 L${x+2} 36 L${x} 32 L${x-2} 36Z" fill="#8a6a1a"/>`).join('')
+    +hpTorch(82,52)+hpTorch(278,52)
+    +hpFloor(96,'#a89c88','#8c806c')+hpRug(96)
+    +hpChand(180,22,26)
+    // the dais and the throne
+    +`<path d="M132 96 H228 V88 H132Z" fill="#7a6e5e" stroke="#4a4238"/><path d="M144 88 H216 V80 H144Z" fill="#8a7e6c" stroke="#4a4238"/>`
+    +`<path d="M164 80 V34 Q180 22 196 34 V80Z" fill="#6a3418" stroke="#3b2614"/><path d="M168 76 V38 Q180 30 192 38 V76Z" fill="${hc}"/><circle cx="180" cy="30" r="3" fill="#d9b24a"/><rect x="160" y="64" width="40" height="8" fill="#5a3a20"/><rect x="158" y="56" width="6" height="18" fill="#6a3418"/><rect x="196" y="56" width="6" height="18" fill="#6a3418"/>`
+    +`<g transform="translate(180 78)"><path d="M-9 0 L-7 -22 H7 L9 0Z" fill="${rc}" stroke="${CLS}" stroke-width=".6"/><path d="M-7 -22 H7 L5 -14 H-5Z" fill="#f2ecdc"/>${(()=>{const L=r?hpLook(r):{sk:SKIN[1],hr:HAIR[1],f:0,bd:0};return `${L.f?`<path d="M-5.6 -29 Q-7 -20 -4 -19 L-3 -27Z M5.6 -29 Q7 -20 4 -19 L3 -27Z" fill="${L.hr}"/>`:''}<circle cx="0" cy="-27" r="5" fill="${L.sk}" stroke="${CLS}" stroke-width=".5"/><path d="M-5 -28 Q-5 -33 0 -33 Q5 -33 5 -28 Q2 -30.5 -5 -28Z" fill="${L.hr}"/>${L.bd?`<path d="M-4.2 -25.6 Q0 -18.6 4.2 -25.6 Q0 -23 -4.2 -25.6Z" fill="${L.hr}"/>`:''}`})()}<path d="M-5 -31 L-5 -37 L-2.5 -33 L0 -38 L2.5 -33 L5 -37 L5 -31Z" fill="#e8c24a" stroke="#8a6a1a" stroke-width=".6"/><rect x="5" y="-20" width="2" height="18" fill="#d9b24a"/><circle cx="6" cy="-21" r="2.5" fill="#d9b24a"/></g>`
+    +[[142,100],[218,100],[112,96],[248,96]].slice(0,Math.min(4,G.relics||0)).map(([x,y],i)=>hpRelic(x,y,i)).join('')
+    +[[118,124],[96,138],[136,140],[242,124],[264,138],[224,140],[74,146],[286,146]].map(([x,y],i)=>hpFolk(x,y,HPC[i%7],i<n+1&&n>1,i,1.35)).join('')
+  return v}
+// the courtroom: timber walls, the high bench with the ruler judging under the scales, the law book, a clerk with his quill, the accused in the dock with a
+// guard, and the gallery's heads in front
+function hpCourt(hc){const r=ruler(),rc=r&&r.sex==='f'?'#7a3a8a':'#8e2b1d';
+  let v=`<rect width="360" height="150" fill="#7a5632"/>`+[...Array(13)].map((_,i)=>`<path d="M${i*30} 0 V100" stroke="#5a3a20" stroke-width="2"/>`).join('')+`<path d="M0 26 H360 M0 62 H360" stroke="#4a2f1a" stroke-width="3"/>`
+    +hpWin(30,8,24,46)+hpWin(306,8,24,46)
+    // the scales of justice on the wall, in gold, and the house banner either side
+    +`<g transform="translate(180 18)" stroke="#d9b24a" stroke-width="2" fill="none"><path d="M0 0 V22 M-16 6 H16 M-16 6 L-22 16 M-16 6 L-10 16 M16 6 L10 16 M16 6 L22 16"/><path d="M-23 16 Q-16 22 -9 16 M9 16 Q16 22 23 16" fill="#d9b24a"/><path d="M-6 24 H6"/></g>`
+    +[120,240].map(x=>`<rect x="${x-10}" y="6" width="20" height="40" fill="${hc}" stroke="#3b2614"/><path d="M${x-10} 46 L${x} 53 L${x+10} 46" fill="${hc}" stroke="#3b2614"/><rect x="${x-10}" y="6" width="20" height="3" fill="#d9b24a"/>`).join('')
+    +hpTorch(82,48)+hpTorch(278,48)
+    +hpFloor(100,'#9a8a70','#7e6e56')+hpChand(76,20,16)+hpChand(284,20,16)
+    // the bench: the ruler behind it, the law book open on top
+    +hpFolk(180,66,rc,0,1,1.5,r||null)+`<path d="M175.5 40 L175.5 35 L177.8 38 L180 34 L182.2 38 L184.5 35 L184.5 40Z" fill="#e8c24a" stroke="#8a6a1a" stroke-width=".5"/>`
+    +`<rect x="120" y="62" width="120" height="38" fill="#6a4525" stroke="#3b2614"/><rect x="120" y="62" width="120" height="6" fill="#8a5a2a" stroke="#3b2614"/><path d="M140 72 V96 M220 72 V96" stroke="#4a2f1a"/><circle cx="180" cy="82" r="8" fill="#d9b24a" opacity=".8"/>`
+    +`<g transform="translate(206 62)"><path d="M-12 0 L0 -3 L12 0 L12 -6 L0 -9 L-12 -6Z" fill="#f3e6c4" stroke="#8a6a3a" stroke-width=".7"/><path d="M0 -3 V-9" stroke="#8a6a3a" stroke-width=".6"/><path d="M-9 -5 h6 M3 -5 h6" stroke="#8a6a3a" stroke-width=".5"/></g><rect x="150" y="55" width="6" height="7" fill="#5a3a20"/><path d="M152 55 l2 -3" stroke="#3b2614"/>`
+    // the clerk at his little desk, quill up
+    +hpFolk(262,116,'#6c7a80',0,4,1.2,councillor('steward'))+`<rect x="250" y="104" width="26" height="14" fill="#6a4525" stroke="#3b2614"/><rect x="254" y="101" width="10" height="3" fill="#f3e6c4"/><path d="M270 102 L276 92" stroke="#f2ecdc" stroke-width="1.5"/>`
+    // the dock: the accused behind a rail, a guard with his spear
+    +hpFolk(84,122,'#8a7a5a',0,6,1.3,prisoners()[0]||null)+`<rect x="64" y="106" width="42" height="4" fill="#8a5a2a" stroke="#3b2614"/><path d="M68 110 V124 M80 110 V124 M92 110 V124 M102 110 V124" stroke="#6a4525" stroke-width="2"/><rect x="64" y="122" width="42" height="4" fill="#8a5a2a" stroke="#3b2614"/>`
+    +hpFolk(44,126,'#8e2b1d',0,2,1.35,councillor('marshal'))+`<path d="M52 126 V86" stroke="#5a3a20" stroke-width="2"/><path d="M52 86 L49 92 H55Z" fill="#9aa0a6"/>`
+    // the gallery: a bench and the backs of heads in front
+    +`<rect x="0" y="136" width="360" height="5" fill="#6a4525" stroke="#3b2614"/>`+[30,62,96,140,168,212,246,288,322].map((x,i)=>`<path d="M${x-9} 150 Q${x-9} 136 ${x} 136 Q${x+9} 136 ${x+9} 150Z" fill="${(()=>{const p=hpCast(i+8);return p?hpLook(p).c:HPC[i%7]})()}"/><circle cx="${x}" cy="131" r="6" fill="${(()=>{const p=hpCast(i+8);return p?hpLook(p).hr:HAIR[i%6]})()}"/>`).join('');
+  return v}
+// the crusader (his ask 2026-11-25: "more dramatic and the horse have some armor or crusader coloring"): a knight at the gallop, lance couched with a red-cross pennon,
+// great helm with a red plume, white surcoat and kite shield with the red cross; the horse in a white caparison with red crosses and a steel chanfron; feet at 0,0
+const hpKnight=()=>`<g stroke="#4a3020" stroke-width=".55" stroke-linejoin="round">`
+  // dust under the hooves
+  +`<g fill="#d8c49a" opacity=".55" stroke="none"><ellipse cx="-44" cy="-4" rx="16" ry="5"/><ellipse cx="-60" cy="-8" rx="10" ry="4"/><ellipse cx="-26" cy="-2" rx="10" ry="3"/></g><ellipse cx="0" cy="0" rx="44" ry="4.5" fill="rgba(18,28,10,.32)" stroke="none"/>`
+  // legs (far ones darker), hooves
+  +`<g stroke="#5a3e2a" stroke-width="5" stroke-linecap="round" fill="none"><path d="M14 -30 L22 -14 L18 -2" stroke="#4a3220"/><path d="M-18 -30 L-12 -14 L-18 -2" stroke="#4a3220"/><path d="M22 -30 L36 -18 L46 -10"/><path d="M-22 -30 L-34 -16 L-46 -10"/></g>`
+  +`<g fill="#2a1d14" stroke="none"><circle cx="18" cy="-1" r="3"/><circle cx="-18" cy="-1" r="3"/><circle cx="47" cy="-9" r="3"/><circle cx="-47" cy="-9" r="3"/></g>`
+  // tail, body, neck and head
+  +`<path d="M-32 -46 Q-52 -48 -58 -30 Q-50 -40 -36 -38Z" fill="#4a3220"/><ellipse cx="0" cy="-42" rx="34" ry="15" fill="#e2d8c4"/><path d="M18 -54 Q22 -68 34 -78 Q40 -83 46 -82 L60 -68 Q61 -63 56 -61 L47 -64 Q40 -60 36 -48Z" fill="#e2d8c4"/><path d="M20 -56 Q26 -72 38 -82 L42 -84" stroke="#4a3220" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M42 -84 L44 -89 L46 -83Z" fill="#e2d8c4"/>`
+  // the caparison: white cloth from neck to tail with a scalloped red hem and red crosses, the chanfron on the head
+  +`<path d="M-36 -48 Q0 -62 30 -56 L36 -26 Q30 -21 24 -26 Q18 -21 12 -26 Q6 -21 0 -26 Q-6 -21 -12 -26 Q-18 -21 -24 -26 Q-30 -21 -36 -26 L-40 -38Z" fill="#f4efe2"/><path d="M36 -26 Q30 -21 24 -26 Q18 -21 12 -26 Q6 -21 0 -26 Q-6 -21 -12 -26 Q-18 -21 -24 -26 Q-30 -21 -36 -26" fill="none" stroke="#b3261e" stroke-width="2.5"/>`
+  +`<g stroke="none" fill="rgba(90,70,50,.13)"><path d="M-32 -47 Q-34 -36 -33 -26 L-27 -26 Q-29 -38 -28 -49Z M-8 -55 Q-10 -40 -8 -26 L-2 -26 Q-4 -42 -3 -56Z M12 -57 Q14 -42 13 -26 L19 -26 Q20 -42 17 -57Z"/><path d="M-38 -32 Q0 -36 36 -32 L36 -26 Q0 -22 -36 -26Z"/></g><path d="M-22 -48 V-32 M-29 -40 H-15 M18 -50 V-34 M11 -42 H25" stroke="#b3261e" stroke-width="3.2"/>`
+  +`<path d="M22 -54 L33 -72 L42 -76 L38 -58Z" fill="#f4efe2"/><path d="M31 -70 V-60 M27 -65 H36" stroke="#b3261e" stroke-width="2.2"/>`
+  +`<path d="M44 -81 L60 -68 Q61 -63 56 -61 L47 -64Z" fill="#a8b0b8"/><path d="M46 -79 L58 -68" stroke="#e8eef2" stroke-width=".8" fill="none"/><path d="M48 -74 L50 -80 L52 -73" fill="#b3261e"/><circle cx="50" cy="-70" r="1.2" fill="#2a1d14" stroke="none"/><path d="M40 -76 Q36 -66 34 -58" stroke="#c8a83a" stroke-width="1.2" fill="none"/>`
+  // the knight: surcoat, mailed arm, great helm with a plume
+  +`<path d="M-8 -54 L8 -54 L6 -86 L-6 -86Z" fill="#f4efe2"/><path d="M0 -82 V-60 M-6 -72 H6" stroke="#b3261e" stroke-width="3"/><path d="M-2 -54 L6 -32 L12 -34 L6 -54" fill="#9aa0a6"/><path d="M-8 -86 H8 V-98 Q0 -104 -8 -98Z" fill="#a8b0b8"/><path d="M-8 -92 H8" stroke="#2a1d14" stroke-width="1.6"/><path d="M-6 -97 Q-3 -101 3 -101" stroke="#eef3f6" stroke-width="1" fill="none"/><path d="M4 -86 V-98 Q6 -99 8 -98 V-86Z" fill="rgba(0,0,0,.15)" stroke="none"/><path d="M0 -92 V-86" stroke="#2a1d14"/><path d="M-6 -101 Q-16 -112 -22 -100 Q-12 -104 -6 -98Z" fill="#b3261e"/>`
+  // the lance couched under the arm, pennon forked with the red cross
+  +`<path d="M-20 -70 L96 -84" stroke="#7a5632" stroke-width="3" stroke-linecap="round"/><path d="M96 -84 L104 -85 L96 -82Z" fill="#a8b0b8"/><path d="M78 -82 L96 -84 L92 -76 L96 -70 L80 -74Z" fill="#f4efe2"/><path d="M85 -81 V-73 M81 -77 H90" stroke="#b3261e" stroke-width="1.8"/>`
+  +`<rect x="2" y="-74" width="7" height="5" fill="#9aa0a6"/>`
+  // the kite shield on the near arm
+  +`<path d="M-14 -80 H4 V-68 Q4 -56 -5 -50 Q-14 -56 -14 -68Z" fill="#f4efe2" stroke-width="1"/><path d="M-5 -78 V-54 M-12 -70 H2" stroke="#b3261e" stroke-width="3"/></g>`;
+// the host marching down the road behind: small spearmen two by two, a red-cross banner
+const hpHost=()=>[[206,96,.5],[200,102,.6],[194,110,.72],[186,120,.86]].map(([x,y,s],i)=>`<g transform="translate(${x} ${y}) scale(${s})">${[-6,6].map(dx=>`<path d="M${dx-3} 0 L${dx-2} -10 H${dx+2} L${dx+3} 0Z" fill="${i%2?'#f4efe2':'#8e2b1d'}" stroke="#3b2614" stroke-width=".5"/><circle cx="${dx}" cy="-12" r="2.6" fill="#a8b0b8"/><path d="M${dx+4} 0 V-24" stroke="#5a3a20"/>`).join('')}${i===1?`<path d="M0 -10 V-30" stroke="#5a3a20" stroke-width="1.2"/><path d="M0 -30 H12 V-20 H0Z" fill="#f4efe2" stroke="#3b2614" stroke-width=".5"/><path d="M6 -29 V-21 M2 -25 H10" stroke="#b3261e" stroke-width="1.5"/>`:''}</g>`).join('');
+// the cellar inside (his ask 2026-11-25: "more like the inside of a dungeon"): dark stone and arches, a barred window with a moonbeam, chains on the wall, a torch,
+// the cell behind its bars with your prisoners in it (prisoners(), three at most; none: the rats have it), the jailer asleep on his stool with the keys, a rat
+const hpRat=(x,y,f)=>`<g transform="translate(${x} ${y}) scale(${f||1} 1)"><ellipse cx="0" cy="-3" rx="6" ry="3.5" fill="#6a625a"/><circle cx="6" cy="-4" r="2.4" fill="#6a625a"/><circle cx="5" cy="-6.5" r="1.2" fill="#8a7a72"/><circle cx="7.4" cy="-4.4" r=".6" fill="#111"/><path d="M-6 -2 Q-14 -2 -16 -8" stroke="#8a7a72" fill="none"/></g>`;
+function hpDungeon(){const n=Math.min(3,prisoners().length);
+  let v=`<rect width="360" height="150" fill="#4a4440"/>`+[...Array(10)].map((_,j)=>[...Array(13)].map((_,i)=>`<rect x="${i*30-(j%2)*15}" y="${j*11}" width="30" height="11" fill="none" stroke="#3a3430" stroke-width=".9"/>`).join('')).join('')
+    +[[20,90],[110,170]].map(([a,b])=>`<path d="M${a} 108 V40 Q${(a+b)/2} 4 ${b} 40 V108" fill="#3a3430" stroke="#2a2420" stroke-width="2"/>`).join('')
+    +`<rect x="158" y="12" width="20" height="14" fill="#2a3448"/><path d="M163 12 V26 M168 12 V26 M173 12 V26" stroke="#1a1410" stroke-width="1.5"/><path d="M158 26 H178 L230 118 H190Z" fill="url(#hpmn)"/>`
+    +[38,64].map(x=>`<path d="M${x} 34 ${[...Array(6)].map((_,i)=>`a2 3 0 0 1 0 6`).join(' ')}" stroke="#7a7a7a" stroke-width="1.6" fill="none"/><path d="M${x-4} 72 a4 4 0 1 0 8 0" stroke="#8a8a8a" stroke-width="2" fill="none"/>`).join('')
+    +hpTorch(140,52)+``
+    +hpFloor(108,'#5a524a','#463e38')+`<ellipse cx="208" cy="130" rx="16" ry="3" fill="#6a7a86" opacity=".6"/>`
+    // the cell: a dark recess behind iron bars, straw, its folk
+    +`<rect x="216" y="40" width="128" height="74" fill="#2a2420"/><path d="M222 114 Q250 104 280 114Z" fill="#b8a05a"/>`
+    +(n?[244,276,308].slice(0,n).map((x,i)=>hpFolk(x,112,['#7a7266','#6a6258','#8a8070'][i],0,i+2,1.3,prisoners()[i]||null)).join(''):hpRat(262,112)+hpRat(300,113,-1))
+    +`<g stroke="#2a2a2a" stroke-width="3">${[...Array(12)].map((_,i)=>`<path d="M${220+i*11} 38 V116"/>`).join('')}<path d="M216 52 H344 M216 100 H344" stroke-width="3.5"/></g><rect x="214" y="36" width="132" height="5" fill="#3a3a3a"/><rect x="288" y="70" width="8" height="10" fill="#8a7a3a" stroke="#2a2a2a"/>`
+    // the jailer asleep on his stool, keys on his belt, a bowl of gruel; z's
+    +`<g transform="translate(110 142)"><rect x="-10" y="-12" width="20" height="4" fill="#7a5632"/><path d="M-8 -8 V0 M8 -8 V0" stroke="#5a3a20" stroke-width="2.5"/></g>`+hpFolk(110,130,'#5a4a3a',0,5,1.4,councillor('marshal')||hpCast(5))
+    +`<circle cx="122" cy="124" r="4" fill="none" stroke="#d9b24a" stroke-width="1.5"/><path d="M122 128 l2 5 M120 128 l-1 5" stroke="#d9b24a" stroke-width="1.2"/><ellipse cx="80" cy="142" rx="8" ry="3" fill="#8a6a42"/><ellipse cx="80" cy="140" rx="6" ry="1.8" fill="#c8b890"/>`
+    +`<g fill="#e8e0d0" font-family="serif" font-style="italic"><text x="124" y="102" font-size="9">z</text><text x="131" y="94" font-size="11">z</text><text x="140" y="84" font-size="13">Z</text></g>`
+    +hpRat(176,146);
+  return v}
+// the finish (his note 2026-11-25: "clean them up so they're not cheap looking"): gradients for torchlight (hptg), window light (hpsh), moonlight (hpmn),
+// a vignette, and outdoors a sun glow, haze on the far hills and a darker foreground; drawn last over the scene, or under it where noted
+const HPDEF=`<radialGradient id="hptg"><stop offset="0" stop-color="#ffd27a" stop-opacity=".5"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient><linearGradient id="hpsh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6d8" stop-opacity=".32"/><stop offset="1" stop-color="#fff6d8" stop-opacity="0"/></linearGradient><linearGradient id="hpmn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe0f0" stop-opacity=".3"/><stop offset="1" stop-color="#cfe0f0" stop-opacity="0"/></linearGradient><radialGradient id="hpvi" cx=".5" cy=".45" r=".72"><stop offset=".5" stop-color="#1a120a" stop-opacity="0"/><stop offset="1" stop-color="#1a120a" stop-opacity=".6"/></radialGradient><radialGradient id="hpvo" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#2a1a0a" stop-opacity="0"/><stop offset="1" stop-color="#2a1a0a" stop-opacity=".28"/></radialGradient><linearGradient id="hphz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".6" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><linearGradient id="hpfg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2a10" stop-opacity="0"/><stop offset="1" stop-color="#1a2a10" stop-opacity=".22"/></linearGradient><radialGradient id="hpsg"><stop offset="0" stop-color="#fff4c0" stop-opacity=".7"/><stop offset="1" stop-color="#fff4c0" stop-opacity="0"/></radialGradient>`;
+function hpScene(k){const o=HPSC[k];if(o.inside)return `<svg viewBox="0 0 360 150" width="100%" role="img" aria-hidden="true"><defs>${HPDEF}</defs>${o.draw(null,houseCol())}<rect y="98" width="360" height="14" fill="url(#hpfg)" opacity=".8"/><rect width="360" height="150" fill="url(#hpvi)"/></svg>`;const B=HPBG[o.bg],si=seasonIdx(),g=[PAL.base[si],PAL.dark[si],PAL.light[si],PAL.path[si]],hc=houseCol(),sky=si===3&&o.bg!=='dusk'?['#c8d2da','#efe3c2']:B.sky;
+  return `<svg viewBox="0 0 360 150" width="100%" role="img" aria-hidden="true"><defs><linearGradient id="hpsk${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient>${HPDEF}</defs>`
+    +`<rect width="360" height="150" fill="url(#hpsk${k})"/>`+(o.bg==='dusk'||o.bg==='march'?'':`<circle cx="326" cy="22" r="11" fill="#f4d66a"/><g fill="#fbf6ea" opacity=".85"><ellipse cx="62" cy="24" rx="22" ry="6"/><ellipse cx="78" cy="20" rx="14" ry="6"/><ellipse cx="214" cy="30" rx="18" ry="4.5"/></g>`)
+    +(o.bg==='march'?`<circle cx="250" cy="74" r="80" fill="url(#hpsg)"/>`:o.bg==='dusk'?'':`<circle cx="326" cy="22" r="46" fill="url(#hpsg)"/>`)+B.far(g)+`<rect y="50" width="360" height="50" fill="url(#hphz)"/><path d="M0 98 Q100 88 200 96 T360 92 V150 H0Z" fill="${g[0]}"/><rect y="100" width="360" height="50" fill="url(#hpfg)"/>`+(o.bg==='road'||o.bg==='march'?`<path d="M186 100 Q206 112 196 126 T214 152 H162 Q178 130 172 118 T180 100Z" fill="${g[3]}"/>`:'')+clTufts(g)+o.draw(g,hc)+`<rect width="360" height="150" fill="url(#hpvo)"/></svg>`}
 // Send a crew (his pick "C with list"): what is left to raise, each with its picture, kind and cost; Maud's crew with a Change each; Not now.
 // CRW {lid, ids, no}: the crew on the page (no: those swapped out, so a second Change brings someone new); checked again on Send (crewSend)
 let CRW=null;
