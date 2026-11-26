@@ -11935,7 +11935,8 @@ function landFree(l,fond){delete G.lpend;l.free=G.day;l.att=fond?40:-40;delete l
 function landHeel(l){const y=Math.floor(G.day/DPY),fam=l.fn,town=!!l.ttl,T=town?clTown(l):'',o=l.hn,os=l.f&&l.f.sex,sur=/ /.test(o)?' '+o.split(' ').pop():'';
   if(l.fm!=null&&famOn()){const L=famL(l.fm);if(famRow(L)){famNote(L.id,'rose',`Their kin at ${l.nm} rose against you`,-15);famStory(L,`Their kin at ${l.nm} rose against House ${G.house}, and lost.`)}}
   delete l.fp;delete l.fn;if(town){delete l.ttl;delete l.tw;l.tx=1}l.bs={};l.dt=y+5;
-  const c=mkSettler({age:30+R(15)});c.traits=['content'];l.hn=c.name+sur;l.f={id:c.id,sex:c.sex,born:c.born,lk:c.lk,traits:['content'],col:c.col,cv:c.cv};
+  let c=mkSettler({age:30+R(15)});for(let i=0;i<9&&c.name+sur===o;i++)c=mkSettler({age:30+R(15)});// a new writer never shares the old one's name (a chance draw did, and the test caught it)
+  c.traits=['content'];l.hn=c.name+sur;l.f={id:c.id,sex:c.sex,born:c.born,lk:c.lk,traits:['content'],col:c.col,cv:c.cv};
   annal(`${l.nm} is brought to heel${town?`, and is ${T} no longer`:''}.`,'bad');
   const lose=[fam?`${fam} lose their standing`:'',town?`the banner comes down and nobody calls it ${T} now`:'','what they built for themselves is yours',`the tithe is doubled for five years`].filter(x=>x);
   postAdd({t:'news',lid:l.id,txt:`${o} has been sent to tend the goats on the high pasture, and I keep the letters now. We are very sorry about the pitchforks. The tithe will come, twice over. Yours most humbly, ${l.hn}.`});
