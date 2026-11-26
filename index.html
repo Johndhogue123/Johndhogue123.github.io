@@ -1099,6 +1099,38 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
   #modal .chs{display:grid;grid-column:2;grid-row:1/-1;gap:9px;align-content:start}
   #modal .chs .choice{padding-top:7px;padding-bottom:7px;min-height:0}
 }
+/* THE START PAGES IN THE PAGE TEMPLATE (his picks 2026-11-26 from mock-ups: the title as a poster, T3; the founder and sigil pages look C). One book-of-hours frame (.illumf.stf) holds all three pages between the scroll rods; the outer parchment sheet goes clear so only the frame shows.
+   Title: the lettering sits over the sky (.tt) with clouds, birds and a lantern drifting (.cl, .bd, .lant; the global reduced-motion rule stills them). Founder: the throne room with the founder seated on the throne (hpScene crown). Sigil: the great hall, your shield on the swaying middle banner (.bsway). */
+#start .unroll>.sheet{background:none;box-shadow:none;border:0;padding:0}
+#start .illumf.stf{margin:10px 8px;width:auto;max-width:none}
+#start .stf>.sheet.illum{padding:16px 14px 16px;gap:10px;justify-items:center}
+#start .stf .spage{gap:10px}
+#start .stf .bhead,#start .stf .ihead,#start .stf h2.hh,#start .stf .kind{width:100%}
+#start .stf .ihead{position:relative;box-sizing:border-box}
+#start .stf .ihead .dice{position:absolute;right:16px;bottom:16px;width:40px;height:40px;padding:0;border-radius:8px;display:grid;place-items:center;background:linear-gradient(180deg,#6a4426,#43291a);border:1px solid #2a190c;box-shadow:0 2px 3px rgba(0,0,0,.35);z-index:2}
+#start .stf .ihead .dice svg{width:26px;height:26px}
+#start .stf .stpic{margin:0;width:100%}
+#start .stf .stpic .stsky{position:relative;height:min(250px,33vh)}
+.dv{display:block;width:100%;height:14px;background:var(--divider) center/min(300px,100%) 14px no-repeat}
+.stsky .tt{position:absolute;left:0;right:0;top:10px;text-align:center;z-index:2;pointer-events:none;display:grid;gap:2px;justify-items:center}
+.stsky .tt .eyebrow{margin:0;color:#f4d98a;text-shadow:0 1px 0 #3b2614}
+.stsky .tt .title{margin:0;color:#f8ecc6;text-shadow:0 2px 0 #3b2614,0 0 16px rgba(0,0,0,.65)}
+.stsky .cl{position:absolute;left:0;height:12px;border-radius:12px;background:rgba(250,236,215,.5);filter:blur(1px);animation:stcld 46s linear infinite}
+.stsky .c1{top:26%;width:54px}.stsky .c2{top:40%;width:36px;animation-delay:-18s}.stsky .c3{top:33%;width:44px;animation-delay:-31s}
+@keyframes stcld{from{transform:translateX(-80px)}to{transform:translateX(480px)}}
+.stsky .bd{position:absolute;left:0;font-size:12px;line-height:1;color:#2a1b2a;animation:stbd 15s linear infinite}
+.stsky .b1{top:54%;animation-delay:-4s}.stsky .b2{top:48%;animation-delay:-10s}
+@keyframes stbd{from{transform:translate(-30px,0)}to{transform:translate(470px,-26px)}}
+.stsky .lant{position:absolute;left:0;bottom:16%;width:5px;height:5px;border-radius:50%;background:#ffd27a;box-shadow:0 0 8px 4px rgba(255,200,90,.7);animation:stlw 20s linear infinite alternate}
+@keyframes stlw{from{transform:translate(120px,0)}to{transform:translate(250px,-6px)}}
+.bsway{transform-box:fill-box;transform-origin:50% 0;animation:bsw 3.6s ease-in-out infinite}
+@keyframes bsw{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+/* a short computer window (the itch.io box, 940x620): the poster picture smaller and the Maud line and dividers left out, so Found the hold shows */
+@media (min-width:900px) and (min-height:500px) and (orientation:landscape) and (max-height:760px){#start .stf .stpic .stsky{height:150px}#startMaud,.stsky .tt .dv{display:none}.stsky .tt .title{font-size:40px}#start .illumf.stf{margin-block:4px}}
+/* short windows (a small phone, the itch.io box): the painted header smaller and the extras left out, so Next and Take the high seat stay in view as before */
+@media (max-height:700px){#start .stf .ihead{width:min(100%,230px);padding:5px}#start .stf>.sheet.illum{padding-block:10px;gap:6px}#start .stf .spage{gap:6px}#start .stf .vend:not(#startMaud),#start .stf .sigtip,#start .stf .kind{display:none}#start .stf .fpt .pt{width:84px;height:84px}#start .stf .bhead h3{font-size:21px}#start .stf h2.hh{margin-top:2px;font-size:16px}}
+@media (max-height:700px){#start .stf .stpic .stsky{height:150px}#startMaud{display:none}.stsky .tt .title{font-size:42px}}
+.stsky .tt .eyebrow{white-space:nowrap}@media (max-width:380px){.stsky .tt .eyebrow{font-size:12.5px;letter-spacing:.08em}}
 </style>
 
 <div id="app">
@@ -1159,16 +1191,16 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
   <div class="embers" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
   <div class="start-in">
     <div class="roller"></div>
-    <div class="unroll"><div class="sheet parch">
+    <div class="unroll"><div class="sheet parch"><div class="illumf stf"><div class="sheet parch illum">
       <div id="startA" class="spage">
       <div id="startPic" class="bookb stpic"></div>
-      <p class="eyebrow">A small hold, a long line</p>
-      <h1 class="title"><span class="ecap">E</span>mberholt</h1>
+      <i class="dv" aria-hidden="true"></i>
       <p class="lead">Lead a family through hard winters, war and quarrels, and keep the bloodline alive.</p>
       <div id="startWarn" class="stwarn" role="note" hidden></div>
       <div id="startCard" hidden></div>
-      <label for="houseInput" class="small">Name your house</label>
+      <h2 class="hh"><label for="houseInput">Name your house</label></h2>
       <div class="inrow"><input id="houseInput" maxlength="18" autocomplete="off" spellcheck="false"><button class="btn" data-act="reroll" style="width:auto">Roll</button></div>
+      <div class="vend" id="startMaud"></div>
       <button class="dfold" id="dfold" data-act="dfold" aria-expanded="false" aria-controls="dpick"></button>
       <div id="dpick" class="dpick" hidden><label class="small">Have you played games like this before?</label><div class="diffs" id="diffs"></div><div class="diffd" id="diffd"></div></div>
       <button class="hcfold" id="hcfold" data-act="hcfold" aria-expanded="false" aria-controls="hcpick">Have a hold code?</button>
@@ -1180,7 +1212,7 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
       </div>
       <div id="startB" class="spage" hidden></div>
       <div id="startC" class="spage" hidden></div>
-    </div></div>
+    </div></div></div></div>
     <div class="roller"></div>
   </div>
 </div>
@@ -12869,7 +12901,7 @@ function spyHTML(){const sm=smOf(),r=ruler(),A=rivals().map((rv,i)=>[rv,i,agOf(i
    - the House tab (his pick B, 2026-11-25): a picture board, HPT (one entry per tile and its page), hpTile, hpPageHTML (the page in the tab, UI.hp; act hpo), rulerCard, cellarHTML, bloodHTML, legacyHTML, setHTML, hpArt, hpNoteK, lawsW, renderHouse
    - the hold from the front: the neighbours' pictures (HPROW, hpCot in the house style, the land: hpCrag, hpWood, hpRiver; hpWorks; life: hpWar, hpSnow; nbLook, nbLookAt, nbLookG and nbSty for newcomers (rv.gen), nbFolk, nbSnap; a burned seat hpAsh), holdPic (dusk with p.dk, style p.st, land p.ld, life p.lf, war p.war), holdSnap; nbPageHTML with Declare war (pwPageHTML); nbCrop (the round picture on a neighbour row) and a neighbour's page (ATTL, NBHX, NBCI, openNb, nbSide their side of it, nbPageHTML; the bond on it: loyBar, nbBondHTML; a burned seat's page ashPageHTML; Declare independence on your overlord's page)
    - the share card (after legacy): shareSVG, shareBlob, openShare (the picture with the hold code, for itch.io comments)
-   - the start screen: the title page (renderStartPic, stCardHTML, stIconsHTML, stWarnHTML: a browser that will not keep the hold, the houses that were: pastAdd, stPastHTML), the sigil maker, the founder page, startPage, renderDiffs, showStart
+   - the start screen, its three pages in the page template (frame in body.html; hpHall and the founder-look hpThrone give the sigil and founder headers): the title page (renderStartPic, stCardHTML, stIconsHTML, stWarnHTML: a browser that will not keep the hold, the houses that were: pastAdd, stPastHTML), the sigil maker, the founder page, startPage, renderDiffs, showStart
    - the House tab pages' header pictures (hpFolk, HPC, hpFlag, hpTorch, hpWin, hpFloor, HPREL, hpRelic, hpLook, hpCast, HPFOC, hpWinS, hpWinT, hpSet, hpChand, hpRug, hpCouncil, hpThrone, hpCourt, hpKnight, hpHost, hpRat, hpDungeon, HPDEF, hpTree, hpBarrel, hpTent, hpImg, HPBG, HPSC, hpScene), after landPic
    - colonies part 1: the drawn place and the Send a crew page (CLS, CLMAP, clArt, clWall, CLPOS, clLane, clImg, clPlot, clCrew, clTufts, PALP, LANDBK, landPic, CRW, crewFix, crewSwap, crewPageHTML; acts crewpg, crewsw, crewgo; BI.crew)
    - Families of the Hold (Notable families part B): FAMALL, FAMCOL, famPic, famHomePic (FHPIC), famCol, FAMPW, FAMFL, famChip, famLine, famRowHTML, FAMMAUD2, famListHTML, famTree, famPageHTML, FAMPG, famDemHTML, famRaiseHTML (part D: a waiting demand, Raise them up), famCardLine (the person card's "of the Brannocks")
@@ -14176,7 +14208,9 @@ function stPicP(g){
   const c=r&&{id:r.id,lk:r.lk},a=r?Math.floor(((g.day|0)-(r.born|0))/DPY):0,f=r?[[skinOf(c),a>=42?mixHex(hairOf(c),'#d2cfc6',clamp((a-42)/18,0,1)):hairOf(c),SIGC[s.c%SIGC.length].c,(r.sex==='f'?1:0)|(r.sex!=='f'&&beardOf(c)?2:0)|(a<14?4:0)|8|rulerBits({id:r.id,lk:r.lk,sex:r.sex,born:r.born},a,g.rank|0)]]:[];
   return {f,r:g.rank|0,d:g.day|0,h:b.palace?3:b.keep?2:b.hall?1:0,c:b.hut|0,cl:l('hut'),w:b.palisade?l('palisade'):-1,t:b.tower?1+l('tower'):0,ch:b.cathedral?2:b.chapel?1:0,m:b.mill?1:0,fl:b.field|0,col:SIGC[s.c%SIGC.length].c,e:s.e,dk:1,st:hstyPermFor(g.seed)[0]};
 }
-function renderStartPic(){const el=$('#startPic');if(el)el.innerHTML='<div class="stsky">'+holdPic(stPicP(startSave())).replace('<svg class="hp"','<svg class="hp" preserveAspectRatio="xMidYMax slice"')+'</div><i class="vn vtl"></i><i class="vn vtr"></i><i class="vn vbl"></i><i class="vn vbr"></i>'}
+// the title lettering sits over the sky (his pick T3, 2026-11-26), with clouds and birds drifting by and a lantern on the road (CSS, still under reduced motion)
+function renderStartPic(){const el=$('#startPic'),m=$('#startMaud');if(m)m.innerHTML=maudPic(32,'smug')+'<i>Name it something you can bear to hear shouted across a field.</i>';
+  if(el)el.innerHTML='<div class="stsky">'+holdPic(stPicP(startSave())).replace('<svg class="hp"','<svg class="hp" preserveAspectRatio="xMidYMax slice"')+'<i class="cl c1"></i><i class="cl c2"></i><i class="cl c3"></i><span class="bd b1" aria-hidden="true">⌄⌄</span><span class="bd b2" aria-hidden="true">⌄</span><i class="lant"></i><div class="tt"><p class="eyebrow">A small hold, a long line</p><h1 class="title"><span class="ecap">E</span>mberholt</h1><i class="dv" aria-hidden="true"></i></div></div><i class="vn vtl"></i><i class="vn vtr"></i><i class="vn vbl"></i><i class="vn vbr"></i>'}
 // the saved hold: a clean copy of the ruler for the portrait (no game is loaded yet, so nothing may read G)
 function stCardHTML(g){
   const r=g.settlers.find(s=>s.id===g.rulerId)||g.settlers.find(s=>s.ruler),s=sigOf(g.sig||g.house),col=SIGC[s.c%SIGC.length].c,rk=RANKS[g.rank|0]||RANKS[0],yr=SEASONS[Math.floor(((g.day|0)%DPY)/DPS)%4]+' '+(Y0+Math.floor((g.day|0)/DPY)),n=g.settlers.length;
@@ -14212,15 +14246,16 @@ const sigRoll=()=>({c:R(SIGC.length),e:R(SIGE.length),p:R(SIGP.length)});
 function stSig(){if(!STSIG)STSIG=sigOk(UI.sig)?{c:UI.sig.c,e:UI.sig.e,p:UI.sig.p}:sigRoll();return STSIG}
 function renderSigMaker(){
   const h=sanitize($('#houseInput').value)||'Nameless',g=stSig(),b=(k,v,inner,lab,cls)=>`<button class="${cls||''}${g[k]===v?' on':''}" data-act="sig" data-k="${k}" data-v="${v}" aria-label="${lab}" aria-pressed="${g[k]===v}"${k==='c'?` style="background:${SIGC[v].c}"`:''}>${inner}</button>`;
-  $('#startC').innerHTML=`<p class="eyebrow">The arms of House ${h}</p><h2>Your sigil</h2>
-  <div class="fpt">${shield(g,104)}<button class="dice" data-act="sroll" aria-label="Roll a sigil" title="Roll a sigil">${DICE}</button></div>
+  $('#startC').innerHTML=`<div class="kind">The arms of House ${h}</div><div class="bhead"><h3>Your sigil</h3><span class="iseal">${shield(g,40)}</span></div>
+  <div class="bookb ihead">${hpScene('startHall',SIGC[g.c].c,shield(g,44))}<button class="dice" data-act="sroll" aria-label="Roll a sigil" title="Roll a sigil">${DICE}</button>${VNS}</div>
   <p class="sigtip">It flies over your hall and marks everything of your house.</p>
-  <label class="small">Colour</label>
+  <h2 class="hh">Colour</h2>
   <div class="sigrow c">${SIGC.map((x,i)=>b('c',i,'',x.n,'cs')).join('')}</div>
-  <label class="small">Emblem</label>
+  <h2 class="hh">Emblem</h2>
   <div class="sigrow e">${SIGE.map((x,i)=>b('e',i,shield({c:g.c,e:i,p:0},30),x.n)).join('')}</div>
-  <label class="small">Pattern</label>
+  <h2 class="hh">Pattern</h2>
   <div class="sigrow">${SIGP.map((x,i)=>b('p',i,shield({c:g.c,e:g.e,p:i},30),x.n)).join('')}</div>
+  <div class="vend">${maudPic(32,'smug')}<i>Make it a bold one. It will be stitched on everything, mostly crooked.</i></div>
   <button class="btn wax" data-act="fbegin" style="font-size:20px;padding-block:12px">Take the high seat</button>
   <button class="btn" data-act="sback">Back</button>`;
 }
@@ -14238,18 +14273,20 @@ function renderFounder(){
   const f=FND,h=sanitize($('#houseInput').value)||'Nameless';
   const who={id:0,sex:f.sex,lk:fndLk(f),born:(G?G.day:0)-FAGE[f.ag].a*DPY,ruler:true,mood:70,col:SIGC[stSig().c].c,traits:f.traits};
   const arrows=(k,lab,col)=>`<span class="small">${lab}</span><div class="lkrow"><button data-act="flk" data-k="${k}" data-v="-1" aria-label="Previous ${lab.toLowerCase()}">&#9664;</button><span class="sw" style="background:${col}"></span><button data-act="flk" data-k="${k}" data-v="1" aria-label="Next ${lab.toLowerCase()}">&#9654;</button></div>`;
-  $('#startB').innerHTML=`<p class="eyebrow">The first of House ${h}</p><h2>Your founder</h2>
+  $('#startB').innerHTML=`<div class="kind">The first of House ${h}</div><div class="bhead"><h3>Your founder</h3><span class="iseal">${shield(stSig(),40)}</span></div>
+  <div class="bookb ihead">${hpScene('crown',SIGC[stSig().c].c,{sk:SKIN[f.sk],hr:HAIR[f.hr],f:f.sex==='f',bd:f.sex==='m'&&f.bd,sex:f.sex})}${VNS}</div>
   <div class="fpt">${portrait(who,116)}<button class="dice" data-act="fdice" aria-label="New looks" title="New looks">${DICE}</button></div>
-  <label for="fndName" class="small">Their name</label>
+  <h2 class="hh"><label for="fndName">Their name</label></h2>
   <div class="inrow"><input id="fndName" maxlength="14" autocomplete="off" spellcheck="false" value="${f.name}"><button class="btn" data-act="fname">Roll</button></div>
   <div class="diffs two">${['m','f'].map(x=>`<button class="sm${f.sex===x?' on':''}" data-act="fsex" data-v="${x}" aria-pressed="${f.sex===x}">${x==='m'?'Lord':'Lady'}</button>`).join('')}</div>
   <button class="fmore" data-act="fmore" aria-expanded="${!!UI.fm}">More about them ${UI.fm?'&#9652;':'&#9662;'}</button>
   ${UI.fm?`<div class="looks">${arrows('sk','Skin',SKIN[f.sk])}${arrows('hr','Hair',HAIR[f.hr])}${f.sex==='m'?`<span class="small">Beard</span><div class="lkrow"><button class="bdt" data-act="fbd">${f.bd?'Bearded':'Clean-shaven'}</button></div>`:''}</div>
-  <label class="small">Age</label>
+  <h2 class="hh">Age</h2>
   <div class="diffs">${FAGE.map((a,i)=>`<button class="${f.ag===i?'on':''}" data-act="fage" data-v="${i}" aria-pressed="${f.ag===i}">${a.n}<small>${a.a}. ${a.q}</small></button>`).join('')}</div>
-  <label class="small">Pick two traits</label>
+  <h2 class="hh">Pick two traits</h2>
   <div class="trs">${Object.keys(TRAITS).map(t=>{const on=f.traits.includes(t),no=!on&&f.traits.some(o=>oppOf(t,o));return `<button class="${on?'on':no?'no':''}" data-act="ftr" data-v="${t}" aria-pressed="${on}">${TRAITS[t].n}</button>`}).join('')}</div>
   <div class="trd">${f.traits.length?f.traits.map(t=>`<b>${TRAITS[t].n}:</b> ${TDESC[t]}`).join('<br>'):'No traits at all. A blank page of a person.'}</div>`:''}
+  <div class="vend">${maudPic(32,'smug')}<i>Pick a good one. They will be blamed for everything, and credited with some of it.</i></div>
   <button class="btn wax" data-act="fnext" style="font-size:20px;padding-block:12px">Next: your sigil</button>
   <button class="btn" data-act="fback">Back</button>`;
 }
@@ -14672,7 +14709,9 @@ const HPBG={
 // each page: bg its setting, and draw(g,hc) its picture (main building, folk, things)
 const HPSC={
   // crown and repute: the throne room (hpThrone); the laws: the courtroom (hpCourt)
-  crown:{inside:1,draw:(g,hc)=>hpThrone(hc)},
+  crown:{inside:1,draw:(g,hc,x)=>hpThrone(hc,x)},
+  // the start screen's sigil page: the great hall with your banner (x is the chosen shield, hung on the middle banner)
+  startHall:{inside:1,draw:(g,hc,x)=>hpHall(hc,x)},
   laws:{inside:1,draw:(g,hc)=>hpCourt(hc)},
   // the council: the council chamber (hpCouncil)
   council:{inside:1,draw:(g,hc)=>hpCouncil(hc)},
@@ -14735,19 +14774,25 @@ function hpCouncil(hc){const r=ruler(),C=['steward','marshal','chaplain','spymas
     +[[118,100],[242,100]].map(([x,y])=>`<rect x="${x-1.5}" y="${y-8}" width="3" height="8" fill="#f4efe2"/><path d="M${x} ${y-13} Q${x+2.4} ${y-10} ${x} ${y-8} Q${x-2.4} ${y-10} ${x} ${y-13}Z" fill="#fbd06a"/><circle cx="${x}" cy="${y-10}" r="14" fill="url(#hptg)"/>`).join('')
     +hpFolk(96,148,null,0,3,1.6,C[1]||null)+`<g>${hpFolk(272,148,'#3a3440',0,4,1.6,C[3]||null)}</g><path d="M266 126 Q272 116 278 126 L277 130 H267Z" fill="#3a3440" opacity=".9"/>`;
   return v}
-function hpThrone(hc){const R=rp(),n=RPS.reduce((a,k)=>a+rpBand(k,R),0),r=ruler(),rc=r&&r.sex==='f'?'#7a3a8a':'#8e2b1d';
-  let v=`<rect width="360" height="150" fill="#8c8478"/>`+[...Array(9)].map((_,j)=>[...Array(12)].map((_,i)=>`<rect x="${i*32-(j%2)*16}" y="${j*12}" width="32" height="12" fill="none" stroke="#7a7266" stroke-width=".8"/>`).join('')).join('')
+// hpHall(hc,sh): a stone hall, a banner each side and a big one in the middle, in the house colour; sh is a shield svg for the middle one, which sways (.bsway)
+const hpBan=(x,y,w,h,c)=>`<path d="M${x-w/2} ${y} H${x+w/2} V${y+h} L${x} ${y+h-12} L${x-w/2} ${y+h}Z" fill="${c}" stroke="#3b2614"/><rect x="${x-w/2-3}" y="${y-4}" width="${w+6}" height="4" fill="#6a4525"/><rect x="${x-w/2+3}" y="${y+3}" width="${w-6}" height="2.5" fill="#d9b24a"/>`;
+function hpHall(hc,sh){return hpBricks()+hpWin(30,16,26,56)+hpWin(304,16,26,56)+hpTorch(82,52)+hpTorch(278,52)+hpFloor(100,'#a89c88','#8c806c')+hpBan(110,14,40,70,hc)+hpBan(250,14,40,70,hc)
+  +`<g class="bsway">${hpBan(180,10,70,104,hc)}${(sh||'').replace('<svg','<svg x="158" y="38"')}</g>`}
+// hpBricks: the throne room's and the great hall's stone wall. hpThrone(hc,fd): fd is a founder's look ({sk,hr,f,bd,sex}) for the start screen, where no game is in memory (then no repute, relics or ruler are read; two courtiers cheer)
+const hpBricks=()=>`<rect width="360" height="150" fill="#8c8478"/>`+[...Array(9)].map((_,j)=>[...Array(12)].map((_,i)=>`<rect x="${i*32-(j%2)*16}" y="${j*12}" width="32" height="12" fill="none" stroke="#7a7266" stroke-width=".8"/>`).join('')).join('');
+function hpThrone(hc,fd){const R=fd?0:rp(),n=fd?2:RPS.reduce((a,k)=>a+rpBand(k,R),0),r=fd?null:ruler(),rc=(fd?fd.sex==='f':r&&r.sex==='f')?'#7a3a8a':'#8e2b1d';
+  let v=hpBricks()
     +hpWin(36,14,26,56)+hpWin(298,14,26,56)+`<path d="M36 70 L10 150 H90 L62 70Z M298 70 L270 150 H350 L324 70Z" fill="url(#hpsh)"/>`
     +[110,250].map(x=>`<rect x="${x-14}" y="8" width="28" height="62" fill="${hc}" stroke="#3b2614"/><path d="M${x-14} 70 L${x} 80 L${x+14} 70" fill="${hc}" stroke="#3b2614"/><rect x="${x-14}" y="8" width="28" height="4" fill="#d9b24a"/><circle cx="${x}" cy="36" r="7" fill="#d9b24a"/><path d="M${x-4} 34 L${x-4} 39 L${x+4} 39 L${x+4} 34 L${x+2} 36 L${x} 32 L${x-2} 36Z" fill="#8a6a1a"/>`).join('')
     +hpTorch(82,52)+hpTorch(278,52)
     +hpFloor(96,'#a89c88','#8c806c')+hpRug(96)
-    +hpChand(180,22,26)
+    +hpChand(180,22,26)+(fd?`<circle cx="180" cy="54" r="30" fill="url(#hptg)"/>`:'')
     // the dais and the throne
     +`<path d="M132 96 H228 V88 H132Z" fill="#7a6e5e" stroke="#4a4238"/><path d="M144 88 H216 V80 H144Z" fill="#8a7e6c" stroke="#4a4238"/>`
     +`<path d="M164 80 V34 Q180 22 196 34 V80Z" fill="#6a3418" stroke="#3b2614"/><path d="M168 76 V38 Q180 30 192 38 V76Z" fill="${hc}"/><circle cx="180" cy="30" r="3" fill="#d9b24a"/><rect x="160" y="64" width="40" height="8" fill="#5a3a20"/><rect x="158" y="56" width="6" height="18" fill="#6a3418"/><rect x="196" y="56" width="6" height="18" fill="#6a3418"/>`
-    +`<g transform="translate(180 78)"><path d="M-9 0 L-7 -22 H7 L9 0Z" fill="${rc}" stroke="${CLS}" stroke-width=".6"/><path d="M-7 -22 H7 L5 -14 H-5Z" fill="#f2ecdc"/>${(()=>{const L=r?hpLook(r):{sk:SKIN[1],hr:HAIR[1],f:0,bd:0};return `${L.f?`<path d="M-5.6 -29 Q-7 -20 -4 -19 L-3 -27Z M5.6 -29 Q7 -20 4 -19 L3 -27Z" fill="${L.hr}"/>`:''}<circle cx="0" cy="-27" r="5" fill="${L.sk}" stroke="${CLS}" stroke-width=".5"/><path d="M-5 -28 Q-5 -33 0 -33 Q5 -33 5 -28 Q2 -30.5 -5 -28Z" fill="${L.hr}"/>${L.bd?`<path d="M-4.2 -25.6 Q0 -18.6 4.2 -25.6 Q0 -23 -4.2 -25.6Z" fill="${L.hr}"/>`:''}`})()}<path d="M-5 -31 L-5 -37 L-2.5 -33 L0 -38 L2.5 -33 L5 -37 L5 -31Z" fill="#e8c24a" stroke="#8a6a1a" stroke-width=".6"/><rect x="5" y="-20" width="2" height="18" fill="#d9b24a"/><circle cx="6" cy="-21" r="2.5" fill="#d9b24a"/></g>`
-    +[[142,100],[218,100],[112,96],[248,96]].slice(0,Math.min(4,G.relics||0)).map(([x,y],i)=>hpRelic(x,y,i)).join('')
-    +[[118,124],[96,138],[136,140],[242,124],[264,138],[224,140],[74,146],[286,146]].map(([x,y],i)=>hpFolk(x,y,HPC[i%7],i<n+1&&n>1,i,1.35)).join('')
+    +`<g transform="translate(180 78)"><path d="M-9 0 L-7 -22 H7 L9 0Z" fill="${rc}" stroke="${CLS}" stroke-width=".6"/><path d="M-7 -22 H7 L5 -14 H-5Z" fill="#f2ecdc"/>${(()=>{const L=fd||(r?hpLook(r):{sk:SKIN[1],hr:HAIR[1],f:0,bd:0});return `${L.f?`<path d="M-5.6 -29 Q-7 -20 -4 -19 L-3 -27Z M5.6 -29 Q7 -20 4 -19 L3 -27Z" fill="${L.hr}"/>`:''}<circle cx="0" cy="-27" r="5" fill="${L.sk}" stroke="${CLS}" stroke-width=".5"/><path d="M-5 -28 Q-5 -33 0 -33 Q5 -33 5 -28 Q2 -30.5 -5 -28Z" fill="${L.hr}"/>${L.bd?`<path d="M-4.2 -25.6 Q0 -18.6 4.2 -25.6 Q0 -23 -4.2 -25.6Z" fill="${L.hr}"/>`:''}`})()}<path d="M-5 -31 L-5 -37 L-2.5 -33 L0 -38 L2.5 -33 L5 -37 L5 -31Z" fill="#e8c24a" stroke="#8a6a1a" stroke-width=".6"/><rect x="5" y="-20" width="2" height="18" fill="#d9b24a"/><circle cx="6" cy="-21" r="2.5" fill="#d9b24a"/></g>`
+    +[[142,100],[218,100],[112,96],[248,96]].slice(0,fd?0:Math.min(4,G.relics||0)).map(([x,y],i)=>hpRelic(x,y,i)).join('')
+    +[[118,124],[96,138],[136,140],[242,124],[264,138],[224,140],[74,146],[286,146]].map(([x,y],i)=>hpFolk(x,y,HPC[i%7],i<n+1&&n>1,i,1.35,fd?null:undefined)).join('')
   return v}
 // the courtroom: timber walls, the high bench with the ruler judging under the scales, the law book, a clerk with his quill, the accused in the dock with a
 // guard, and the gallery's heads in front
@@ -14829,7 +14874,7 @@ function hpSet(){return `<rect width="360" height="150" fill="#e6d6b4"/>`+[0,90,
   +`<path d="M140 98 Q160 92 180 98 Q200 92 220 98 L224 112 Q202 106 180 112 Q158 106 136 112Z" fill="#f3e6c4" stroke="#8a6a3a" stroke-width=".8"/><path d="M180 98 V112" stroke="#8a6a3a" stroke-width=".8"/><path d="M146 102 h26 M146 105 h22 M146 108 h24 M186 102 h26 M186 105 h20 M186 108 h24" stroke="#8a6a3a" stroke-width=".6"/><rect x="176" y="112" width="8" height="10" fill="#b3261e"/>`
   +`<rect x="228" y="96" width="8" height="8" fill="#2a1d14"/><path d="M232 96 L244 74" stroke="#f2ecdc" stroke-width="2"/><rect x="118" y="88" width="6" height="12" fill="#f4efe2"/><path d="M121 80 Q124 84 121 88 Q118 84 121 80Z" fill="#fbd06a"/><circle cx="121" cy="84" r="20" fill="url(#hptg)"/>`
   +`<g transform="translate(286 146) rotate(-18)"><ellipse cx="0" cy="-14" rx="13" ry="16" fill="#b8863e" stroke="#5a3a20"/><circle cx="0" cy="-12" r="4" fill="#3b2614"/><rect x="-2.5" y="-62" width="5" height="34" fill="#7a5632" stroke="#3b2614" stroke-width=".6"/><rect x="-4" y="-70" width="8" height="9" fill="#6a4525"/><path d="M-1 -62 V-6 M1 -62 V-6" stroke="#f2ecdc" stroke-width=".4"/></g>`}
-function hpScene(k){const o=HPSC[k];if(o.inside)return `<svg viewBox="0 0 360 150" width="100%" role="img" aria-hidden="true"><defs>${HPDEF}</defs>${o.draw(null,houseCol())}<rect y="98" width="360" height="14" fill="url(#hpfg)" opacity=".8"/><rect width="360" height="150" fill="url(#hpvi)"/></svg>`;const B=HPBG[o.bg],si=seasonIdx(),g=[PAL.base[si],PAL.dark[si],PAL.light[si],PAL.path[si]],hc=houseCol(),sky=si===3&&o.bg!=='dusk'?['#c8d2da','#efe3c2']:B.sky;
+function hpScene(k,hcol,x){const o=HPSC[k];if(o.inside)return `<svg viewBox="0 0 360 150" width="100%" role="img" aria-hidden="true"><defs>${HPDEF}</defs>${o.draw(null,hcol||houseCol(),x)}<rect y="98" width="360" height="14" fill="url(#hpfg)" opacity=".8"/><rect width="360" height="150" fill="url(#hpvi)"/></svg>`;const B=HPBG[o.bg],si=seasonIdx(),g=[PAL.base[si],PAL.dark[si],PAL.light[si],PAL.path[si]],hc=houseCol(),sky=si===3&&o.bg!=='dusk'?['#c8d2da','#efe3c2']:B.sky;
   return `<svg viewBox="0 0 360 150" width="100%" role="img" aria-hidden="true"><defs><linearGradient id="hpsk${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset="1" stop-color="${sky[1]}"/></linearGradient>${HPDEF}</defs>`
     +`<rect width="360" height="150" fill="url(#hpsk${k})"/>`+(o.bg==='dusk'||o.bg==='march'?'':`<circle cx="326" cy="22" r="11" fill="#f4d66a"/><g fill="#fbf6ea" opacity=".85"><ellipse cx="62" cy="24" rx="22" ry="6"/><ellipse cx="78" cy="20" rx="14" ry="6"/><ellipse cx="214" cy="30" rx="18" ry="4.5"/></g>`)
     +(o.bg==='march'?`<circle cx="250" cy="74" r="80" fill="url(#hpsg)"/>`:o.bg==='dusk'?'':`<circle cx="326" cy="22" r="46" fill="url(#hpsg)"/>`)+B.far(g)+`<rect y="50" width="360" height="50" fill="url(#hphz)"/><path d="M0 98 Q100 88 200 96 T360 92 V150 H0Z" fill="${g[0]}"/><rect y="100" width="360" height="50" fill="url(#hpfg)"/>`+(o.bg==='road'||o.bg==='march'?`<path d="M186 100 Q206 112 196 126 T214 152 H162 Q178 130 172 118 T180 100Z" fill="${g[3]}"/>`:'')+clTufts(g)+o.draw(g,hc)+`<rect width="360" height="150" fill="url(#hpvo)"/></svg>`}
