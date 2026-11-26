@@ -1131,6 +1131,12 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 @media (max-height:700px){#start .stf .ihead{width:min(100%,230px);padding:5px}#start .stf>.sheet.illum{padding-block:10px;gap:6px}#start .stf .spage{gap:6px}#start .stf .vend:not(#startMaud),#start .stf .sigtip,#start .stf .kind{display:none}#start .stf .fpt .pt{width:84px;height:84px}#start .stf .bhead h3{font-size:21px}#start .stf h2.hh{margin-top:2px;font-size:16px}}
 @media (max-height:700px){#start .stf .stpic .stsky{height:150px}#startMaud{display:none}.stsky .tt .title{font-size:42px}}
 .stsky .tt .eyebrow{white-space:nowrap}@media (max-width:380px){.stsky .tt .eyebrow{font-size:12.5px;letter-spacing:.08em}}
+
+/* the Hold tab's shortcut row (from year 3; two rows of House-board tiles: Always here / Right now) */
+#jobsum.hhrow{display:block}
+.hhcap{text-align:center;font-family:var(--f-display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:4px 0 2px}
+.hhsep{height:1px;margin:4px 16px 2px;background:linear-gradient(90deg,transparent,rgba(224,185,84,.7),transparent)}
+.hpwin.art{display:grid;place-items:center;background:#cfe3ea}
 </style>
 
 <div id="app">
@@ -12897,7 +12903,7 @@ function spyHTML(){const sm=smOf(),r=ruler(),A=rivals().map((rv,i)=>[rv,i,agOf(i
   return h+'</div>'}
 /* Contents of 10-screen.js: What is on screen: icons, portraits, the tabs, cards, input and the guide.
    - icons & portraits: ICONS, ic, gBody, pNeck (necklaces), pScarf, pScar (scars and eyepatches), portrait
-   - rendering: renderTop (with the ruler medallion, medal), alerts, the Hold tab (jobTiles, alertsHTML, projCard, renderHold), the Folk tab (People: folkTile, wallSec, peopleHTML; Work: maudStrip (Maud sees to the work, the switch and her line), groupHead, fixStrip, wpPanel (Where they work, from Barony), workHTML; folkCard, jobPick, renderFolk), renderBuild, renderHouse, renderModal (your own war: the battle scene before its card, BSMS, bsOk, battleHTML; ev.seal, ev.post, ev.war; love cards: loveHearts), refresh, setView, begin, showStart
+   - rendering: renderTop (with the ruler medallion, medal), alerts, the Hold tab (jobTiles, holdRow, alertsHTML, projCard, renderHold), the Folk tab (People: folkTile, wallSec, peopleHTML; Work: maudStrip (Maud sees to the work, the switch and her line), groupHead, fixStrip, wpPanel (Where they work, from Barony), workHTML; folkCard, jobPick, renderFolk), renderBuild, renderHouse, renderModal (your own war: the battle scene before its card, BSMS, bsOk, battleHTML; ev.seal, ev.post, ev.war; love cards: loveHearts), refresh, setView, begin, showStart
    - the House tab (his pick B, 2026-11-25): a picture board, HPT (one entry per tile and its page), hpTile, hpPageHTML (the page in the tab, UI.hp; act hpo), rulerCard, cellarHTML, bloodHTML, legacyHTML, setHTML, hpArt, hpNoteK, lawsW, renderHouse
    - the hold from the front: the neighbours' pictures (HPROW, hpCot in the house style, the land: hpCrag, hpWood, hpRiver; hpWorks; life: hpWar, hpSnow; nbLook, nbLookAt, nbLookG and nbSty for newcomers (rv.gen), nbFolk, nbSnap; a burned seat hpAsh), holdPic (dusk with p.dk, style p.st, land p.ld, life p.lf, war p.war), holdSnap; nbPageHTML with Declare war (pwPageHTML); nbCrop (the round picture on a neighbour row) and a neighbour's page (ATTL, NBHX, NBCI, openNb, nbSide their side of it, nbPageHTML; the bond on it: loyBar, nbBondHTML; a burned seat's page ashPageHTML; Declare independence on your overlord's page)
    - the share card (after legacy): shareSVG, shareBlob, openShare (the picture with the hold code, for itch.io comments)
@@ -13252,6 +13258,36 @@ function jobTiles(cnt,kids){
   const pop=G.settlers.length,hs=housing();
   return JOBS.map(([j,l])=>t(j,l,cnt[j],jobState(j,cnt[j]),'jobgo')).join('')+t('kids','Children',kids,'','jobgo')+t('beds','Beds',pop+'/'+hs,pop>hs?'bad':'','bedgo',`<span class="bedb">${ic('bed',13)}</span>`);
 }
+// the shortcut row (his pick, 2026-11-26: "the tiles should be shortcuts to other parts of the game ... fixed plus changing"): from year 3 the job
+// tiles give way to two rows of House-board tiles. "Always here" never moves: Work (to the job that needs a hand, else Farm; red edge while any does),
+// the Chronicle, the Family tree. "Right now" is three tiles picked by what is going on (hhPick: the most pressing first, calm ones fill the rest),
+// chosen once a day so a tile never swaps under a thumb, their words live. In the first two years the job tiles stay (the guide and the first
+// minutes lean on them). Tiles open the House pages (act hpgo), the Build tab (bedgo) or the job's Folk group (jobgo). Mock-ups: mockups-holdboard/.
+const hhArt=k=>`<span class="hpwin art">${hpArt(k,70,40)}</span>`;
+let HRK={d:-1,k:[]},HRP={d:-1,p:{}};
+const hhPic=(k,f)=>{if(HRP.d!==G.day)HRP={d:G.day,p:{}};return HRP.p[k]||(HRP.p[k]=f())};
+function hhCands(cnt){
+  const pop=G.settlers.length,hs=housing(),hp=k=>{const p=ruler()&&hpOf(k);return p&&p.on()?p.st():null},bad=a=>a&&a[1]==='bad';
+  const nb=hp('nb'),cn=hp('council'),he=hp('heir'),cr=hp('crown'),cl=hp('cellar');
+  const T=(k,n,w,st,pic,act,dk)=>({k,n,w,st,pic,act,dk});
+  const page=(k,pri,calm)=>{const p=hpOf(k),a=hp(k);return a?[a&&a[1]==='bad'?pri:calm,T(k,p.n,a[0],a[1],()=>hhPic(k,p.pic),'hpgo',k)]:null};
+  const L=[];
+  if(pop>=hs-1)L.push([pop>hs?92:68,T('beds','Beds',`${pop} of ${hs}`+(pop>hs?', crowded':''),pop>hs?'bad':'',()=>hhPic('beds',()=>hhArt('hut')),'bedgo','')]);
+  if(G.proj&&jobState('build',cnt.build)==='bad')L.push([72,T('bld','Build','Nobody building','bad',()=>hhPic('bld',()=>hhArt('hall')),'jobgo','build')]);
+  [page('crown',88,8),page('heir',85,5),page('council',80,7),page('nb',90,9),page('laws',0,10),page('crus',G.crus?60:4,4),page('cellar',cl?50:0,2)].forEach(x=>{if(x&&x[0])L.push(x)});
+  return L.sort((a,b)=>b[0]-a[0]).map(x=>x[1]);
+}
+function hhTile(t){return `<button class="ht${t.st?' '+t.st:''}" data-act="${t.act}" data-k="${t.dk}"><span class="hp">${t.pic()}</span><b>${t.n}</b><small>${t.w}</small></button>`}
+function holdRow(cnt){
+  const need=JOBS.map(j=>j[0]).filter(j=>jobState(j,cnt[j])==='bad'),first=need[0]||'farm';
+  const fixed=[{n:'Work',w:need.length?`${need.length} need${need.length>1?'':'s'} a hand`:'All hands set',st:need.length?'bad':'good',pic:()=>hhPic('work',()=>hpWinT('land0')),act:'jobgo',dk:first},
+    {n:'Chronicle',w:'All the news',st:'',pic:()=>hhPic('chr',()=>hpWinT('legacy')),act:'chron',dk:''},
+    {n:'Family',w:`${G.settlers.length} under your roof`,st:'',pic:()=>hhPic('fam',()=>hpWinT('heir')),act:'tree',dk:''}];
+  if(HRK.d!==G.day){HRK={d:G.day,k:hhCands(cnt).slice(0,3).map(t=>t.k)}}
+  const all=hhCands(cnt),pick=HRK.k.map(k=>all.find(t=>t.k===k)).filter(Boolean);
+  for(const t of all)if(pick.length<3&&!pick.includes(t))pick.push(t);// a kept tile that stopped applying leaves a gap: fill it
+  return `<div class="hhcap">Always here</div><div class="hgrid">${fixed.map(hhTile).join('')}</div><div class="hhsep"></div><div class="hhcap">Right now</div><div class="hgrid">${pick.map(hhTile).join('')}</div>`;
+}
 // warnings, worst first: the bad and the worrying (up to three), the perk note always, then the one-tap nudges; the rest fold behind one line
 const ALIC={farm:'hoe',wood:'axe',stone:'pick',build:'build',guard:'spear',rest:'bed',hunt:'food',feast:'tavern',clothes:'wool',pray:'chapel',tools:'smithy',banish:'palisade',settle:'hut',sell:'market',tax:'gold',match:'heart',heir:'cradle',card:'renown',cellar:'dungeon',perks:'renown'};
 function alertIc(a){const k=a[2]||'',[w,v]=k.split(':'),n=ALIC[v]||ALIC[w]||(ICONS[v]?v:'')||(w==='f'||w==='s'?'folk':w==='r'?'palisade':w==='b'||w==='u'?'build':a[0]==='bad'?'cross':'hold');return ic(n,18)}
@@ -13264,7 +13300,7 @@ function alertsHTML(){
 function renderHold(){
   const cnt={};JOBS.forEach(j=>cnt[j[0]]=0);let kids=0;
   G.settlers.forEach(s=>{if(isChild(s))kids++;else cnt[s.job]++});
-  setH($('#jobsum'),jobTiles(cnt,kids));
+  {const row=G.day>=2*DPY,js=$('#jobsum');js.className=row?'hhrow':'jgrid';setH(js,row?holdRow(cnt):jobTiles(cnt,kids))}
   {const jk=$('#jobkey');if(jk)jk.hidden=!(G.day<2*DPY&&$('#jobsum').querySelector('.bad'))}
   setH($('#alerts'),alertsHTML());
   setH($('#projcard'),projCard()+goalCard());
@@ -14336,10 +14372,11 @@ function showStart(){
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-act]');if(!t)return;
   const a=t.dataset.act;
-  if(['tab','jpick','ffo','fview','open','speed','reroll','jobgo','bedgo','medal','alfold','chold','fname','fsex','fage','flk','fbd','ftr','fdice','fmore','fback','sback'].includes(a))auPlay('tap');
+  if(['tab','jpick','ffo','fview','open','speed','reroll','jobgo','bedgo','hpgo','medal','alfold','chold','fname','fsex','fage','flk','fbd','ftr','fdice','fmore','fback','sback'].includes(a))auPlay('tap');
   if(a==='tab')setView(t.dataset.tab);
   else if(a==='jobgo'){closeBinfo();uiSet('f',t.dataset.k);selected=null;expanded=null;setView('folk')}
   else if(a==='bedgo'){setView('build')}
+  else if(a==='hpgo'){closeBinfo();auPlay('scroll');setView('house');UI.hp=t.dataset.k||null;LANDO=null;renderHouse();$('#main').scrollTop=0}
   else if(a==='medal'){const r=ruler();closeBinfo();if(r)goFix(crownLevel(crownThreats()).i>=2?'card':'s:'+r.id)}
   else if(a==='alfold'){ALO=!ALO;renderHold()}
   else if(a==='chold'){CHO=!CHO;renderHold()}
