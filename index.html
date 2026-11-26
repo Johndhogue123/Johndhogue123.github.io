@@ -5166,7 +5166,11 @@ function walk(a,b,inn){
     // round the wall's inner side (on the guards' boardwalk where it stands in the river) or outer side, the short way unless
     // that way is in the river and the long way is not
     if(cut){const A=q=>Math.atan2((q[1]+.5)*TS+12-WCY(),(q[0]+.5)*TS-WCX()),a1=A(a);let d=angN(A(b)-a1);if(d>Math.PI)d-=2*Math.PI;
-      const way=d=>{const n=Math.ceil(Math.abs(d)/.25),o=[];let wet=0;for(let i=1;i<n;i++){const w=wallXY(a1+d*i/n,inn?-.45:.65);if(wetPx(w[0],w[1]))wet++;o.push(sPt(w[0],w[1]))}return {o,wet}};
+      // wet: water at a turn or anywhere on the straight stretch before it (the stretches cut corners: turns all dry on the river side,
+      // a stretch between them clipped the bank and the walk waded, seed 4246540531, 2026-11-25)
+      const way=d=>{const n=Math.ceil(Math.abs(d)/.25),o=[];let wet=0,pv=null;for(let i=1;i<n;i++){const w=wallXY(a1+d*i/n,inn?-.45:.65);if(wetPx(w[0],w[1]))wet++;
+        if(pv){const k=Math.ceil(Math.hypot(w[0]-pv[0],w[1]-pv[1])/6);for(let j=1;j<k;j++)if(wetPx(pv[0]+(w[0]-pv[0])*j/k,pv[1]+(w[1]-pv[1])*j/k)){wet++;break}}
+        pv=w;o.push(sPt(w[0],w[1]))}return {o,wet}};
       let w=way(d);if(w.wet){const w2=way(d-Math.sign(d)*2*Math.PI);if(w2.wet<w.wet)w=w2}
       for(const q of w.o){pts.push(...stepRound(p,q),q);p=q}}}
   for(const q of keepDry(p,b)){pts.push(...stepRound(p,q),q);p=q}
@@ -12869,6 +12873,7 @@ function spyHTML(){const sm=smOf(),r=ruler(),A=rivals().map((rv,i)=>[rv,i,agOf(i
    - the House tab pages' header pictures (hpFolk, HPC, hpFlag, hpTorch, hpWin, hpFloor, HPREL, hpRelic, hpLook, hpCast, HPFOC, hpWinS, hpWinT, hpSet, hpChand, hpRug, hpCouncil, hpThrone, hpCourt, hpKnight, hpHost, hpRat, hpDungeon, HPDEF, hpTree, hpBarrel, hpTent, hpImg, HPBG, HPSC, hpScene), after landPic
    - colonies part 1: the drawn place and the Send a crew page (CLS, CLMAP, clArt, clWall, CLPOS, clLane, clImg, clPlot, clCrew, clTufts, PALP, LANDBK, landPic, CRW, crewFix, crewSwap, crewPageHTML; acts crewpg, crewsw, crewgo; BI.crew)
    - Families of the Hold (Notable families part B): FAMALL, FAMCOL, famPic, famHomePic (FHPIC), famCol, FAMPW, FAMFL, famChip, famLine, famRowHTML, FAMMAUD2, famListHTML, famTree, famPageHTML, FAMPG, famDemHTML, famRaiseHTML (part D: a waiting demand, Raise them up), famCardLine (the person card's "of the Brannocks")
+   - a look back at each season: seasonSnap, levelGains, silverLine, skillGains, SSNQ, seasonReport
    - input; map zoom gestures; tap a building: bldAt, openBinfo, sheets
    - the first-game guide (told by Sister Maud): TUT, tutStep, and lessons told when things first matter (LESSONS, lessonOn; House notes: noteOn, houseNote); the season report: seasonReport, daily
    - boot (placeMap: on a computer screen the map moves to #stage on the left)
