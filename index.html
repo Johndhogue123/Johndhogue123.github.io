@@ -8624,7 +8624,7 @@ function evPwLose(w,rv){const cr=pwCrush(w,rv),g0=Math.round(15+rivalStr(rv)),g=
   const note=cr&&(!w.ind||w.ind==='them')?`<p class="fs">${CRUSHW}. ${G.ov!=null?`You already kneel to House ${rivals()[G.ov].house}, so`:'Being greedy or pious,'} ${lordOf(rv)} takes gold instead of your knee.</p>`:cr&&w.ind==='me'?`<p class="fs">${CRUSHW}.${G.diff===2?' On Hard, one more like this ends your house.':''}</p>`:'';
   return {kind:'War',title,text:`${pwHead(w)} ${why}`,post:pwSoFar()+note,
     choices:[
-      {t:'Pay in gold',d:pay<g?`All the ${pay} gold you have. -${rn+2} renown.`:`${g} gold. -${rn} renown.`,fn(){return pwEnd('lose',{g:pay,rn:pay<g?rn+2:rn})}},
+      {t:'Pay in gold',d:pay<g?`${pay>0?`All the ${pay} gold you have.`:'You have no gold left to give.'} -${rn+2} renown.`:`${g} gold. -${rn} renown.`,fn(){return pwEnd('lose',{g:pay,rn:pay<g?rn+2:rn})}},
       {t:'Pay in grain',d:`${fd} food. -${rn} renown.`,dis:G.food<fd,why:'Not enough food',fn(){return pwEnd('lose',{fd,rn})}}
     ]}}
 function evPwTruce(w,rv){const fr=w.ind==='v'?` House ${rv.house} goes free: four battles, and you could not bring them to heel.`:w.ind==='me'?` You go free: four battles, and they could not bring you to heel.`:'';
