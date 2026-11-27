@@ -1137,6 +1137,8 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 .hhcap{text-align:center;font-family:var(--f-display);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin:4px 0 2px}
 .hhsep{height:1px;margin:4px 16px 2px;background:linear-gradient(90deg,transparent,rgba(224,185,84,.7),transparent)}
 .hpwin.art{display:grid;place-items:center;background:#cfe3ea}
+.ht.warn{border-color:#c9a23a;box-shadow:inset 0 0 12px rgba(201,162,58,.4),0 0 0 1.5px #c9a23a,0 2px 3px rgba(0,0,0,.4)}
+.ht.warn small{color:#8a5d0e;font-weight:600}
 </style>
 
 <div id="app">
@@ -13259,30 +13261,39 @@ function jobTiles(cnt,kids){
   return JOBS.map(([j,l])=>t(j,l,cnt[j],jobState(j,cnt[j]),'jobgo')).join('')+t('kids','Children',kids,'','jobgo')+t('beds','Beds',pop+'/'+hs,pop>hs?'bad':'','bedgo',`<span class="bedb">${ic('bed',13)}</span>`);
 }
 // the shortcut row (his pick, 2026-11-26: "the tiles should be shortcuts to other parts of the game ... fixed plus changing"): from year 3 the job
-// tiles give way to two rows of House-board tiles. "Always here" never moves: Work (to the job that needs a hand, else Farm; red edge while any does),
-// the Chronicle, the Family tree. "Right now" is three tiles picked by what is going on (hhPick: the most pressing first, calm ones fill the rest),
+// tiles give way to two rows of tiles. "Always here" never moves, the things played all the time in general terms (his note: the Chronicle and the Family
+// tree are not that important to always have): Work (to the job that needs a hand, else Farm; red only while a job lacks people, idle builders only a word),
+// Build (the project and its percent, to the Build tab; red with nobody building) and Folk (how many are unhappy, to that Folk list). "Right now" is three
+// House-board tiles picked by what is going on (hhCands: the most pressing first, calm ones fill the rest; a feud on one job brings Family, to its fix),
 // chosen once a day so a tile never swaps under a thumb, their words live. In the first two years the job tiles stay (the guide and the first
-// minutes lean on them). Tiles open the House pages (act hpgo), the Build tab (bedgo) or the job's Folk group (jobgo). Mock-ups: mockups-holdboard/.
+// minutes lean on them). Tiles open the House pages (act hpgo), the Build tab (bedgo, gofix build) or a Folk group (jobgo). Mock-ups: mockups-holdboard/.
 const hhArt=k=>`<span class="hpwin art">${hpArt(k,70,40)}</span>`;
 let HRK={d:-1,k:[]},HRP={d:-1,p:{}};
 const hhPic=(k,f)=>{if(HRP.d!==G.day)HRP={d:G.day,p:{}};return HRP.p[k]||(HRP.p[k]=f())};
+// a neighbour who is only hostile is amber and ranks lower; red is for war and for things you can act on now (measured 2026-11-26: red on most days made it mean nothing)
+const hhNb=x=>{if(x&&x[1].st==='bad'&&!/war/i.test(x[1].w)){x[1].st='warn';x[0]=55}return x};
 function hhCands(cnt){
   const pop=G.settlers.length,hs=housing(),hp=k=>{const p=ruler()&&hpOf(k);return p&&p.on()?p.st():null},bad=a=>a&&a[1]==='bad';
   const nb=hp('nb'),cn=hp('council'),he=hp('heir'),cr=hp('crown'),cl=hp('cellar');
   const T=(k,n,w,st,pic,act,dk)=>({k,n,w,st,pic,act,dk});
-  const page=(k,pri,calm)=>{const p=hpOf(k),a=hp(k);return a?[a&&a[1]==='bad'?pri:calm,T(k,p.n,a[0],a[1],()=>hhPic(k,p.pic),'hpgo',k)]:null};
+  const nk=hpNoteK(),page=(k,pri,calm)=>{const p=hpOf(k),a=hp(k);if(!a)return null;const x=[a[1]==='bad'?pri:calm,T(k,p.n,a[0],a[1],()=>hhPic(k,p.pic),'hpgo',k)];if(nk===k){x[0]=Math.max(x[0],74);x[1].dot=1}return x};
   const L=[];
   if(pop>=hs-1)L.push([pop>hs?92:68,T('beds','Beds',`${pop} of ${hs}`+(pop>hs?', crowded':''),pop>hs?'bad':'',()=>hhPic('beds',()=>hhArt('hut')),'bedgo','')]);
-  if(G.proj&&jobState('build',cnt.build)==='bad')L.push([72,T('bld','Build','Nobody building','bad',()=>hhPic('bld',()=>hhArt('hall')),'jobgo','build')]);
-  [page('crown',88,8),page('heir',85,5),page('council',80,7),page('nb',90,9),page('laws',0,10),page('crus',G.crus?60:4,4),page('cellar',cl?50:0,2)].forEach(x=>{if(x&&x[0])L.push(x)});
+  {const fd=feudJobs(),fk=fd.length?(alerts().find(a=>/^sj:/.test(a[2]||''))||[])[2]:'';// two folk quarrelling over one job: the Family tile, to the quarrel's fix
+   if(fk)L.push([fd.some(f=>f.st>=3)?78:66,T('fam','Family',`${fd.length} feud${fd.length>1?'s':''}, same job`,fd.some(f=>f.st>=3)?'bad':'warn',()=>hhPic('fam',()=>hpWinT('heir')),'gofix',fk)])}
+  [page('crown',88,8),page('heir',85,5),page('council',80,7),hhNb(page('nb',90,9)),page('laws',0,10),page('legacy',0,3),page('crus',G.crus?60:4,4),page('cellar',cl?50:0,2)].forEach(x=>{if(x&&x[0])L.push(x)});
   return L.sort((a,b)=>b[0]-a[0]).map(x=>x[1]);
 }
-function hhTile(t){return `<button class="ht${t.st?' '+t.st:''}" data-act="${t.act}" data-k="${t.dk}"><span class="hp">${t.pic()}</span><b>${t.n}</b><small>${t.w}</small></button>`}
+function hhTile(t){return `<button class="ht${t.st?' '+t.st:''}" data-act="${t.act}" data-k="${t.dk}" data-row="${t.k||t.n.toLowerCase()}"><span class="hp">${t.pic()}</span><b>${t.n}</b><small>${t.w}</small>${t.dot?'<i class="ndot"></i>':''}</button>`}
+// quarrels between two grown folk who work the same job (the warning strip's own test)
+const feudJobs=()=>{const o=[];for(const k in G.feud||{}){const f=G.feud[k],x=byId(f.a),y=byId(f.b);if(x&&y&&f.st>=2&&x.job===y.job&&!isChild(x)&&!isChild(y))o.push(f)}return o};
 function holdRow(cnt){
-  const need=JOBS.map(j=>j[0]).filter(j=>jobState(j,cnt[j])==='bad'),first=need[0]||'farm';
-  const fixed=[{n:'Work',w:need.length?`${need.length} need${need.length>1?'':'s'} a hand`:'All hands set',st:need.length?'bad':'good',pic:()=>hhPic('work',()=>hpWinT('land0')),act:'jobgo',dk:first},
-    {n:'Chronicle',w:'All the news',st:'',pic:()=>hhPic('chr',()=>hpWinT('legacy')),act:'chron',dk:''},
-    {n:'Family',w:`${G.settlers.length} under your roof`,st:'',pic:()=>hhPic('fam',()=>hpWinT('heir')),act:'tree',dk:''}];
+  const need=JOBS.map(j=>j[0]).filter(j=>j!=='rest'&&jobState(j,cnt[j])==='bad'&&!(j==='build'&&!G.proj)),idleB=!G.proj&&cnt.build>0,first=need[0]||(idleB?'build':'farm'),nm=j=>(JOBS.find(x=>x[0]===j)||[0,j])[1];
+  const p=G.proj,pf=p?Math.min(100,Math.round(p.done/p.need*100)):0,bn=G.settlers.filter(s=>active(s,'build')).length,un=unrest().length;
+  // his pick (2026-11-26): the fixed three are the things played all the time, in general terms: the work, the building, the people's mood
+  const fixed=[{n:'Work',w:need.length>1?`${need.length} need a hand`:need.length?`${nm(need[0])} needs a hand`:idleB?'Builders waiting':'All hands set',st:need.length?'bad':idleB?'':'good',pic:()=>hhPic('work',()=>hpWinT('land0')),act:'jobgo',dk:first},
+    {n:'Build',w:p?`${BUILD[p.type].n} ${pf}%`:nq().length?'Next one waits':'Nothing building',st:p&&!bn?'bad':'',pic:()=>hhPic('bpic'+(p?p.type:''),()=>hhArt(p?p.type:'hut')),act:'gofix',dk:'build'},
+    {n:'Folk',w:un>1?`${un} unhappy`:un?'1 unhappy':'All content',st:un>=3?'bad':un?'warn':'good',pic:()=>hhPic('folk',()=>hpWinT('heir')),act:'jobgo',dk:'unhappy'}];
   if(HRK.d!==G.day){HRK={d:G.day,k:hhCands(cnt).slice(0,3).map(t=>t.k)}}
   const all=hhCands(cnt),pick=HRK.k.map(k=>all.find(t=>t.k===k)).filter(Boolean);
   for(const t of all)if(pick.length<3&&!pick.includes(t))pick.push(t);// a kept tile that stopped applying leaves a gap: fill it
@@ -14371,7 +14382,7 @@ function showStart(){
 /* ---------- input ---------- */
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-act]');if(!t)return;
-  const a=t.dataset.act;
+  const a=t.dataset.act;if(t.dataset.row)tally1('row-'+t.dataset.row);// the Hold row tiles: one anonymous count per tile and game (itch.io only), to see which are used
   if(['tab','jpick','ffo','fview','open','speed','reroll','jobgo','bedgo','hpgo','medal','alfold','chold','fname','fsex','fage','flk','fbd','ftr','fdice','fmore','fback','sback'].includes(a))auPlay('tap');
   if(a==='tab')setView(t.dataset.tab);
   else if(a==='jobgo'){closeBinfo();uiSet('f',t.dataset.k);selected=null;expanded=null;setView('folk')}
@@ -15161,6 +15172,7 @@ const LESSONS=[
   {id:"idle",urg:1,mv:()=>{if(maudCan())return null;const b=G.settlers.find(s=>active(s,"build"));return b?[b,G.settlers.some(s=>active(s,"wood"))&&G.food<foodCap()?"farm":"wood"]:null},ok:()=>{if(maudCan()||!(G.built.hut&&!G.proj&&!nq().length&&G.settlers.some(s=>active(s,"build")))){IDLE0=0;return false}if(!IDLE0){IDLE0=Date.now();setTimeout(()=>{try{renderTip()}catch(e){}},2100)}return Date.now()-IDLE0>=2000},k:()=>G.settlers.some(s=>active(s,"wood"))&&G.food<foodCap()?"j:farm":"j:wood",t:()=>{const b=G.settlers.find(s=>active(s,"build")),w=!G.settlers.some(s=>active(s,"wood"))||G.food>=foodCap();return gx(`The cottage is up, and ${b?b.name:"your builder"} has nothing to build. Put them to work in ${w?"the woods":"the fields"}, or pick a new building.`,b)}},
   {id:"food",urg:1,mv:()=>{if(maudCan())return null;const p=farmHand();return p?[p,"farm"]:null},ok:()=>{const d=G.dl.food||0;return G.starve>0||(d<-.05&&G.food/-d<15)},k:"j:farm",t:()=>maudCan()?"<b>Food is running low.</b> "+(G.settlers.filter(s=>s.job==="farm"&&!isChild(s)).length>=wpTotal()?"Maud has every field full of hands. Another field plot would help.":"Maud is putting more hands on the farms. Everyone eats every day: if it runs out, people starve."):"<b>Food is running low.</b> "+((G.built.fishery||G.built.orchard||G.built.pasture)?"Farm hands bring it in from the fields, the fish, the apples and the sheep":"Farmers grow it")+", and everyone eats every day: if it runs out, people starve. About half your grown-ups should farm."},
   {id:"winter",urg:1,now:1,ok:()=>G.day>=2*DPS&&G.day<3*DPS,k:"j:wood",t:"<b>Winter comes after this season.</b> Fields barely grow in the cold and fires burn wood, so stock up on <b>food</b> and <b>wood</b> now."},
+  {id:"row",ok:()=>G.day>=2*DPY,t:"<b>The tiles under the map</b> are shortcuts now. The top three never move: <b>Work</b>, <b>Build</b> and <b>Folk</b>. The bottom three change with the news, a hostile neighbour, a quarrel, a full house. Tap one to go straight there."},
   {id:"bubble",ok:()=>G.day>=DPS,t:"Now and then someone has <b>a thought bubble</b> over their head. Tap them on the map to hear what is on their mind."},
   {id:"laws",at:"rule",ok:()=>G.day>=DPS,t:"<b>The laws of the hold</b>: five standing laws set the taxes, rations, work, justice and arms. Each can change once a season. Most holds leave them be for years."},
   {id:"blood",ok:()=>G.day>=DPY||G.settlers.some(s=>s.born>0&&bloodOf(s)),k:"tree",t:()=>{const r=ruler(),h=r&&heirOf(r);return `Your family is the heart of the game. When ${r?r.name:"your ruler"} dies, ${h?h.name:"the heir"} takes the seat. If no one of the blood is left, your house falls. Marry, have children and keep them safe.`}},
