@@ -1230,7 +1230,7 @@ figcaption .role{display:block;font-size:13px;font-style:italic;color:var(--ink2
 /* Contents of 01-basics.js: Tables and small helpers every other part leans on.
    - tables: traits, jobs, BUILD, GREAT (gwName, gwCap), UPG, BCAT, OUTER, ranks, names; helpers: setH, R/chance/pick/pickLine, rnd (RNDS), rng, holdCode/codeNum, andW, nDays/nYears, gx (they -> he/she), gainFood, isHead
    - wide/mapOn: a computer screen, where the map shows on every tab
-   - date & basics: dateStr, byId, ruler, annal, log; tally (anonymous play counts on itch.io)
+   - date & basics: dateStr, byId, ruler, annal, log; tally (anonymous play counts on itch.io), PS/psn/psList/psSend (play-style counts)
    - More: docs/basics.md
    Names: docs/where.md. Keep this list true when a section is added or moved. */
 const $=s=>document.querySelector(s);
@@ -1453,6 +1453,15 @@ const ITCH=typeof location!=='undefined'&&/(^|[.])itch[.](zone|io)$/.test(locati
 function tally(p,b){if(!ITCH)return;try{const c=window.screen||{},u='https://seratur.goatcounter.com/count?e=true&p='+encodeURIComponent(p)+'&s='+encodeURIComponent([c.width|0,c.height|0,window.devicePixelRatio||1].join(','))+'&rnd='+Math.random();if(b&&navigator.sendBeacon&&navigator.sendBeacon(u))return;new Image().src=u}catch(e){}}
 // once per hold (kept in the save as G.tl): the first time a tab is opened, the hold starves or freezes, or a kind of event card shows
 function tally1(k){if(!ITCH||!G)return;const t=G.tl||(G.tl={});if(t[k])return;t[k]=1;tally(k)}
+// play-style counts (2026-11-26, to tune the bots to how people really play): kept in memory only (not in the save), bucketed, sent once at year 1 (tag y1), year 5 (y5) and when a young hold is put away (y0); itch.io only
+const PS={};const psn=(k,n)=>{PS[k]=(PS[k]||0)+(n||1)};
+const psB=n=>n<=0?'0':n<=2?'1-2':n<=5?'3-5':n<=10?'6-10':n<=20?'11-20':n<=40?'21-40':'41+',psP=p=>p<=0?'0':p<=25?'1-25':p<=50?'26-50':p<=75?'51-75':'76+';
+// the event names a summary would send: taps (every button and map tap), tabs, jobs (people moved), speeds (speed changes), builds (started), picks (event choices), first (share of picks that were the top choice), paused (share of taps made while paused), fast (share of days at fast speeds), fbuild/fjob (day of the first build / job move, in tens)
+function psList(tag){const t=PS.taps||0,pk=PS.picks||0,dy=(PS.d1||0)+(PS.d2||0)+(PS.d3||0),o=[];const add=(n,v)=>o.push('ps-'+tag+'-'+n+'-'+v);
+  add('taps',psB(t));add('tabs',psB(PS.tabs||0));add('jobs',psB(PS.jobs||0));add('speeds',psB(PS.speeds||0));add('builds',psB(PS.builds||0));add('picks',psB(pk));
+  if(pk)add('first',psP(100*(PS.pick0||0)/pk));if(t)add('paused',psP(100*(PS.ptaps||0)/t));if(dy)add('fast',psP(100*((PS.d2||0)+(PS.d3||0))/dy));
+  if(PS.fb!=null)add('fbuild',psB(Math.floor(PS.fb/10)));if(PS.fj!=null)add('fjob',psB(Math.floor(PS.fj/10)));return o}
+function psSend(tag,b){if(!ITCH||!G)return;const t=G.tl||(G.tl={});if(t['ps-'+tag])return;t['ps-'+tag]=1;psList(tag).forEach(p=>tally(p,b))}
 function stamp(d){const o=((d%DPY)+DPY)%DPY;return `${SEASONS[Math.floor(o/DPS)].slice(0,3)} ${o%DPS+1}`}
 const byId=id=>G.settlers.find(s=>s.id===id);
 const ruler=()=>byId(G.rulerId);
@@ -6196,6 +6205,7 @@ function startUpgrade(t){
 }
 function startBuild(t){
   if(!canBuild(t).ok)return;
+  psn('builds');if(PS.fb==null)PS.fb=G.day;
   const b=BUILD[t];let x,y;
   if(t==='palisade'){x=HX;y=HY+3.4}
   else if(t==='tower'){x=HX+3;y=HY-3}
@@ -6274,12 +6284,13 @@ function evNameWork(t){
 /* ---------- the day ---------- */
 function tick(){
   if(!G||G.over||G.modal)return;
+  psn('d'+(speed>=3?3:speed>=2?2:1));// play-style: days at each speed
   if((G.pw&&G.pw.pend||G.rivals&&G.rivals.some(x=>x.pend)||G.lpend!=null||G.lovp)&&cqResume())return;// a war, vassal, daughter-hold or Lord of the Valley card waiting since before a reload (or since a choice set it)
   const prev={food:G.food,wood:G.wood,stone:G.stone,iron:G.iron,wool:G.wool,gold:G.gold,renown:G.renown};
   G.day++;
   for(const s of G.settlers)if(fastKid(s))s.born=Math.round((s.born-CHACC)*100)/100;// a commoner's childhood runs fast (01-basics CHYRS); a neighbour's ward keeps the long one, so the oath runs its sixteen years
   const d=doy(),si=seasonIdx();
-  if(d===0){log(`A new year dawns: ${yearNum()}.`,'info');knownYear();G.renown+=2;const y=G.day/DPY;if([1,5,10,25,50,100].includes(y))tally('year-'+y)}
+  if(d===0){log(`A new year dawns: ${yearNum()}.`,'info');knownYear();G.renown+=2;const y=G.day/DPY;if([1,5,10,25,50,100].includes(y))tally('year-'+y);if(y===1||y===5)psSend('y'+y)}
   if(d%DPS===0){seasonReport();try{seasonBanner()}catch(e){}log(`${SEASONS[si]} arrives.`,'info');rivalsSeason();try{knownSeason()}catch(e){}crusSeason();exileSeason();feudSeason();affairSeason();basSeason();tradeSeason();famSeason();postSeason();lifeHints();save()}
   crusDay();
   try{maudDay()}catch(e){}
@@ -6957,6 +6968,7 @@ function resChips(dl){const e=Object.entries(dl||{});if(!e.length)return '';retu
 function choose(i){
   const ev=G.modal;if(!ev||ev.res)return;
   const c=ev.choices[i];if(!c||c.dis)return;
+  psn('picks');if(!i)psn('pick0');
   let txt;const pre={};RESK.forEach(k=>pre[k]=G[k]||0);
   const rid=G.rulerId;if(!ev.newc){choiceDeed(c.t);rpChoice(ev,c)}if(ev.echoSid)try{lifeEcho(ev)}catch(e){}
   OPEV=ev.title;try{txt=c.fn()}catch(e){console.error(e);txt='Nothing much comes of it.'}OPEV=null;
@@ -14368,7 +14380,7 @@ function renderDiffs(){
 let PLAYT=0,PLAYN=0;const PLAYM=[5,15,30,60];
 if(ITCH)setInterval(()=>{if(document.hidden||!G||G.over||!$('#start').hidden)return;PLAYT+=10;while(PLAYN<PLAYM.length&&PLAYT>=PLAYM[PLAYN]*60)tally('play-'+PLAYM[PLAYN++]+'m')},10000);
 // put away before year 1 (itch.io only, once per visit): where a new player was when they hid or closed the page: the guide step, or the season of year 1
-let AWAY=0;if(ITCH&&typeof document!=='undefined')document.addEventListener('visibilitychange',()=>{if(!document.hidden||AWAY||!G||G.over||G.day>=DPY||!$('#start').hidden)return;AWAY=1;tally(G.tut>=0&&TUT[G.tut]?'away-guide-'+TUT[G.tut].id:'away-y0-'+SEASONS[Math.floor(G.day/DPS)%4].toLowerCase(),1)});
+let AWAY=0;if(ITCH&&typeof document!=='undefined')document.addEventListener('visibilitychange',()=>{if(!document.hidden||AWAY||!G||G.over||G.day>=DPY||!$('#start').hidden)return;AWAY=1;psSend('y0',1);tally(G.tut>=0&&TUT[G.tut]?'away-guide-'+TUT[G.tut].id:'away-y0-'+SEASONS[Math.floor(G.day/DPS)%4].toLowerCase(),1)});
 let TLT=0;// the title page counted once per visit (itch.io only), so visitors who never start show up
 function showStart(){
   if(!TLT){TLT=1;tally('title')}
@@ -14382,7 +14394,7 @@ function showStart(){
 /* ---------- input ---------- */
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-act]');if(!t)return;
-  const a=t.dataset.act;if(t.dataset.row)tally1('row-'+t.dataset.row);// the Hold row tiles: one anonymous count per tile and game (itch.io only), to see which are used
+  const a=t.dataset.act;psn('taps');if(speed===0)psn('ptaps');if(a==='tab')psn('tabs');else if(a==='speed')psn('speeds');if(t.dataset.row)tally1('row-'+t.dataset.row);// the Hold row tiles: one anonymous count per tile and game (itch.io only), to see which are used
   if(['tab','jpick','ffo','fview','open','speed','reroll','jobgo','bedgo','hpgo','medal','alfold','chold','fname','fsex','fage','flk','fbd','ftr','fdice','fmore','fback','sback'].includes(a))auPlay('tap');
   if(a==='tab')setView(t.dataset.tab);
   else if(a==='jobgo'){closeBinfo();uiSet('f',t.dataset.k);selected=null;expanded=null;setView('folk')}
@@ -14392,7 +14404,7 @@ document.addEventListener('click',e=>{
   else if(a==='alfold'){ALO=!ALO;renderHold()}
   else if(a==='chold'){CHO=!CHO;renderHold()}
   else if(a==='speed'){menuSpeed=0;setSpeed(+t.dataset.v)}
-  else if(a==='job'){const s=byId(+t.dataset.id);if(s){const o=s.job;s.job=t.dataset.job;JP=null;if(o!==s.job){sealFx(t);maudPin(s)}jobReact(s,o);retarget();refresh()}}
+  else if(a==='job'){const s=byId(+t.dataset.id);if(s){const o=s.job;s.job=t.dataset.job;JP=null;if(o!==s.job){sealFx(t);maudPin(s);psn('jobs');if(PS.fj==null)PS.fj=G.day}jobReact(s,o);retarget();refresh()}}
   else if(a==='maudtog'){auPlay('tap');maudOn(!G.maud);refresh()}
   else if(a==='unpin'){const s=byId(+t.dataset.id);if(s){delete s.pin;auPlay('tap');refresh()}}
   else if(a==='jpick'){const id=+t.dataset.id;JP=JP===id?null:id;if(JP)expanded=null;renderFolk();renderTip()}
@@ -14545,7 +14557,7 @@ MAPC.addEventListener('touchmove',e=>{if(e.touches.length>1||mzOn())e.preventDef
 MAPC.addEventListener('wheel',e=>{if(!G||!(wide()||e.ctrlKey))return;e.preventDefault();const d=e.deltaY*(e.deltaMode===1?33:e.deltaMode===2?400:1),z=clamp(MZ.z*Math.exp(-d*(e.ctrlKey?.01:.0015)),1,3),p=mzAt(e.clientX,e.clientY);
   if(z<1.03)mzSet(1,{wx:MZ.x+COLS*TS/MZ.z/2,wy:MZ.y+ROWS*TS/MZ.z/2,fx:.5,fy:.5});else mzSet(z,p)},{passive:false});
 MAPC.addEventListener('click',e=>{
-  if(!G)return;if(MMOVED){MMOVED=0;return}
+  if(!G)return;psn('taps');if(speed===0)psn('ptaps');if(MMOVED){MMOVED=0;return}
   const t=performance.now(),cx=e.clientX,cy=e.clientY;
   if(MTAP&&t-MTAP.t<320&&Math.hypot(cx-MTAP.x,cy-MTAP.y)<40){clearTimeout(MTAP.h);MTAP=null;mzSet(mzOn()&&MZ.z>1.02?1:2,mzAt(cx,cy),1);return}
   if(MTAP){clearTimeout(MTAP.h);mapTap(MTAP.x,MTAP.y)}
